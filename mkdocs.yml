@@ -19,8 +19,7 @@ theme:
 nav:
   - Home: index.md
   - Blog: blog/index.md
-  - Resume: resume.md
-  - GIA: gia.md
+  - GIA: https://gia.lafabrique.ai/
 
 plugins:
   - search
