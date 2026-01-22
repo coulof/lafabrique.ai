@@ -165,9 +165,13 @@ html:not([data-theme]) .mdx-hero__banner[data-banner="blue"] {
   font-family: 'Goldman', sans-serif;
   font-size: 1.5rem;
   font-weight: 400;
-  color: var(--md-primary-fg-color);
+  color: white;
   margin: 0 0 2.5rem 0;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  text-decoration: underline;
+  text-decoration-color: var(--md-primary-fg-color);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.3rem;
 }
 
 .mdx-hero__content .md-button {
