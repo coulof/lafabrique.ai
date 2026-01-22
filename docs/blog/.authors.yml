@@ -2,8 +2,8 @@ authors:
   admin:
     name: LaFabrique.AI
     description: Creator
-    avatar: https://github.com/identicons/lafabrique.png
+    avatar: assets/images/coulof-avatar.png
   coulof:
-    name: Coulof
+    name: coulof
     description: Author
     avatar: assets/images/coulof-avatar.png
