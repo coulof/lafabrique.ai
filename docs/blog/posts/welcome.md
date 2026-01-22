@@ -16,10 +16,9 @@ Welcome to LaFabrique.AI! An evolution of https://storage-chaos.io/. This blog t
 
 This blog will cover a wide range of AI-related topics or not !:
 
-- **Machine Learning** - Concepts, algorithms, and practical applications
-- **Deep Learning** - Neural networks, transformers, and modern architectures
 - **AI Tools** - Reviews and tutorials on the latest AI tools
-- **AI Infrastructure** - 
+- **AI Infrastructure** - Benchmark & architecture best practices
+- **Kubernetes** - Insights on Kubernetes, Storage & its use in context of AI
 - **Industry Insights** - Trends and developments in the AI space
 
 Stay tuned for more content!
