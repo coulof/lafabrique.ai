@@ -1,84 +1,206 @@
 /* Theme color schemes */
 :root {
-  --theme-banner: url('../assets/images/1.png');
+  --md-primary-fg-color: #1976d2;
+  --md-accent-fg-color: #1976d2;
 }
 
 [data-theme="blue"] {
   --md-primary-fg-color: #1976d2;
   --md-accent-fg-color: #1976d2;
-  --theme-banner: url('../assets/images/1.png');
 }
 
 [data-theme="red"] {
   --md-primary-fg-color: #e53935;
   --md-accent-fg-color: #e53935;
-  --theme-banner: url('../assets/images/2.png');
 }
 
 [data-theme="yellow"] {
   --md-primary-fg-color: #f9a825;
   --md-accent-fg-color: #f9a825;
-  --theme-banner: url('../assets/images/3.png');
 }
 
-/* Hero section styling */
-.hero-section {
-  min-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 2rem;
-  margin: -1rem -1rem 2rem -1rem;
-  background-image: var(--theme-banner);
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+/* ========================================
+   Hero Section - Full Width Parallax
+   ======================================== */
+
+.mdx-hero {
   position: relative;
+  width: 100vw;
+  height: 100vh;
+  margin-left: calc(-50vw + 50%);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.hero-section::before {
+/* Banner images container */
+.mdx-hero__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  z-index: 1;
+}
+
+/* Individual banner images */
+.mdx-hero__banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  will-change: transform;
+}
+
+/* Show active theme banner */
+[data-theme="blue"] .mdx-hero__banner[data-theme="blue"],
+[data-theme="red"] .mdx-hero__banner[data-theme="red"],
+[data-theme="yellow"] .mdx-hero__banner[data-theme="yellow"] {
+  opacity: 1;
+}
+
+/* Default to blue if no theme set */
+:root:not([data-theme]) .mdx-hero__banner[data-theme="blue"] {
+  opacity: 1;
+}
+
+/* Dark overlay for text readability */
+.mdx-hero__image::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 1;
-}
-
-.hero-section > * {
-  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
   z-index: 2;
 }
 
-.hero-section h1 {
-  font-size: 3.5rem;
-  color: white;
-  margin-bottom: 0.5rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+/* Hero content */
+.mdx-hero__content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 2rem;
+  max-width: 800px;
 }
 
-.hero-section h2 {
+.mdx-hero__content h1 {
+  font-size: 4rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 1rem 0;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  letter-spacing: -0.02em;
+}
+
+.mdx-hero__content p {
   font-size: 1.5rem;
-  color: white;
   font-weight: 300;
-  margin-bottom: 2rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 2.5rem 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.hero-section .md-button {
+.mdx-hero__content .md-button {
   font-size: 1.1rem;
-  padding: 0.8rem 2rem;
+  padding: 0.8rem 2.5rem;
+  border-radius: 0.3rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-/* Content section below hero */
+.mdx-hero__content .md-button--primary {
+  background-color: var(--md-primary-fg-color);
+  border-color: var(--md-primary-fg-color);
+  color: white;
+}
+
+.mdx-hero__content .md-button--primary:hover {
+  background-color: var(--md-accent-fg-color);
+  border-color: var(--md-accent-fg-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Scroll indicator */
+.mdx-hero__scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.mdx-hero__scroll-indicator span {
+  display: block;
+  width: 24px;
+  height: 40px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  position: relative;
+}
+
+.mdx-hero__scroll-indicator span::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
+  animation: scroll-indicator 2s infinite;
+}
+
+@keyframes scroll-indicator {
+  0%, 100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    opacity: 0.3;
+    transform: translateX(-50%) translateY(12px);
+  }
+}
+
+/* ========================================
+   Parallax Scroll Effect
+   ======================================== */
+
+@supports (background-attachment: fixed) {
+  .mdx-hero__image {
+    background-attachment: fixed;
+  }
+
+  .mdx-hero__banner {
+    position: fixed;
+    top: 0;
+    height: 100vh;
+  }
+}
+
+/* ========================================
+   Content Section Styling
+   ======================================== */
+
 .content-section {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 4rem 1.5rem;
 }
 
 .content-section h2 {
@@ -87,28 +209,46 @@
   margin-top: 2rem;
 }
 
-/* Landing page full-width adjustments */
-.md-content__inner.md-typeset {
-  max-width: 100%;
-}
+/* ========================================
+   Smooth Scrolling
+   ======================================== */
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Mobile responsive adjustments */
-@media screen and (max-width: 768px) {
-  .hero-section {
-    min-height: 60vh;
-    background-attachment: scroll;
-  }
+/* ========================================
+   Mobile Responsive
+   ======================================== */
 
-  .hero-section h1 {
+@media screen and (max-width: 768px) {
+  .mdx-hero__content h1 {
     font-size: 2.5rem;
   }
 
-  .hero-section h2 {
+  .mdx-hero__content p {
     font-size: 1.2rem;
+  }
+
+  .mdx-hero__content .md-button {
+    font-size: 1rem;
+    padding: 0.7rem 2rem;
+  }
+
+  /* Disable fixed positioning on mobile for better performance */
+  .mdx-hero__banner {
+    position: absolute;
+    height: 100%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .mdx-hero__content h1 {
+    font-size: 2rem;
+  }
+
+  .mdx-hero__content p {
+    font-size: 1rem;
+    margin-bottom: 2rem;
   }
 }

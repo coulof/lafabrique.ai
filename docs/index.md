@@ -1,20 +1,11 @@
 ---
-template: main.html
-title: Home
+template: home.html
+title: LaFabrique.AI
 hide:
   - navigation
   - toc
+  - path
 ---
-
-<div class="hero-section" markdown>
-
-# LaFabrique.AI
-
-## A Journey Through Artificial Intelligence
-
-[Get Started](blog/index.md){ .md-button .md-button--primary }
-
-</div>
 
 <div class="content-section" markdown>
 
