@@ -1,0 +1,77 @@
+version: '3'
+
+vars:
+  VENV: .venv
+  PYTHON: "{{.VENV}}/bin/python"
+  PIP: "{{.VENV}}/bin/pip"
+  MKDOCS: "{{.VENV}}/bin/mkdocs"
+  PROJECT_NAME: lafabrique-ai
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list
+
+  setup:
+    desc: Create virtual environment and install dependencies
+    cmds:
+      - python3 -m venv {{.VENV}}
+      - "{{.PIP}} install --upgrade pip"
+      - "{{.PIP}} install mkdocs-material"
+    status:
+      - test -d {{.VENV}}
+      - test -f {{.VENV}}/bin/mkdocs
+
+  build:
+    desc: Build the static site
+    deps: [setup]
+    cmds:
+      - "{{.MKDOCS}} build"
+    sources:
+      - docs/**/*
+      - mkdocs.yml
+      - overrides/**/*
+    generates:
+      - site/**/*
+
+  serve:
+    desc: Start local development server
+    deps: [setup]
+    cmds:
+      - "{{.MKDOCS}} serve"
+
+  clean:
+    desc: Remove build artifacts
+    cmds:
+      - rm -rf site/
+
+  # Cloudflare deployment tasks (using npx)
+  cf:login:
+    desc: Login to Cloudflare
+    cmds:
+      - npx wrangler login
+
+  cf:deploy:
+    desc: Deploy to Cloudflare Pages
+    deps: [build]
+    cmds:
+      - npx wrangler pages deploy site --project-name={{.PROJECT_NAME}}
+
+  cf:deploy:prod:
+    desc: Deploy to Cloudflare Pages (production)
+    deps: [build]
+    cmds:
+      - npx wrangler pages deploy site --project-name={{.PROJECT_NAME}} --branch=main
+
+  cf:create:
+    desc: Create Cloudflare Pages project (run once)
+    cmds:
+      - npx wrangler pages project create {{.PROJECT_NAME}} --production-branch=main
+
+  # Full deployment pipeline
+  deploy:
+    desc: Build and deploy to Cloudflare Pages
+    cmds:
+      - task: build
+      - task: cf:deploy:prod
