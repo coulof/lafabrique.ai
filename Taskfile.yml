@@ -41,6 +41,18 @@ tasks:
     cmds:
       - "{{.MKDOCS}} serve"
 
+  stop:
+    desc: Stop running mkdocs server
+    cmds:
+      - pkill -f "mkdocs serve" || true
+
+  restart:
+    desc: Stop, build, and serve
+    cmds:
+      - task: stop
+      - task: build
+      - task: serve
+
   clean:
     desc: Remove build artifacts
     cmds:
