@@ -1,22 +1,62 @@
-/* Theme color schemes */
+/* ========================================
+   Theme Color Schemes
+   ======================================== */
+
 :root {
   --md-primary-fg-color: #1976d2;
-  --md-accent-fg-color: #1976d2;
+  --md-accent-fg-color: #1565c0;
+  --md-primary-fg-color--light: #1976d21a;
+  --md-primary-fg-color--dark: #1565c0;
 }
 
 [data-theme="blue"] {
   --md-primary-fg-color: #1976d2;
-  --md-accent-fg-color: #1976d2;
+  --md-accent-fg-color: #1565c0;
+  --md-primary-fg-color--light: #1976d21a;
+  --md-primary-fg-color--dark: #1565c0;
 }
 
 [data-theme="red"] {
   --md-primary-fg-color: #e53935;
-  --md-accent-fg-color: #e53935;
+  --md-accent-fg-color: #c62828;
+  --md-primary-fg-color--light: #e539351a;
+  --md-primary-fg-color--dark: #c62828;
 }
 
 [data-theme="yellow"] {
   --md-primary-fg-color: #f9a825;
-  --md-accent-fg-color: #f9a825;
+  --md-accent-fg-color: #f57f17;
+  --md-primary-fg-color--light: #f9a8251a;
+  --md-primary-fg-color--dark: #f57f17;
+}
+
+/* ========================================
+   Header Styling with Theme Colors
+   ======================================== */
+
+/* Header background uses theme color */
+.md-header {
+  background-color: var(--md-primary-fg-color);
+}
+
+/* Tabs use theme color */
+.md-tabs {
+  background-color: var(--md-primary-fg-color);
+}
+
+/* Active tab indicator */
+.md-tabs__link--active,
+.md-tabs__link:hover {
+  opacity: 1;
+}
+
+/* Links use theme accent */
+.md-typeset a {
+  color: var(--md-primary-fg-color);
+}
+
+.md-typeset a:hover {
+  color: var(--md-accent-fg-color);
 }
 
 /* ========================================
@@ -44,7 +84,7 @@
   z-index: 1;
 }
 
-/* Individual banner images */
+/* Individual banner images - hidden by default */
 .mdx-hero__banner {
   position: absolute;
   top: 0;
@@ -54,19 +94,24 @@
   object-fit: cover;
   object-position: center;
   opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-  will-change: transform;
+  transition: opacity 0.3s ease;
 }
 
-/* Show active theme banner */
-[data-theme="blue"] .mdx-hero__banner[data-theme="blue"],
-[data-theme="red"] .mdx-hero__banner[data-theme="red"],
-[data-theme="yellow"] .mdx-hero__banner[data-theme="yellow"] {
+/* Show banner based on theme */
+[data-theme="blue"] .mdx-hero__banner[data-banner="blue"] {
   opacity: 1;
 }
 
-/* Default to blue if no theme set */
-:root:not([data-theme]) .mdx-hero__banner[data-theme="blue"] {
+[data-theme="red"] .mdx-hero__banner[data-banner="red"] {
+  opacity: 1;
+}
+
+[data-theme="yellow"] .mdx-hero__banner[data-banner="yellow"] {
+  opacity: 1;
+}
+
+/* Default fallback - show blue if no theme set */
+html:not([data-theme]) .mdx-hero__banner[data-banner="blue"] {
   opacity: 1;
 }
 

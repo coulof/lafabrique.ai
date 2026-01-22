@@ -1,45 +1,46 @@
 // Theme rotation for LaFabrique.AI
-// Changes theme on each page reload within a session
+// Rotates between blue, red, yellow themes on each page reload
 
 (function() {
-  const themes = ['blue', 'red', 'yellow'];
-
-  function getRandomTheme() {
-    const index = Math.floor(Math.random() * themes.length);
-    return themes[index];
-  }
+  var themes = ['blue', 'red', 'yellow'];
+  var colors = {
+    blue:   { primary: '#1976d2', accent: '#1565c0' },
+    red:    { primary: '#e53935', accent: '#c62828' },
+    yellow: { primary: '#f9a825', accent: '#f57f17' }
+  };
 
   function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
+    var root = document.documentElement;
+    var color = colors[theme];
+
+    root.setAttribute('data-theme', theme);
+    root.style.setProperty('--md-primary-fg-color', color.primary);
+    root.style.setProperty('--md-accent-fg-color', color.accent);
+    root.style.setProperty('--md-primary-fg-color--light', color.primary + '1a');
+    root.style.setProperty('--md-primary-fg-color--dark', color.accent);
+  }
+
+  function getNextTheme(current) {
+    var available = themes.filter(function(t) { return t !== current; });
+    return available[Math.floor(Math.random() * available.length)];
   }
 
   function initTheme() {
-    // Check if we should rotate theme (on page load)
-    const lastTheme = sessionStorage.getItem('lafabrique-theme');
-    let newTheme;
+    var stored = sessionStorage.getItem('lafabrique-theme');
+    var theme;
 
-    if (lastTheme) {
-      // Get a different theme from the current one
-      const availableThemes = themes.filter(t => t !== lastTheme);
-      const index = Math.floor(Math.random() * availableThemes.length);
-      newTheme = availableThemes[index];
+    if (stored && colors[stored]) {
+      // On reload, pick a different theme
+      theme = getNextTheme(stored);
     } else {
-      newTheme = getRandomTheme();
+      // First visit, pick random
+      theme = themes[Math.floor(Math.random() * themes.length)];
     }
 
-    sessionStorage.setItem('lafabrique-theme', newTheme);
-    applyTheme(newTheme);
+    sessionStorage.setItem('lafabrique-theme', theme);
+    applyTheme(theme);
   }
 
-  // Apply theme as soon as possible to prevent flash
-  if (document.readyState === 'loading') {
-    // Apply immediately if DOM not ready
-    const savedTheme = sessionStorage.getItem('lafabrique-theme');
-    if (savedTheme) {
-      applyTheme(savedTheme);
-    }
-    document.addEventListener('DOMContentLoaded', initTheme);
-  } else {
-    initTheme();
-  }
+  // Run immediately
+  initTheme();
 })();
