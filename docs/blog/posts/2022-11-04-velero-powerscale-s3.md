@@ -42,15 +42,15 @@ PS1-1% isi s3 settings global view
 S3 Service Enabled: Yes
 ```
 
-![Global Settings](../../assets/img/velero-powerscale-s3/global_settings.png)
+![Global Settings](../../assets/images/velero-powerscale-s3/global_settings.png)
 
 2. Create a bucket with write permissions
 
-![Create Bucket](../../assets/img/velero-powerscale-s3/bucket.png)
+![Create Bucket](../../assets/images/velero-powerscale-s3/bucket.png)
 
 3. Create a key for the user - note that the key is only displayed upon creation
 
-![Create Keys](../../assets/img/velero-powerscale-s3/keys.png)
+![Create Keys](../../assets/images/velero-powerscale-s3/keys.png)
 
 ### Velero installation
 
@@ -91,7 +91,7 @@ After installation, verify with `kubectl logs -n velero deployment/velero`.
 
 You can check the actual content directly from PowerScale File Explorer:
 
-![Bucket File Explorer](../../assets/img/velero-powerscale-s3/bucket_file_explorer.png)
+![Bucket File Explorer](../../assets/images/velero-powerscale-s3/bucket_file_explorer.png)
 
 ## Demo
 
