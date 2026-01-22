@@ -5,6 +5,9 @@ site_url: https://lafabrique.ai
 theme:
   name: material
   custom_dir: overrides
+  favicon: assets/images/favicon.svg
+  icon:
+    logo: material/factory
   features:
     - navigation.tabs
     - navigation.sections
