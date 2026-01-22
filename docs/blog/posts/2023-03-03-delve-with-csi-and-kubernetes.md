@@ -76,11 +76,11 @@ Next, we can open the project in our favorite IDE and ensure that we are on the 
 
 You can use [Goland](https://www.jetbrains.com/help/go/attach-to-running-go-processes-with-debugger.html#step-2-run-delve-on-the-host-machine) or [VSCode](https://github.com/golang/vscode-go/wiki/debugging#connecting-to-headless-delve-with-target-specified-at-server-start-up) :material-github: for remote debugging.
 
-![Goland remote debugging configuration](../../assets/img/delve/goland-config.gif)
+![Goland remote debugging configuration](../../assets/images/delve/goland-config.gif)
 
 And here is the result of a breakpoint on `CreateVolume` call:
 
-![Goland breakpoint](../../assets/img/delve/goland.png)
+![Goland breakpoint](../../assets/images/delve/goland.png)
 
 The full code is here: [https://github.com/dell/csi-powerflex/compare/main...coulof:csi-powerflex:v2.5.0-delve](https://github.com/dell/csi-powerflex/compare/main...coulof:csi-powerflex:v2.5.0-delve) :material-github:.
 

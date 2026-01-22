@@ -49,7 +49,7 @@ curl -X POST "localhost:5601/api/kibana/dashboards/import?exclude=index-pattern"
   -H 'Content-Type: application/json' -d @kibana-dashboard.json
 ```
 
-![Kibana Dashboard](../../assets/img/kibana_dashboard.png)
+![Kibana Dashboard](../../assets/images/kibana_dashboard.png)
 
 ## Wrap-up
 
