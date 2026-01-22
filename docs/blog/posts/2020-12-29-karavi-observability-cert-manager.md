@@ -27,7 +27,7 @@ Karavi focuses in three domains:
 
 The first project brought to life as a tech-preview is the metrics & topology collection for PowerFlex Kubernetes volumes.
 
-![Karavi Observability Architecture](../../assets/img/karavi-obs-vxflexos.png)
+![Karavi Observability Architecture](../../assets/images/karavi-obs-vxflexos.png)
 
 <iframe height="560" src="https://www.youtube.com/embed/Fmmv-nP06QU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 

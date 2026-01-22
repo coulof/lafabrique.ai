@@ -30,7 +30,7 @@ In my lab, I only have one routable VLAN. For Tanzu, I decided to use three netw
 
 The problem: I do not have an NSX-T license. Luckily, Linux is here to save the day.
 
-![Architecture](../../assets/img/tanzu/vmware-dswitch.png)
+![Architecture](../../assets/images/tanzu/vmware-dswitch.png)
 
 ## The implementation
 
@@ -67,7 +67,7 @@ nat {
 
 During workload cluster creation I got an error. The ICMP echo requests went through the router but the response was issued directly on the DSwitch.
 
-![Ping error](../../assets/img/tanzu/tanzu_ping_error.png)
+![Ping error](../../assets/images/tanzu/tanzu_ping_error.png)
 
 The fix required three network configuration changes on HAProxy:
 

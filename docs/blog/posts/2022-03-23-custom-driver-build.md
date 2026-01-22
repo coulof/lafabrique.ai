@@ -46,7 +46,7 @@ cd dell/csi-powerscale
 git checkout v2.1.0 -b v2.1.0-longer-path
 ```
 
-![Fork gocsi on GitHub](../../assets/img/github_fork_dell_gocsi.png)
+![Fork gocsi on GitHub](../../assets/images/github_fork_dell_gocsi.png)
 
 Fork and clone the gocsi library:
 
