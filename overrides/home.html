@@ -1,0 +1,48 @@
+{% extends "main.html" %}
+
+{% block tabs %}
+  {{ super() }}
+
+  <style>
+    /* Hide elements on home page */
+    .md-main__inner {
+      margin: 0;
+    }
+    .md-sidebar {
+      display: none;
+    }
+    .md-content {
+      max-width: none;
+    }
+    .md-content__inner {
+      margin: 0;
+      padding: 0;
+    }
+    .md-typeset h1 {
+      display: none;
+    }
+  </style>
+
+  <!-- Hero Section -->
+  <section class="mdx-hero" data-md-color-scheme="slate">
+    <div class="mdx-hero__image">
+      <img src="assets/images/1.png" alt="" class="mdx-hero__banner" data-theme="blue" draggable="false">
+      <img src="assets/images/2.png" alt="" class="mdx-hero__banner" data-theme="red" draggable="false">
+      <img src="assets/images/3.png" alt="" class="mdx-hero__banner" data-theme="yellow" draggable="false">
+    </div>
+    <div class="mdx-hero__content">
+      <h1>LaFabrique.AI</h1>
+      <p>A Journey Through Artificial Intelligence</p>
+      <a href="{{ page.next_page.url | url }}" class="md-button md-button--primary">
+        Get Started
+      </a>
+    </div>
+    <div class="mdx-hero__scroll-indicator">
+      <span></span>
+    </div>
+  </section>
+{% endblock %}
+
+{% block content %}
+  {{ super() }}
+{% endblock %}
