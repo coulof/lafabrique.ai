@@ -1,0 +1,42 @@
+site_name: LaFabrique.AI
+site_description: A Journey Through Artificial Intelligence
+site_url: https://lafabrique.ai
+
+theme:
+  name: material
+  custom_dir: overrides
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - content.tabs.link
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+
+nav:
+  - Home: index.md
+  - Blog: blog/index.md
+  - Resume: resume.md
+  - GIA: gia.md
+
+plugins:
+  - search
+  - blog:
+      blog_dir: blog
+      post_date_format: long
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
