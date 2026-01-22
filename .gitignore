@@ -1,0 +1,9 @@
+# Virtual environment
+.venv/
+
+# Built site
+site/
+
+# Python cache
+__pycache__/
+*.py[cod]

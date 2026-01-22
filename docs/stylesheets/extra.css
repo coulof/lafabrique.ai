@@ -1,0 +1,114 @@
+/* Theme color schemes */
+:root {
+  --theme-banner: url('../assets/images/1.png');
+}
+
+[data-theme="blue"] {
+  --md-primary-fg-color: #1976d2;
+  --md-accent-fg-color: #1976d2;
+  --theme-banner: url('../assets/images/1.png');
+}
+
+[data-theme="red"] {
+  --md-primary-fg-color: #e53935;
+  --md-accent-fg-color: #e53935;
+  --theme-banner: url('../assets/images/2.png');
+}
+
+[data-theme="yellow"] {
+  --md-primary-fg-color: #f9a825;
+  --md-accent-fg-color: #f9a825;
+  --theme-banner: url('../assets/images/3.png');
+}
+
+/* Hero section styling */
+.hero-section {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  margin: -1rem -1rem 2rem -1rem;
+  background-image: var(--theme-banner);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.hero-section > * {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-section h1 {
+  font-size: 3.5rem;
+  color: white;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-section h2 {
+  font-size: 1.5rem;
+  color: white;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.hero-section .md-button {
+  font-size: 1.1rem;
+  padding: 0.8rem 2rem;
+}
+
+/* Content section below hero */
+.content-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.content-section h2 {
+  border-bottom: 2px solid var(--md-primary-fg-color);
+  padding-bottom: 0.5rem;
+  margin-top: 2rem;
+}
+
+/* Landing page full-width adjustments */
+.md-content__inner.md-typeset {
+  max-width: 100%;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mobile responsive adjustments */
+@media screen and (max-width: 768px) {
+  .hero-section {
+    min-height: 60vh;
+    background-attachment: scroll;
+  }
+
+  .hero-section h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-section h2 {
+    font-size: 1.2rem;
+  }
+}

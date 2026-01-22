@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  <style>
+    /* Apply theme immediately to prevent flash */
+    :root {
+      --theme-banner: url('../assets/images/1.png');
+    }
+  </style>
+  <script>
+    // Apply saved theme immediately
+    (function() {
+      var theme = sessionStorage.getItem('lafabrique-theme');
+      if (theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+    })();
+  </script>
+{% endblock %}
+
+{% block content %}
+  {{ super() }}
+{% endblock %}
