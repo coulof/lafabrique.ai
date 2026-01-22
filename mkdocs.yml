@@ -13,8 +13,8 @@ theme:
     - content.tabs.link
   palette:
     - scheme: default
-      primary: indigo
-      accent: indigo
+      primary: custom
+      accent: custom
 
 nav:
   - Home: index.md
