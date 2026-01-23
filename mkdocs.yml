@@ -12,6 +12,7 @@ theme:
     - navigation.tabs
     - navigation.sections
     - navigation.top
+    - navigation.indexes
     - search.suggest
     - content.tabs.link
   palette:
@@ -21,14 +22,21 @@ theme:
 
 nav:
   - Home: index.md
-  - Blog: blog/index.md
+  - Blog:
+    - blog/index.md
   - GIA: https://gia.lafabrique.ai/
 
 plugins:
   - search
   - blog:
-      blog_dir: blog
-      post_date_format: long
+      blog_toc: false
+      archive: true
+      archive_name: Archive
+      archive_date_format: YYYY
+      archive_toc: true
+      categories: true
+      categories_name: Categories
+      categories_toc: true
 
 extra_css:
   - stylesheets/extra.css
@@ -45,3 +53,6 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
