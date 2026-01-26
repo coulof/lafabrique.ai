@@ -7,7 +7,7 @@ categories:
   - Dell
 ---
 
-# Use go debugger's delve with Kubernetes
+# Use go debugger's `delve` with Kubernetes
 
 Some time ago I faced a bug where it was untrivial to understand the precise workflow.
 
