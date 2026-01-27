@@ -29,6 +29,7 @@ nav:
 plugins:
   - search
   - blog:
+      post_url_format: "{slug}"
       draft_on_serve: true
       draft: true
       blog_toc: false
