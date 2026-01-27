@@ -30,6 +30,7 @@ plugins:
   - search
   - blog:
       draft_on_serve: true
+      draft: true
       blog_toc: false
       archive: true
       archive_name: Archive
