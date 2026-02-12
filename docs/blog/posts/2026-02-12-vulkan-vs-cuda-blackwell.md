@@ -30,6 +30,8 @@ We benchmarked 8 LLM models (1B to 70B parameters) across two backends, two oper
 
 ## The Setup
 
+![Our test bench: RTX PRO 6000 Blackwell Server Edition in an Antec case with 8 case fans trying their best against a 600W passive GPU](../../assets/images/llm-bench-lab/psyche-build.jpg){ width="600" }
+
 | Component | Detail |
 |-----------|--------|
 | GPU | NVIDIA RTX PRO 6000 Blackwell Server Edition, 96 GB VRAM |
