@@ -75,11 +75,7 @@ We benchmarked 8 LLM models (1B to 70B parameters) across two backends, two oper
 | [Qwen3 32B :material-open-in-new:](https://huggingface.co/bartowski/Qwen_Qwen3-32B-GGUF) | 32.8B | 1,956 | **58** | **2,221** | 41 | Split |
 | [Llama 3.3 70B :material-open-in-new:](https://huggingface.co/bartowski/Llama-3.3-70B-Instruct-GGUF) | 70.6B | 1,394 | **30** | **1,613** | 25 | Split |
 
-> PP = Prompt Processing (tokens/sec). TG = Token Generation (tokens/sec). Vulkan values from Feb 9. CUDA values from Feb 12 run 4 (best validated run). Values are averages across three test configurations.
-
-### What This Means for Practitioners
-
-Care about interactive speed? Vulkan delivers faster token generation for models at 32B and above. CUDA dominates prompt processing and small model throughput. The generation story at larger sizes surprised us.
+> PP = Prompt Processing (tokens/sec). TG = Token Generation (tokens/sec). Vulkan values from Feb 9. CUDA values from Feb 12 run 4 (last complete run). Values are averages across three test configurations. Vulkan PP numbers on small models (1B-8B) are significantly lower than CUDA. This likely reflects the maturity gap in Vulkan's prompt processing kernels, which are not yet optimized for small batch sizes on Blackwell.
 
 ---
 
@@ -89,12 +85,12 @@ This finding made us recheck our methodology three times.
 
 **[Mistral Nemo 12B :material-open-in-new:](https://mistral.ai/fr/news/mistral-nemo) on CUDA:** 577 t/s prompt processing, 25 t/s generation.
 
-**Mistral Nemo 12B on Vulkan:** 4,776 t/s prompt processing, 51 t/s generation.
+**[Mistral Nemo 12B :material-open-in-new:](https://mistral.ai/fr/news/mistral-nemo) on Vulkan:** 4,776 t/s prompt processing, 51 t/s generation.
 
 That is an 8.3x gap in prompt processing. Same GPU. Same model. Same llama.cpp build.
 
 ![Mistral Nemo 12B CUDA GPU monitoring](../../assets/images/llm-bench-lab/mistral-nemo-12b-cuda13.png)
-*Fig 1: Mistral Nemo 12B on CUDA 13.1. GPU utilization reports 97% average, but power draw tells a different story. The GPU never exceeds 164W on a 250W TDP card. Something is wrong.*
+*Fig 1: Mistral Nemo 12B on CUDA 13.1. GPU utilization reports 97% average, but power draw tells a different story. The GPU never exceeds 164W on a 600W TDP card. Something is wrong.*
 
 ![Mistral Nemo 12B Vulkan GPU monitoring](../../assets/images/llm-bench-lab/mistral-nemo-12b-vulkan.png)
 *Fig 2: Mistral Nemo 12B on Vulkan. Same model, same GPU, completely different behavior. Power peaks at 266W. The GPU works for real this time.*
@@ -123,9 +119,6 @@ For **prompt processing**, CUDA's advantage grows with model size. No surprises 
 ![Qwen3 32B Vulkan GPU monitoring](../../assets/images/llm-bench-lab/qwen3-32b-vulkan.png)
 *Fig 3: Qwen3 32B on Vulkan. Steady 400W power draw, temperature climbing from 37C to 80C. Token generation holds at ~58 t/s throughout.*
 
-![Qwen3 32B CUDA GPU monitoring](../../assets/images/llm-bench-lab/qwen3-32b-cuda13.png)
-*Fig 4: Qwen3 32B on CUDA 13.1. Notice test 3 (pp16+tg1536). Power drops from ~500W to ~150W as temperature hits 95C. Token generation collapses from 52 t/s to 11.6 t/s.*
-
 **The takeaway:** For 32B+ models in interactive use (chatbots, coding assistants), Vulkan delivers faster responses. The 41% advantage on Qwen3 32B translates to noticeably snappier inference.
 
 ---
@@ -141,11 +134,11 @@ The Qwen3 32B CUDA run exposed a thermal problem. The benchmark runs three confi
 That is a 4.5x performance cliff within a single benchmark session. Temperature climbed to 95C. NVIDIA's thermal management aggressively downclocked the GPU, dropping power from ~500W to ~150W.
 
 ![Qwen3 32B CUDA throttling](../../assets/images/llm-bench-lab/qwen3-32b-cuda13-throttle.png)
-*Fig 6: Qwen3 32B on CUDA 13.1. Power spikes to ~500W during the initial burst, then collapses to ~150W as temperature hits 95C. GPU utilization stays at 100% throughout, but the driver downclocks aggressively to survive. This is thermal throttling in action.*
+*Fig 4: Qwen3 32B on CUDA 13.1. Power spikes to ~500W during the initial burst, then collapses to ~150W as temperature hits 95C. GPU utilization stays at 100% throughout, but the driver downclocks aggressively to survive. This is thermal throttling in action.*
 
-Vulkan avoided this on the same model. It ran at lower average power (324W vs CUDA's initial 500W burst). Lower power means lower heat means sustainable performance. Vulkan did not "handle thermals better" in some magical way. It simply drew less power, staying within our cooling budget.
+Vulkan avoided this on the same model. It ran at lower average power (324W vs CUDA's initial 500W burst). CUDA's compute kernels appear to push the GPU harder upfront, drawing peak power before thermals catch up. Vulkan's coopmat2 path spreads the work more evenly, staying within our cooling budget. The result is the same computation at sustainable power levels.
 
-The 70B crashes follow the same pattern. Both backends crashed at peak power draw. Vulkan's sustained compute pushes the thermal envelope longer, which explains its higher crash count. CUDA crashed too when it drew enough power for long enough. A 600W passive GPU in a consumer mid-tower without directed airflow will hit thermal limits regardless of backend.
+Across all testing, we recorded six GPU crashes : four from Vulkan, two from CUDA. CUDA throttled gracefully under thermal pressure. The driver downclocked the GPU and the workload continued at reduced performance. Vulkan workloads did not get that chance. They triggered `VK_ERROR_DEVICE_LOST` at the PCIe level, an unrecoverable error that required a full power cycle every time.
 
 ---
 
@@ -217,7 +210,7 @@ The difference is not raw CFM. It is directed, high-pressure airflow through the
 | Llama 3.2 1B | 31,091 | 30,764 | 785 | 774 |
 | Phi-4 Mini 3.8B | 14,681 | 14,631 | 334 | 320 |
 | Ministral 8B | 8,458 | 7,767 | 208 | 171 |
-| Qwen3 32B | N/A | 2,202 | N/A | 59 |
+| Qwen3 32B | 2,221 | 2,202 | 41 | 59 |
 | Llama 3.3 70B | Crash (run 3) | CPU fallback | N/A | 1.2 |
 
 > Linux values from Feb 12 run 4. Windows values averaged from runs 4 through 7 (GPU-accelerated runs only).
