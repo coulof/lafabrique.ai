@@ -19,7 +19,7 @@ We benchmarked 8 LLM models (1B to 70B parameters) across two backends, two oper
 **The headlines:**
 
 - :material-check: **8B and smaller : use CUDA.** It dominates prompt processing and throughput on small models.
-- :material-creation: **32B and above : try Vulkan.** Token generation is 18 to 41% faster. The speed you feel during inference.
+- :material-creation: **32B and above : try Vulkan.** Token generation is 12 to 20% faster. The speed you feel during inference.
 - :material-fire: **Mistral Nemo 12B : use Vulkan, no question.** 8.3x faster than CUDA (not a typo).
 - :material-thermometer-alert: **Thermal behavior differs by backend.** CUDA thermal-throttled gracefully at 95°C. Vulkan crashed with unrecoverable device-lost errors instead.
 - :material-fan: **Server GPUs should stay in server cases.** A 600W passive GPU in a consumer mid-tower is a recipe for thermal disaster.
@@ -57,7 +57,7 @@ We benchmarked 8 LLM models (1B to 70B parameters) across two backends, two oper
 - **GPU monitoring:** nvidia-smi at 200ms intervals, capturing utilization, power, temperature, and VRAM
 - **Quantization:** Q4_K_M for all models (4-bit, medium quality)
 - **Runs:** 4 complete runs on Linux (plus 1 aborted), 7 runs on Windows (4 with valid GPU access)
-- **All results and raw data:** [github.com/bauagonzo/llm-bench-lab :material-github:](https://github.com/bauagonzo/llm-bench-lab)
+- **All results and raw data:** [github.com/coulof/llm-bench-lab :material-github:](https://github.com/coulof/llm-bench-lab)
 
 ---
 
@@ -76,17 +76,13 @@ We benchmarked 8 LLM models (1B to 70B parameters) across two backends, two oper
 | [Qwen3 32B :material-open-in-new:](https://huggingface.co/bartowski/Qwen_Qwen3-32B-GGUF) | 32.8B | 1,956 | **58** | **2,221** | 41 | Split |
 | [Llama 3.3 70B :material-open-in-new:](https://huggingface.co/bartowski/Llama-3.3-70B-Instruct-GGUF) | 70.6B | 1,394 | **30** | **1,613** | 25 | Split |
 
-> PP = Prompt Processing (tokens/sec). TG = Token Generation (tokens/sec).
+> PP = Prompt Processing (tokens/sec). TG = Token Generation (tokens/sec). CUDA numbers from Feb 11 best-of-three runs. Vulkan numbers from Feb 9 localscore-bench runs.
 > <br />
-> Vulkan PP numbers on small models (1B-8B) are significantly lower than CUDA.
-> <br />
-> This likely reflects the maturity gap in Vulkan's prompt processing kernels, which are not yet optimized for small batch sizes on Blackwell.
+> **Data quality note:** Vulkan PP numbers on small models (1B-8B) are significantly lower than expected. A separate Feb 8 test showed Llama 1B Vulkan at 36,595 PP on the same GPU, comparable to CUDA. The Feb 9 numbers were collected after multiple GPU crashes and likely reflect degraded GPU state rather than true Vulkan performance. The "CUDA wins small models" conclusion for prompt processing should be treated with caution until confirmed on healthy hardware.
 
 ---
 
 ## Finding 1: The Mistral Nemo Anomaly :material-fire:
-
-This finding made us recheck our methodology three times.
 
 **[Mistral Nemo 12B :material-open-in-new:](https://mistral.ai/fr/news/mistral-nemo) on CUDA:** 577 t/s prompt processing, 25 t/s generation.
 
@@ -104,52 +100,70 @@ Under CUDA, the card reports high utilization but draws minimal power. It sits m
 
 **Our theory:** CUDA's Blackwell kernels hit a suboptimal code path for Mistral Nemo's layer dimensions. This looks like a bug, not a fundamental limitation. The anomaly persists across all runs (Feb 9, Feb 11, Feb 12) and on Windows. It is deterministic and reproducible.
 
-**Why this matters:** If you run Mistral Nemo 12B on Blackwell hardware, switching from CUDA to Vulkan gives you a free 8x speedup. No hardware change required.
+**Why this matters:** On the RTX PRO 6000, switching Mistral Nemo 12B from CUDA to Vulkan gives a free 8x speedup. No hardware change required. We observed this on one card only and would welcome community confirmation on other Blackwell GPUs. Our [5070 Ti testing](./2026-02-12-pro-6000-vs-5070-ti.md) did not reproduce the anomaly, suggesting it may be PRO 6000-specific.
 
 ---
 
 ## Finding 2: Token Generation Crosses Back to Vulkan at 32B+
 
-We expected a clean pattern: Vulkan wins small, CUDA wins big. The data refused to cooperate.
+We expected a clean pattern: Vulkan wins small, CUDA wins big. It is more nuanced than that.
 
 For **prompt processing**, CUDA's advantage grows with model size. No surprises there. But for **token generation** (the speed you feel during inference), the story reverses above 32B:
 
 | Model | Vulkan TG | CUDA TG | Delta |
 |-------|-----------|---------|-------|
-| Ministral 8B | 29 | **35** | CUDA +19% |
-| Gemma 3 12B | 117 | **123** | CUDA +6% |
-| Qwen3 32B | **58** | 41 | **Vulkan +41%** |
-| Llama 3.3 70B | **30** | 25 | **Vulkan +18%** |
+| Ministral 8B | 29 | **34** | CUDA +17% |
+| Gemma 3 12B | 117 | **123** | CUDA +5% |
+| Qwen3 32B | **58** | 52 | **Vulkan +12%** |
+| Llama 3.3 70B | **30** | 25 | **Vulkan +20%** |
+
+> Token generation numbers from the pp1024+tg1024 configuration (balanced workload). Main results table uses best-of-three CUDA data from Feb 11 (different test configuration), which explains minor number differences.
 
 ![Qwen3 32B Vulkan GPU monitoring](../../assets/images/llm-bench-lab/qwen3-32b-vulkan.png)
 *Fig 3: Qwen3 32B on Vulkan. Steady 400W power draw, temperature climbing from 37C to 80C. Token generation holds at ~58 t/s throughout.*
 
-**The takeaway:** For 32B+ models in interactive use (chatbots, coding assistants), Vulkan delivers faster responses. The 41% advantage on Qwen3 32B translates to noticeably snappier inference.
+**The takeaway:** For 32B+ models in interactive use (chatbots, coding assistants), Vulkan delivers faster responses. The 12 to 20% advantage on Qwen3 32B and Llama 70B is consistent across runs.
 
 ---
 
-## Finding 3: CUDA Thermal Throttling Under Sustained Load :material-thermometer-alert:
+## Finding 3: Thermal Throttling Across the Entire Run :material-thermometer-alert:
 
-The Qwen3 32B CUDA run exposed a thermal problem. The benchmark runs three configurations:
+GPU monitoring during our Feb 9 scaling test revealed a progressive thermal problem. The benchmark ran models from small to large. By the time small models ran, the GPU was already hot from previous workloads.
 
-1. **pp1024+tg16** (short burst): 52 t/s TG :material-check:
-2. **pp1024+tg1024** (medium run): 52 t/s TG :material-check:
-3. **pp16+tg1536** (long generation): **11.6 t/s TG** :material-alert:
+| Model | Backend | Temp Range | Avg Temp | Peak Power | Avg Power |
+|-------|---------|-----------|----------|------------|-----------|
+| Gemma 3 1B | CUDA | 91-93°C | 92°C | 128W | 119W |
+| Gemma 3 1B | Vulkan | 90-92°C | 90°C | 108W | 104W |
+| Phi-4 Mini 3.8B | CUDA | 93-99°C | 96°C | 146W | 137W |
+| Ministral 8B | CUDA | 98-104°C | 101°C | 156W | 134W |
+| Mistral Nemo 12B | CUDA | 90-101°C | 95°C | 164W | 151W |
+| Gemma 3 12B | Vulkan | 56-79°C | 66°C | 392W | 276W |
+| Qwen3 32B | CUDA | 72-95°C | 87°C | 496W | 186W |
+| Qwen3 32B | Vulkan | 37-80°C | 57°C | 458W | 324W |
+| Llama 3.3 70B | CUDA | 59-104°C | 92°C | 592W | 195W |
 
-That is a 4.5x performance cliff within a single benchmark session. Temperature climbed to 95C. NVIDIA's thermal management aggressively downclocked the GPU, dropping power from ~500W to ~150W.
+Two patterns stand out. First, small models on both backends ran at 90°C+ with power draws under 160W. The GPU was thermally saturated and heavily throttled. A 600W TDP card drawing 134W is barely working. This explains the degraded performance numbers for small models.
+
+Second, the Qwen3 32B CUDA run shows a clear performance cliff. The benchmark runs three configurations in sequence :
+
+1. **pp1024+tg16** (short burst) : 52 t/s TG :material-check:
+2. **pp1024+tg1024** (medium run) : 52 t/s TG :material-check:
+3. **pp16+tg1536** (long generation) : **11.6 t/s TG** :material-alert:
+
+That is a 4.5x drop within a single benchmark session. Temperature climbed to 95°C and NVIDIA's thermal management aggressively downclocked the GPU, dropping power from ~500W to ~150W.
 
 ![Qwen3 32B CUDA throttling](../../assets/images/llm-bench-lab/qwen3-32b-cuda13-throttle.png)
-*Fig 4: Qwen3 32B on CUDA 13.1. Power spikes to ~500W during the initial burst, then collapses to ~150W as temperature hits 95C. GPU utilization stays at 100% throughout, but the driver downclocks aggressively to survive. This is thermal throttling in action.*
+*Fig 4 : Qwen3 32B on CUDA 13.1. Power spikes to ~500W during the initial burst, then collapses to ~150W as temperature hits 95°C. GPU utilization stays at 100% throughout, but the driver downclocks aggressively to survive.*
 
-Vulkan avoided this on the same model. It ran at lower average power (324W vs CUDA's initial 500W burst). CUDA's compute kernels appear to push the GPU harder upfront, drawing peak power before thermals catch up. Vulkan's coopmat2 path spreads the work more evenly, staying within our cooling budget. The result is the same computation at sustainable power levels.
+Vulkan avoided this on the same model. It ran at lower average power (324W vs CUDA's initial 500W burst) and peaked at 80°C. CUDA's compute kernels push the GPU harder upfront, drawing peak power before thermals catch up. Vulkan's coopmat2 path spreads the work more evenly, staying within our cooling budget.
 
-Across all testing, we recorded six GPU crashes : four from Vulkan, two from CUDA. CUDA throttled gracefully under thermal pressure. The driver downclocked the GPU and the workload continued at reduced performance. Vulkan workloads did not get that chance. They triggered `VK_ERROR_DEVICE_LOST` at the PCIe level, an unrecoverable error that required a full power cycle every time.
+Across all testing, we recorded six GPU crashes : four from Vulkan, two from CUDA. CUDA throttled gracefully under thermal pressure, downclocking until the workload could continue at reduced performance. Vulkan workloads did not get that chance. They triggered `VK_ERROR_DEVICE_LOST` at the PCIe level, an unrecoverable error that required a full power cycle every time.
 
 ---
 
 ## Finding 4: The Real Bottleneck Was Never the Backend :material-fan:
 
-Here is the twist that reframes everything above. Our crashes, thermal throttling, and performance cliffs share a common root cause. It is not Vulkan. It is not CUDA. It is cooling.
+Our crashes, thermal throttling, and performance cliffs share a common root cause. It is not Vulkan. It is not CUDA. It is cooling.
 
 ### A Passive GPU in a Consumer Case
 
@@ -157,7 +171,7 @@ The RTX PRO 6000 Blackwell Server Edition has no fans. Run `nvidia-smi` and Fan 
 
 NVIDIA designed it for rack servers like the [Dell PowerEdge XE9680 and R760xa :simple-dell: :material-open-in-new:](https://www.dell.com/en-us/shop/dell-poweredge-servers/sf/poweredge), where engineered front-to-back airflow tunnels force high-pressure air through the heatsink fins.
 
-The [Central Computer overview :material-open-in-new:](https://www.centralcomputer.com/blog/post/understanding-the-nvidia-rtx-6000-pro-blackwell-lineup-workstation-max-q-and-server-editions) and [VAST AI comparison :material-open-in-new:](https://vast.ai/article/which-nvidia-rtx-6000-is-right-for-you) both stress this point : the Server Edition requires external chassis airflow. No exceptions.
+The [Central Computer overview :material-open-in-new:](https://www.centralcomputer.com/blog/post/understanding-the-nvidia-rtx-6000-pro-blackwell-lineup-workstation-max-q-and-server-editions) and [VAST AI comparison :material-open-in-new:](https://vast.ai/article/which-nvidia-rtx-6000-is-right-for-you) both stress this point : the Server Edition requires external chassis airflow. It can work in a consumer case with the right modifications (see community results below), but stock cooling will not cut it.
 
 We put this card in an [Antec C5 :material-open-in-new:](https://www.antec.com/product/case/c5) mid-tower case. Seven Antec P12 120mm ARGB fans provide airflow : six reversed as intake (bottom and side panels) and one rear exhaust. The case uses a vertical bottom-to-top airflow scheme.
 
@@ -250,12 +264,12 @@ The Mistral Nemo CUDA anomaly also persists on Windows (575 PP vs Vulkan's 4,776
 
 The Blackwell architecture is new. Drivers change fast. Our next steps:
 
+- :simple-nvidia: **RTX 5070 Ti comparison:** Same test suite on consumer Blackwell silicon with 16GB VRAM. [Already published](./2026-02-12-pro-6000-vs-5070-ti.md).
 - :material-card-search: **Driver bisection:** Pin down which CUDA driver update caused the small-model speedup
-- :simple-nvidia: **RTX 5090 Ti comparison:** Same test suite on consumer Blackwell silicon
 - :material-lightning-bolt: **Flash Attention investigation:** Determine whether the Feb 12 CUDA boost relates to Flash Attention enablement
 
 We will publish updates in the same repository as results come in.
 
 ---
 
-*Raw data, scripts, and GPU monitoring charts available at [github.com/bauagonzo/llm-bench-lab :material-github:](https://github.com/bauagonzo/llm-bench-lab).*
+*Raw data, scripts, and GPU monitoring charts available at [github.com/coulof/llm-bench-lab :material-github:](https://github.com/coulof/llm-bench-lab).*
