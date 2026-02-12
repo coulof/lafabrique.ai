@@ -39,7 +39,7 @@ tasks:
     desc: Start local development server
     deps: [setup]
     cmds:
-      - "{{.MKDOCS}} serve"
+      - "{{.MKDOCS}} serve -a 0.0.0.0:8000"
 
   stop:
     desc: Stop running mkdocs server
