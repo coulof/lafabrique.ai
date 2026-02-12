@@ -38,6 +38,7 @@
 - External links should open in new tabs
 - Use regular quotes such as ' "
 - Do not use Em dash
+- Preserve French punctuation style : add a space before two-part punctuation marks (; ! : ?)
 
 ## SEO & Readability
 
