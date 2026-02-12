@@ -112,35 +112,7 @@ For **prompt processing**, CUDA's advantage grows with model size. No surprises 
 
 ---
 
-## Finding 3: Both Backends Crash (Not Just Vulkan) :material-alert:
-
-Our initial three runs pointed to a simple story: Vulkan crashes, CUDA stays rock solid. Then we ran more tests. The full picture tells a different story.
-
-### The Complete Crash Log
-
-| # | Date | Model | Backend | OS | Failure |
-|---|------|-------|---------|----|---------|
-| 1 | Feb 8 | GPT-OSS 20B | Vulkan | Linux | PCIe header corruption |
-| 2 | Feb 9 | Llama 3.3 70B | Vulkan | Linux | `vk::DeviceLostError` |
-| 3 | Feb 9 | Llama 3.3 70B | Vulkan | Linux | Same crash on retest |
-| 4 | Feb 11 | Llama 3.3 70B | CUDA | Linux | Crash dump instead of JSON (run 3) |
-| 5 | Feb 11 | Llama 3.3 70B | CUDA | Windows | CPU fallback (GPU unresponsive) |
-| 6 | Feb 12 | Ministral 8B | Vulkan | Linux | Error during sustained TG (run 4) |
-
-Six crashes total. Four from Vulkan, two from CUDA. Every 70B attempt on this GPU carries risk regardless of backend.
-
-Vulkan crashes follow a consistent pattern: sustained token generation triggers a PCIe-level failure. The GPU reports "Unknown header type 7f" via `lspci`. No amount of driver reset recovers it. Only a full power cycle works.
-
-**Crash #6 surprised us most.** Ministral 8B uses only ~5 GB VRAM. Previous crashes all involved models at 20B or larger with 40+ GB allocated. This broke our "large model only" hypothesis. The Vulkan stability issue relates to sustained compute duration, not just memory pressure.
-
-**CUDA's 70B crashes tell a parallel story.** Linux run 3 produced a crash dump instead of benchmark results. Windows refused to load 70B onto the GPU at all, falling back to CPU (1.2 t/s). The 70B model pushes this hardware to its limits on both backends.
-
-![Llama 3.3 70B Vulkan GPU monitoring](../../assets/images/llm-bench-lab/llama-3.3-70b-vulkan.png)
-*Fig 5: Llama 3.3 70B on Vulkan. Power spikes to 513W during prompt processing, then drops to ~120W. Temperature climbs to 104C even after power drops. The GPU has stopped computing but retains residual heat.*
-
----
-
-## Finding 4: CUDA Thermal Throttling Under Sustained Load :material-thermometer-alert:
+## Finding 3 : CUDA Thermal Throttling Under Sustained Load :material-thermometer-alert:
 
 The Qwen3 32B CUDA run exposed a thermal problem. The benchmark runs three configurations:
 
@@ -150,21 +122,30 @@ The Qwen3 32B CUDA run exposed a thermal problem. The benchmark runs three confi
 
 That is a 4.5x performance cliff within a single benchmark session. Temperature climbed to 95C. NVIDIA's thermal management aggressively downclocked the GPU, dropping power from ~500W to ~150W.
 
+![Qwen3 32B CUDA temperature curve](../../assets/images/llm-bench-lab/qwen3-32b-cuda13-temp.png)
+*Fig 5 : Qwen3 32B on CUDA 13.1. Temperature climbs steadily through tests 1 and 2, then hits 95C during test 3. The GPU downclocks aggressively to survive.*
+
 Vulkan avoided this on the same model. It ran at lower average power (324W vs CUDA's initial 500W burst). Lower power means lower heat means sustainable performance. Vulkan did not "handle thermals better" in some magical way. It simply drew less power, staying within our cooling budget.
 
-The 70B crashes (Finding 3) follow the same pattern. Both backends crashed at peak power draw. Vulkan's sustained compute pushes the thermal envelope longer, which explains its higher crash count. CUDA crashed too when it drew enough power for long enough. A 600W passive GPU in a consumer mid-tower without directed airflow will hit thermal limits regardless of backend.
+The 70B crashes follow the same pattern. Both backends crashed at peak power draw. Vulkan's sustained compute pushes the thermal envelope longer, which explains its higher crash count. CUDA crashed too when it drew enough power for long enough. A 600W passive GPU in a consumer mid-tower without directed airflow will hit thermal limits regardless of backend.
 
 ---
 
-## Finding 5: The Real Bottleneck Was Never the Backend :material-fan:
+## Finding 4 : The Real Bottleneck Was Never the Backend :material-fan:
 
 Here is the twist that reframes everything above. Our crashes, thermal throttling, and performance cliffs share a common root cause. It is not Vulkan. It is not CUDA. It is cooling.
 
 ### A Passive GPU in a Consumer Case
 
-The RTX PRO 6000 Blackwell Server Edition has no fans. Run `nvidia-smi` and Fan Speed reads N/A. This card draws up to 600W TDP (configurable from 300W to 600W). NVIDIA designed it for rack servers like the [Dell PowerEdge XE9680 and R760xa :material-open-in-new:](https://www.dell.com/en-us/shop/dell-poweredge-servers/sf/poweredge), where engineered front-to-back airflow tunnels force high-pressure air through the heatsink fins. The [Central Computer overview :material-open-in-new:](https://www.centralcomputer.com/blog/post/understanding-the-nvidia-rtx-6000-pro-blackwell-lineup-workstation-max-q-and-server-editions) and [VAST AI comparison :material-open-in-new:](https://vast.ai/article/which-nvidia-rtx-6000-is-right-for-you) both stress this point: the Server Edition requires external chassis airflow. No exceptions.
+The RTX PRO 6000 Blackwell Server Edition has no fans. Run `nvidia-smi` and Fan Speed reads N/A. This card draws up to 600W TDP (configurable from 300W to 600W).
 
-We put this card in an [Antec C5 :material-open-in-new:](https://www.antec.com/product/case/c5) mid-tower case. Seven Antec P12 120mm ARGB fans provide airflow: six reversed as intake (bottom and side panels) and one rear exhaust. The case uses a vertical bottom-to-top airflow scheme. Each P12 pushes roughly 50 to 60 CFM at 1.5 to 2.0 mm H2O static pressure. Total theoretical intake: about 330 CFM.
+NVIDIA designed it for rack servers like the [Dell PowerEdge XE9680 and R760xa :material-open-in-new:](https://www.dell.com/en-us/shop/dell-poweredge-servers/sf/poweredge), where engineered front-to-back airflow tunnels force high-pressure air through the heatsink fins.
+
+The [Central Computer overview :material-open-in-new:](https://www.centralcomputer.com/blog/post/understanding-the-nvidia-rtx-6000-pro-blackwell-lineup-workstation-max-q-and-server-editions) and [VAST AI comparison :material-open-in-new:](https://vast.ai/article/which-nvidia-rtx-6000-is-right-for-you) both stress this point : the Server Edition requires external chassis airflow. No exceptions.
+
+We put this card in an [Antec C5 :material-open-in-new:](https://www.antec.com/product/case/c5) mid-tower case. Seven Antec P12 120mm ARGB fans provide airflow : six reversed as intake (bottom and side panels) and one rear exhaust. The case uses a vertical bottom-to-top airflow scheme.
+
+Each P12 pushes roughly 50 to 60 CFM at 1.5 to 2.0 mm H2O static pressure. Total theoretical intake : about 330 CFM.
 
 That sounds like plenty. It is not.
 
@@ -208,7 +189,7 @@ The difference is not raw CFM. It is directed, high-pressure airflow through the
 
 ---
 
-## Finding 6: Cross-OS Comparison Shows Minimal Difference :material-check:
+## Finding 5 : Cross-OS Comparison Shows Minimal Difference :material-check:
 
 **The bottom line: OS choice barely matters.** We ran the full suite on Windows (same hardware, driver 582.32) on February 11. Small to medium models performed within 5 to 10% across operating systems. Linux holds a slight edge, but the difference is negligible for practical use.
 
@@ -224,8 +205,6 @@ The difference is not raw CFM. It is directed, high-pressure airflow through the
 > Linux values from Feb 12 run 4. Windows values averaged from runs 4 through 7 (GPU-accelerated runs only).
 
 This is good news. Pick the OS you prefer. Performance follows the hardware, not the operating system. Qwen3 32B produced valid Windows results (2,202 PP, 59 TG) that closely match Linux Vulkan numbers. Llama 3.3 70B failed on both platforms, confirming that the 70B stability issue is hardware-level, not OS-specific. The Mistral Nemo CUDA anomaly also persists on Windows (575 PP vs Vulkan's 4,776 PP), confirming an architecture-level issue.
-
----
 
 ---
 
@@ -282,7 +261,7 @@ Neither backend is crash-free at 70B on this hardware. CUDA offers better stabil
 The Blackwell architecture is new. Drivers change fast. Our next steps:
 
 - :material-card-search: **Driver bisection:** Pin down which CUDA driver update caused the small-model speedup
-- :material-gpu: **RTX 5090 Ti comparison:** Same test suite on consumer Blackwell silicon
+- :material-nvidia: **RTX 5090 Ti comparison:** Same test suite on consumer Blackwell silicon
 - :material-lightning-bolt: **Flash Attention investigation:** Determine whether the Feb 12 CUDA boost relates to Flash Attention enablement
 
 We will publish updates in the same repository as results come in.
