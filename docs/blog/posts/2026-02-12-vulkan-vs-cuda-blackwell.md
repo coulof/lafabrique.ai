@@ -18,11 +18,12 @@ We benchmarked 8 LLM models (1B to 70B parameters) across two backends, two oper
 
 **The headlines:**
 
-- Mistral Nemo 12B runs **8.3x faster on Vulkan** than CUDA (not a typo)
-- Vulkan wins token generation at 32B (+41%) and 70B (+18%)
-- CUDA workloads thermal-throttled gracefully at 95°C. Vulkan workloads crashed with unrecoverable device-lost errors instead.
-- Server GPUs should stay in server cases. A 600W passive GPU in a consumer mid-tower is a recipe for thermal disaster.
-- Linux and Windows CUDA performance within 5 to 10%: OS choice barely matters
+- :material-check: **8B and smaller : use CUDA.** It dominates prompt processing and throughput on small models.
+- :material-creation: **32B and above : try Vulkan.** Token generation is 18 to 41% faster. The speed you feel during inference.
+- :material-fire: **Mistral Nemo 12B : use Vulkan, no question.** 8.3x faster than CUDA (not a typo).
+- :material-thermometer-alert: **Thermal behavior differs by backend.** CUDA thermal-throttled gracefully at 95°C. Vulkan crashed with unrecoverable device-lost errors instead.
+- :material-fan: **Server GPUs should stay in server cases.** A 600W passive GPU in a consumer mid-tower is a recipe for thermal disaster.
+- :material-check-all: **OS choice barely matters.** Linux and Windows CUDA performance within 5 to 10%.
 
 <!-- more -->
 
@@ -75,7 +76,11 @@ We benchmarked 8 LLM models (1B to 70B parameters) across two backends, two oper
 | [Qwen3 32B :material-open-in-new:](https://huggingface.co/bartowski/Qwen_Qwen3-32B-GGUF) | 32.8B | 1,956 | **58** | **2,221** | 41 | Split |
 | [Llama 3.3 70B :material-open-in-new:](https://huggingface.co/bartowski/Llama-3.3-70B-Instruct-GGUF) | 70.6B | 1,394 | **30** | **1,613** | 25 | Split |
 
-> PP = Prompt Processing (tokens/sec). TG = Token Generation (tokens/sec). Vulkan values from Feb 9. CUDA values from Feb 12 run 4 (last complete run). Values are averages across three test configurations. Vulkan PP numbers on small models (1B-8B) are significantly lower than CUDA. This likely reflects the maturity gap in Vulkan's prompt processing kernels, which are not yet optimized for small batch sizes on Blackwell.
+> PP = Prompt Processing (tokens/sec). TG = Token Generation (tokens/sec).
+> <br />
+> Vulkan PP numbers on small models (1B-8B) are significantly lower than CUDA.
+> <br />
+> This likely reflects the maturity gap in Vulkan's prompt processing kernels, which are not yet optimized for small batch sizes on Blackwell.
 
 ---
 
@@ -85,7 +90,7 @@ This finding made us recheck our methodology three times.
 
 **[Mistral Nemo 12B :material-open-in-new:](https://mistral.ai/fr/news/mistral-nemo) on CUDA:** 577 t/s prompt processing, 25 t/s generation.
 
-**[Mistral Nemo 12B :material-open-in-new:](https://mistral.ai/fr/news/mistral-nemo) on Vulkan:** 4,776 t/s prompt processing, 51 t/s generation.
+**Mistral Nemo 12B on Vulkan:** 4,776 t/s prompt processing, 51 t/s generation.
 
 That is an 8.3x gap in prompt processing. Same GPU. Same model. Same llama.cpp build.
 
@@ -213,9 +218,13 @@ The difference is not raw CFM. It is directed, high-pressure airflow through the
 | Qwen3 32B | 2,221 | 2,202 | 41 | 59 |
 | Llama 3.3 70B | Crash (run 3) | CPU fallback | N/A | 1.2 |
 
-> Linux values from Feb 12 run 4. Windows values averaged from runs 4 through 7 (GPU-accelerated runs only).
+This is good news. Pick the OS you prefer ! Performance follows the hardware, not the operating system.
 
-This is good news. Pick the OS you prefer. Performance follows the hardware, not the operating system. Qwen3 32B produced valid Windows results (2,202 PP, 59 TG) that closely match Linux Vulkan numbers. Llama 3.3 70B failed on both platforms, confirming that the 70B stability issue is hardware-level, not OS-specific. The Mistral Nemo CUDA anomaly also persists on Windows (575 PP vs Vulkan's 4,776 PP), confirming an architecture-level issue.
+Qwen3 32B produced valid Windows results (2,202 PP, 59 TG) that closely match Linux Vulkan numbers.
+
+Llama 3.3 70B failed on both platforms, confirming that the 70B stability issue is hardware-level, not OS-specific.
+
+The Mistral Nemo CUDA anomaly also persists on Windows (575 PP vs Vulkan's 4,776 PP), confirming an architecture-level issue.
 
 ---
 
@@ -234,22 +243,6 @@ This is good news. Pick the OS you prefer. Performance follows the hardware, not
     - :material-cog: **Baffles or seals** to prevent hot air recirculation
 
     The [r/LocalLLM community :material-open-in-new:](https://www.reddit.com/r/LocalLLM/comments/1mmqghu/rtx_pro_6000_se_is_crushing_it/) proved it works with the right setup: a server fan plus custom duct held load temps at 61C. Consumer case fans alone hit 85C and throttled.
-
----
-
-## What This Means for You
-
-### Models 8B and smaller: stick with CUDA :material-check:
-Use CUDA. It is faster and more stable. Vulkan remains consistent but CUDA leads by a wide margin on small models.
-
-### Models at 32B for interactive use: try Vulkan :material-creation:
-Try Vulkan. The token generation advantage is real (+18 to 41%). Vulkan also runs at lower sustained power, reducing thermal throttling risk. Expect occasional GPU crashes on long sessions.
-
-### Mistral Nemo 12B specifically: use Vulkan, no question :material-fire:
-Use Vulkan. No question. An 8.3x speedup is not something you leave on the table. This is almost certainly a CUDA bug that will get fixed, but until then, Vulkan wins by a landslide.
-
-### Production reliability: plan for crashes :material-alert:
-Neither backend is crash-free at 70B on this hardware. CUDA offers better stability overall (2 failures vs 4 for Vulkan). For mission-critical workloads, add crash recovery to your pipeline regardless of backend choice.
 
 ---
 
