@@ -57,7 +57,7 @@ We benchmarked eight LLM models (1B to 70B parameters) on two Blackwell GPUs wit
 |-----------|--------|
 | CPU | AMD Ryzen 7 9800X3D |
 | RAM | 60 GB DDR5 |
-| OS | openSUSE Tumbleweed :simple-opensuse: + Windows 11 Pro :material-microsoft-windows: (same hardware) |
+| OS | openSUSE Tumbleweed :simple-opensuse: + Windows 11 Pro :simple-microsoft: (same hardware) |
 | Engine | [llama.cpp :material-github:](https://github.com/ggml-org/llama.cpp) b7966 (Vulkan with coopmat2, CUDA 13.1) |
 | Benchmark | [localscore-bench :material-github:](https://github.com/mozilla-ai/llamafile/tree/main/localscore) : pp1024+tg1024 primary config |
 
