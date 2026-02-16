@@ -25,6 +25,7 @@ nav:
   - Blog:
     - blog/index.md
   - GIA: https://gia.lafabrique.ai/
+  - Chat my Resume: https://huggingface.co/spaces/bauagonzo/chat-my-resume
 
 plugins:
   - search
