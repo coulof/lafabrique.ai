@@ -25,7 +25,7 @@ We benchmarked eight LLM models (1B to 70B parameters) on two Blackwell GPUs wit
 
 - :material-cash-multiple: **The $950 card delivers 4 to 7x more tokens per dollar.** For models under 12B, the 5070 Ti is the rational choice.
 - :material-scale-balance: **Vulkan and CUDA perform within 5 to 15% on cold hardware.** Pick whichever works for your setup.
-- :material-snowflake: **The 5070 Ti just works. The PRO 6000 needs server cooling.** Active fans vs passive heatsink is the real differentiator.
+- :material-snowflake: **The 5070 Ti just works. The PRO 6000 needs server cooling to get to its full potential.** Active fans vs passive heatsink is the real differentiator.
 - :material-check-all: **OS barely matters.** Linux and Windows within 5 to 10%.
 - :material-memory: **VRAM is the main reason to buy the PRO 6000.** It earns its price at 32B+, not at 12B.
 
