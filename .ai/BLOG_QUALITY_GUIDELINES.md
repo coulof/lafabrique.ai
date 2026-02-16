@@ -35,7 +35,8 @@
 - Use `<!-- more -->` tag for excerpt separation
 - Images should have descriptive alt text and captions
 - Use emojis and icons sparingly and consistently ; use mkdocs-material-icons when possible
-- External links should open in new tabs
+- External links should open in new tabs (`:material-open-in-new:`)
+- When a brand icon is used on an external link (e.g. `:simple-redhat:`, `:simple-dell:`), drop the `:material-open-in-new:` icon to avoid clutter. The brand icon already signals "external".
 - Use regular quotes such as ' "
 - Do not use Em dash
 - Preserve French punctuation style : add a space before two-part punctuation marks (; ! : ?)
