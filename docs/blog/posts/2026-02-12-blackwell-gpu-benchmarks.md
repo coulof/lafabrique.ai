@@ -71,17 +71,17 @@ Both GPUs share Blackwell architecture and GDDR7 memory. The PRO 6000 has 6x the
 
 ![Prompt Processing comparison](../../assets/images/llm-bench-lab/merged-pp-comparison.png)
 
-*Fig 1 : Prompt processing throughput. The PRO 6000 leads by 1.5 to 2x, matching its 2:1 memory bandwidth advantage.*
+*Fig 1 : Prompt processing throughput ([model selection rationale](#model-selection)). The PRO 6000 leads by 1.5 to 2x, matching its 2:1 memory bandwidth advantage.*
 
 | Model | PRO 6000 Vulkan | PRO 6000 CUDA | 5070 Ti Vulkan | 5070 Ti CUDA | PRO 6000 lead |
 |-------|-----------------|---------------|----------------|--------------|---------------|
 | [Gemma 3 1B :material-open-in-new:](https://huggingface.co/bartowski/google_gemma-3-1b-it-GGUF) | 47,925 | 42,075 | 32,064 | 29,862 | 1.5x |
 | [Llama 3.2 1B :material-open-in-new:](https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF) | 49,329 | 44,046 | 28,768 | 23,843 | 1.7x |
 | [Phi-4 Mini 3.8B :material-open-in-new:](https://huggingface.co/bartowski/microsoft_Phi-4-mini-instruct-GGUF) | 19,917 | 20,525 | 10,212 | 10,705 | 1.9x |
-| [Ministral 8B :material-open-in-new:](https://huggingface.co/bartowski/Ministral-8B-Instruct-2410-GGUF) | 10,692 | — | 6,041 | 5,901 | 1.8x |
-| [Gemma 3 12B :material-open-in-new:](https://huggingface.co/bartowski/google_gemma-3-12b-it-GGUF) | 7,668 | 8,026 | 3,950 | 4,127 | 1.9x |
+| [Ministral 8B :material-open-in-new:](https://huggingface.co/bartowski/Ministral-8B-Instruct-2410-GGUF) | 10,692 | 11,780 | 6,041 | 5,901 | 1.8x |
+| [Gemma 3 12B :material-open-in-new:](https://huggingface.co/bartowski/google_gemma-3-12b-it-GGUF) | 7,668 | 8,040 | 3,950 | 4,127 | 1.9x |
 
-> PP = Prompt Processing (tokens/sec). PRO 6000 Vulkan from Feb 11 cold runs. PRO 6000 CUDA from Feb 15 cold runs where available (1B to 3.8B and 12B validation). 5070 Ti from Feb 12 runs. Ministral 8B CUDA on PRO 6000 crashed mid-run, excluded.
+> PP = Prompt Processing (tokens/sec). PRO 6000 Vulkan from Feb 11 cold runs. PRO 6000 CUDA from Feb 15-16 cold runs. 5070 Ti from Feb 12 runs. All models use [Q4_K_M quantization](#why-q4_k_m-quantization).
 
 The PRO 6000's wider memory bus shows up clearly in prefill workloads. Prompt processing is memory bandwidth bound : the 2:1 bandwidth ratio (~1,792 vs ~896 GB/s) maps directly to the observed 1.5 to 2x performance gap.
 
@@ -137,7 +137,8 @@ On the PRO 6000 with cold hardware, the backend gap is surprisingly small :
 | Gemma 3 1B | **47,925** | 42,075 | 463 | **484** |
 | Llama 3.2 1B | **49,329** | 44,046 | **836** | 719 |
 | Phi-4 Mini 3.8B | 19,917 | **20,525** | **331** | 314 |
-| Gemma 3 12B | 7,668 | **8,026** | 121 | **123** |
+| Ministral 8B | 10,692 | **11,780** | **212** | 199 |
+| Gemma 3 12B | 7,668 | **8,040** | 121 | **123** |
 
 Vulkan wins PP on 1B models (+12 to 14%). CUDA wins PP on 3.8B and 12B models (+3 to 5%). Token generation splits similarly. No clear winner.
 
@@ -289,7 +290,7 @@ Each configuration runs three repetitions. The numbers in this post use the pp10
 | Source | Date | GPU State | Backend | Models | Notes |
 |--------|------|-----------|---------|--------|-------|
 | PRO 6000 Vulkan | Feb 11 | Cold start | Vulkan coopmat2 | All 8 | Best of 3 automated runs |
-| PRO 6000 CUDA | Feb 15 | Cold start, verified <50°C | CUDA 13.1 | 1B, 1.2B, 3.8B, 12B | Individual runs with cooldown |
+| PRO 6000 CUDA | Feb 15-16 | Cold start, verified <60°C | CUDA 13.1 | 1B, 1.2B, 3.8B, 8B, 12B | Individual runs with cooldown |
 | 5070 Ti | Feb 12 | Active cooling (stable) | Vulkan + CUDA | 1B to 12B | Single run, no thermal variance |
 | Windows | Feb 11 | Active cooling | CUDA 13.1 | All tested | Same hardware, driver 582.32 |
 
