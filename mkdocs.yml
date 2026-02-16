@@ -35,7 +35,7 @@ plugins:
       blog_toc: false
       archive: true
       archive_name: Archive
-      archive_date_format: YYYY
+      archive_date_format: yyyy
       archive_toc: true
       categories: true
       categories_name: Categories
