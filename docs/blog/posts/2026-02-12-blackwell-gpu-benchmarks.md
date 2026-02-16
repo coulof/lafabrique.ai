@@ -75,11 +75,11 @@ Both GPUs share Blackwell architecture and GDDR7 memory. The PRO 6000 has 6x the
 
 | Model | PRO 6000 Vulkan | PRO 6000 CUDA | 5070 Ti Vulkan | 5070 Ti CUDA | PRO 6000 lead |
 |-------|-----------------|---------------|----------------|--------------|---------------|
-| [Gemma 3 1B :material-open-in-new:](https://huggingface.co/bartowski/google_gemma-3-1b-it-GGUF) | 47,925 | 42,075 | 32,064 | 29,862 | 1.5x |
-| [Llama 3.2 1B :material-open-in-new:](https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF) | 49,329 | 44,046 | 28,768 | 23,843 | 1.7x |
-| [Phi-4 Mini 3.8B :material-open-in-new:](https://huggingface.co/bartowski/microsoft_Phi-4-mini-instruct-GGUF) | 19,917 | 20,525 | 10,212 | 10,705 | 1.9x |
-| [Ministral 8B :material-open-in-new:](https://huggingface.co/bartowski/Ministral-8B-Instruct-2410-GGUF) | 10,692 | 11,780 | 6,041 | 5,901 | 1.8x |
-| [Gemma 3 12B :material-open-in-new:](https://huggingface.co/bartowski/google_gemma-3-12b-it-GGUF) | 7,668 | 8,040 | 3,950 | 4,127 | 1.9x |
+| [Gemma 3 1B :simple-google:](https://huggingface.co/bartowski/google_gemma-3-1b-it-GGUF) | 47,925 | 42,075 | 32,064 | 29,862 | 1.5x |
+| [Llama 3.2 1B :simple-meta:](https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF) | 49,329 | 44,046 | 28,768 | 23,843 | 1.7x |
+| [Phi-4 Mini 3.8B :simple-microsoft:](https://huggingface.co/bartowski/microsoft_Phi-4-mini-instruct-GGUF) | 19,917 | 20,525 | 10,212 | 10,705 | 1.9x |
+| [Ministral 8B :material-creation-outline:](https://huggingface.co/bartowski/Ministral-8B-Instruct-2410-GGUF) | 10,692 | 11,780 | 6,041 | 5,901 | 1.8x |
+| [Gemma 3 12B :simple-google:](https://huggingface.co/bartowski/google_gemma-3-12b-it-GGUF) | 7,668 | 8,040 | 3,950 | 4,127 | 1.9x |
 
 > PP = Prompt Processing (tokens/sec). PRO 6000 Vulkan from Feb 11 cold runs. PRO 6000 CUDA from Feb 15-16 cold runs. 5070 Ti from Feb 12 runs. All models use [Q4_K_M quantization](#why-q4_k_m-quantization).
 
@@ -115,8 +115,8 @@ This is where the PRO 6000 earns its keep. These models do not fit in 16 GB :
 
 | Model | PRO 6000 Vulkan PP | PRO 6000 Vulkan TG | 5070 Ti |
 |-------|--------------------|--------------------|---------|
-| [Qwen3 32B :material-open-in-new:](https://huggingface.co/bartowski/Qwen_Qwen3-32B-GGUF) | 2,865 | 59 | Does not fit |
-| [Llama 3.3 70B :material-open-in-new:](https://huggingface.co/bartowski/Llama-3.3-70B-Instruct-GGUF) | 1,394 | 30 | Does not fit |
+| [Qwen3 32B :simple-alibabadotcom:](https://huggingface.co/bartowski/Qwen_Qwen3-32B-GGUF) | 2,865 | 59 | Does not fit |
+| [Llama 3.3 70B :simple-meta:](https://huggingface.co/bartowski/Llama-3.3-70B-Instruct-GGUF) | 1,394 | 30 | Does not fit |
 
 > Qwen3 32B at Q4_K_M needs ~20 GB VRAM. Llama 3.3 70B at Q4_K_M needs ~42 GB. These are PRO 6000 territory.
 
@@ -196,7 +196,7 @@ Realistic estimate : only 30 to 40% of total chassis airflow actually passes thr
 
 ### Community Results Confirm
 
-Other builders on [r/LocalLLM :material-open-in-new:](https://www.reddit.com/r/LocalLLM/comments/1mmqghu/rtx_pro_6000_se_is_crushing_it/) tested the same card in non-server enclosures :
+Other builders on [r/LocalLLM :simple-reddit:](https://www.reddit.com/r/LocalLLM/comments/1mmqghu/rtx_pro_6000_se_is_crushing_it/) tested the same card in non-server enclosures :
 
 | Fan Setup | CFM (Directed) | Idle Temp | Load Temp | Verdict |
 |-----------|----------------|-----------|-----------|---------|
@@ -260,7 +260,7 @@ We selected models to cover the range of practical local LLM use cases :
 - **12B** (Gemma 3 12B) : the largest models that fit in 16 GB at Q4_K_M. This is the ceiling for the 5070 Ti and the natural comparison point.
 - **32B** (Qwen3 32B) and **70B** (Llama 3.3 70B) : PRO 6000 territory. These need 20 to 42 GB of VRAM at Q4_K_M and represent the practical upper bound for single-GPU inference.
 
-All models were sourced from [bartowski's GGUF collection :material-open-in-new:](https://huggingface.co/bartowski) on Hugging Face, a widely used source for quantized models in the llama.cpp community.
+All models were sourced from [bartowski's GGUF collection :simple-huggingface:](https://huggingface.co/bartowski) on Hugging Face, a widely used source for quantized models in the llama.cpp community.
 
 ### Why Q4_K_M Quantization
 
