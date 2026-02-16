@@ -144,9 +144,6 @@ Vulkan wins PP on 1B models (+12 to 14%). CUDA wins PP on 3.8B and 12B models (+
 
 On the 5070 Ti, the story is even simpler : both backends perform within 5 to 10% across the board. No anomalies, no crashes. Pick whichever works for your setup.
 
-!!! info "Data quality note"
-    Early in our testing, a filename convention error caused us to label Vulkan results as CUDA. All numbers in this post have been verified against the actual `backends` field in each JSON result file. PRO 6000 CUDA data is only available for 1B, 1.2B, 3.8B, and 12B models on cold hardware. Larger models need a retest after GPU recovery.
-
 ---
 
 ## The Cooling Trap : Why Our Early Numbers Were Wrong
@@ -284,17 +281,6 @@ We used [localscore-bench :material-github:](https://github.com/mozilla-ai/llama
 - **pp16+tg1536** : token generation focused (simulates long-form output)
 
 Each configuration runs three repetitions. The numbers in this post use the pp1024+tg1024 averages unless noted otherwise.
-
-### Data Sources and Validation
-
-| Source | Date | GPU State | Backend | Models | Notes |
-|--------|------|-----------|---------|--------|-------|
-| PRO 6000 Vulkan | Feb 11 | Cold start | Vulkan coopmat2 | All 8 | Best of 3 automated runs |
-| PRO 6000 CUDA | Feb 15-16 | Cold start, verified <60°C | CUDA 13.1 | 1B, 1.2B, 3.8B, 8B, 12B | Individual runs with cooldown |
-| 5070 Ti | Feb 12 | Active cooling (stable) | Vulkan + CUDA | 1B to 12B | Single run, no thermal variance |
-| Windows | Feb 11 | Active cooling | CUDA 13.1 | All tested | Same hardware, driver 582.32 |
-
-All results were validated by checking the `backends` field in each JSON result file. A filename convention error in our test scripts initially caused Vulkan results to be saved with `-cuda13` suffixes. This was caught and corrected during data review.
 
 Raw data, scripts, and GPU monitoring charts available at [llm-bench-lab :material-github:](https://github.com/bauagonzo/llm-bench-lab).
 
