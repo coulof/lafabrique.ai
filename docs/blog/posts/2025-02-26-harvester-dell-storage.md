@@ -9,6 +9,8 @@ categories:
 
 # Use Harvester with Dell Storage
 
+*Co-authored with Parasar Kodati.*
+
 Dell CSI drivers for PowerStore, PowerMax, PowerFlex, and PowerScale have all been tested and are compatible with [KubeVirt :material-open-in-new:](https://kubevirt.io/). This guide provides instructions for installing Dell CSI for PowerMax on [Harvester :simple-suse:](https://harvesterhci.io/), though the steps are very similar regardless of the storage backend.
 
 Tested on :
