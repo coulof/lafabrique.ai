@@ -27,7 +27,7 @@ We benchmarked eight LLM models (1B to 70B parameters) on two Blackwell GPUs wit
 - :material-scale-balance: **Vulkan and CUDA perform within 5 to 15% on cold hardware.** Pick whichever works for your setup.
 - :material-snowflake: **The 5070 Ti just works. The PRO 6000 needs server cooling.** Active fans vs passive heatsink is the real differentiator.
 - :material-check-all: **OS barely matters.** Linux and Windows within 5 to 10%.
-- :material-memory: **VRAM is the only reason to buy the PRO 6000.** It earns its price at 32B+, not at 12B.
+- :material-memory: **VRAM is the main reason to buy the PRO 6000.** It earns its price at 32B+, not at 12B.
 
 <!-- more -->
 
