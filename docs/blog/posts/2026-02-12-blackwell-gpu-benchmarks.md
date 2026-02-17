@@ -56,7 +56,7 @@ We benchmarked eight LLM models (1B to 70B parameters) on two Blackwell GPUs wit
 |-----------|--------|
 | CPU | AMD Ryzen 7 9800X3D |
 | RAM | 60 GB DDR5 |
-| OS | openSUSE Tumbleweed :simple-opensuse: + Windows 11 Pro :simple-microsoft: (same hardware) |
+| OS | openSUSE Tumbleweed :simple-opensuse: + Windows 11 Pro :material-microsoft: (same hardware) |
 | Engine | [llama.cpp :material-github:](https://github.com/ggml-org/llama.cpp) b7966 (Vulkan with coopmat2, CUDA 13.1) |
 | Benchmark | [localscore-bench :material-github:](https://github.com/mozilla-ai/llamafile/tree/main/localscore) : pp1024+tg1024 primary config |
 
@@ -80,7 +80,7 @@ Both GPUs share Blackwell architecture and GDDR7 memory. The PRO 6000 has 6x the
 | [Ministral 8B :material-creation-outline:](https://huggingface.co/bartowski/Ministral-8B-Instruct-2410-GGUF) | 10,692 | 11,780 | 6,041 | 5,901 | 1.8x |
 | [Gemma 3 12B :simple-google:](https://huggingface.co/bartowski/google_gemma-3-12b-it-GGUF) | 7,668 | 8,040 | 3,950 | 4,127 | 1.9x |
 
-> PP = Prompt Processing (tokens/sec). PRO 6000 Vulkan from Feb 11 cold runs. PRO 6000 CUDA from Feb 15-16 cold runs. 5070 Ti from Feb 12 runs. All models use [Q4_K_M quantization](#why-q4_k_m-quantization).
+> PP = Prompt Processing (tokens/sec). All models use [Q4_K_M quantization](#why-q4_k_m-quantization).
 
 The PRO 6000's wider memory bus shows up clearly in prefill workloads. Prompt processing is memory bandwidth bound : the 2:1 bandwidth ratio (~1,792 vs ~896 GB/s) maps directly to the observed 1.5 to 2x performance gap.
 
@@ -181,7 +181,7 @@ For our 600W card :
 
 At 330 CFM total, even assuming 50% loss to imperfect routing, we should land at ~165 CFM through the card. On paper that covers the 10°C rise scenario with margin. In practice, the losses are much worse than 50%.
 
-### Why It Actually Failed
+### Why It Actually Failed (I guess)
 
 Three factors compound to turn 330 CFM into a fraction of what the GPU heatsink receives :
 
