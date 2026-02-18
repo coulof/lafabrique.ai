@@ -58,7 +58,7 @@ We benchmarked eight LLM models (1B to 70B parameters) on two Blackwell GPUs wit
 | RAM | 60 GB DDR5 |
 | OS | openSUSE Tumbleweed :simple-opensuse: + Windows 11 Pro :material-microsoft: (same hardware) |
 | Engine | [llama.cpp :material-github:](https://github.com/ggml-org/llama.cpp) b7966 (Vulkan with coopmat2, CUDA 13.1) |
-| Benchmark | [localscore-bench :material-github:](https://github.com/mozilla-ai/llamafile/tree/main/localscore) : pp1024+tg1024 primary config |
+| Benchmark | [localscore-bench :material-github:](https://github.com/bauagonzo/localscore-bench) : pp1024+tg1024 primary config |
 
 Both GPUs share Blackwell architecture and GDDR7 memory. The PRO 6000 has 6x the VRAM, 2x the memory bandwidth, 2x the power budget, and zero fans.
 
@@ -273,7 +273,7 @@ Q4_K_M represents the practical trade-off most users make. All models use the sa
 
 ### Benchmark Configuration
 
-We used [localscore-bench :material-github:](https://github.com/mozilla-ai/llamafile/tree/main/localscore) which runs three configurations per model :
+We used [localscore-bench :material-github:](https://github.com/bauagonzo/localscore-bench) which runs three configurations per model :
 
 - **pp1024+tg16** : prompt processing focused (simulates loading a long context)
 - **pp1024+tg1024** : balanced (our primary metric, simulates a typical chat turn)
