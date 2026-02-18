@@ -2,6 +2,7 @@
   "_comment": "Theme config for LaFabrique.AI hero section. Updated weekly by cron. Format: name (display name), colors (array of 3 objects with name, hex, accent), banners (array of 3 filenames from docs/assets/images/banner/). The cron picks from the themes list below and writes the active theme.",
   "active": {
     "name": "Dracula",
+    "icon": "🧛",
     "colors": [
       { "name": "purple", "hex": "#bd93f9", "accent": "#6c5ce7" },
       { "name": "green",  "hex": "#50fa7b", "accent": "#00b894" },
@@ -16,6 +17,7 @@
   "themes": [
     {
       "name": "Primary RGB",
+      "icon": "🔴🟢🔵",
       "colors": [
         { "name": "red",   "hex": "#e53935", "accent": "#c62828" },
         { "name": "green", "hex": "#43a047", "accent": "#2e7d32" },
@@ -24,6 +26,7 @@
     },
     {
       "name": "CMY",
+      "icon": "🎨",
       "colors": [
         { "name": "cyan",    "hex": "#00bcd4", "accent": "#0097a7" },
         { "name": "magenta", "hex": "#e040fb", "accent": "#aa00ff" },
@@ -32,6 +35,7 @@
     },
     {
       "name": "Dracula",
+      "icon": "🧛",
       "colors": [
         { "name": "purple", "hex": "#bd93f9", "accent": "#6c5ce7" },
         { "name": "green",  "hex": "#50fa7b", "accent": "#00b894" },
@@ -40,6 +44,7 @@
     },
     {
       "name": "Catppuccin",
+      "icon": "🐱",
       "colors": [
         { "name": "rosewater", "hex": "#f5e0dc", "accent": "#f2cdcd" },
         { "name": "mauve",     "hex": "#cba6f7", "accent": "#b4befe" },
@@ -48,6 +53,7 @@
     },
     {
       "name": "Nord",
+      "icon": "❄️",
       "colors": [
         { "name": "frost",  "hex": "#88c0d0", "accent": "#5e81ac" },
         { "name": "aurora", "hex": "#a3be8c", "accent": "#8fbcbb" },
@@ -56,6 +62,7 @@
     },
     {
       "name": "Warm",
+      "icon": "🔥",
       "colors": [
         { "name": "amber",      "hex": "#ff8f00", "accent": "#e65100" },
         { "name": "crimson",    "hex": "#ec407a", "accent": "#c62828" },
@@ -64,6 +71,7 @@
     },
     {
       "name": "Cool",
+      "icon": "🧊",
       "colors": [
         { "name": "indigo", "hex": "#5c6bc0", "accent": "#3949ab" },
         { "name": "teal",   "hex": "#26a69a", "accent": "#00897b" },
@@ -72,6 +80,7 @@
     },
     {
       "name": "Legacy",
+      "icon": "🏛️",
       "colors": [
         { "name": "blue",   "hex": "#1976d2", "accent": "#1565c0" },
         { "name": "red",    "hex": "#e53935", "accent": "#c62828" },
