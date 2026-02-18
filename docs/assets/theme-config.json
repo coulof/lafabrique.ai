@@ -1,0 +1,74 @@
+{
+  "_comment": "Theme config for LaFabrique.AI hero section. Updated weekly by cron. Format: name (display name), colors (array of 3 objects with name, hex, accent), banners (array of 3 filenames from docs/assets/images/banner/). The cron picks from the themes list below and writes the active theme.",
+  "active": {
+    "name": "Dracula",
+    "colors": [
+      { "name": "purple", "hex": "#bd93f9", "accent": "#6c5ce7" },
+      { "name": "green",  "hex": "#50fa7b", "accent": "#00b894" },
+      { "name": "pink",   "hex": "#ff79c6", "accent": "#e84393" }
+    ],
+    "banners": [
+      "indigo-woman.png",
+      "emerald-man.png",
+      "crimson-woman.png"
+    ]
+  },
+  "themes": [
+    {
+      "name": "Primary RGB",
+      "colors": [
+        { "name": "red",   "hex": "#e53935", "accent": "#c62828" },
+        { "name": "green", "hex": "#43a047", "accent": "#2e7d32" },
+        { "name": "blue",  "hex": "#1e88e5", "accent": "#1565c0" }
+      ]
+    },
+    {
+      "name": "CMY",
+      "colors": [
+        { "name": "cyan",    "hex": "#00bcd4", "accent": "#0097a7" },
+        { "name": "magenta", "hex": "#e040fb", "accent": "#aa00ff" },
+        { "name": "yellow",  "hex": "#fdd835", "accent": "#f9a825" }
+      ]
+    },
+    {
+      "name": "Dracula",
+      "colors": [
+        { "name": "purple", "hex": "#bd93f9", "accent": "#6c5ce7" },
+        { "name": "green",  "hex": "#50fa7b", "accent": "#00b894" },
+        { "name": "pink",   "hex": "#ff79c6", "accent": "#e84393" }
+      ]
+    },
+    {
+      "name": "Catppuccin",
+      "colors": [
+        { "name": "rosewater", "hex": "#f5e0dc", "accent": "#f2cdcd" },
+        { "name": "mauve",     "hex": "#cba6f7", "accent": "#b4befe" },
+        { "name": "teal",      "hex": "#94e2d5", "accent": "#89dceb" }
+      ]
+    },
+    {
+      "name": "Nord",
+      "colors": [
+        { "name": "frost",  "hex": "#88c0d0", "accent": "#5e81ac" },
+        { "name": "aurora", "hex": "#a3be8c", "accent": "#8fbcbb" },
+        { "name": "snow",   "hex": "#eceff4", "accent": "#d8dee9" }
+      ]
+    },
+    {
+      "name": "Warm",
+      "colors": [
+        { "name": "amber",      "hex": "#ff8f00", "accent": "#e65100" },
+        { "name": "crimson",    "hex": "#ec407a", "accent": "#c62828" },
+        { "name": "terracotta", "hex": "#d4714e", "accent": "#a0522d" }
+      ]
+    },
+    {
+      "name": "Cool",
+      "colors": [
+        { "name": "indigo", "hex": "#5c6bc0", "accent": "#3949ab" },
+        { "name": "teal",   "hex": "#26a69a", "accent": "#00897b" },
+        { "name": "slate",  "hex": "#78909c", "accent": "#455a64" }
+      ]
+    }
+  ]
+}
