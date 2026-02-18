@@ -10,3 +10,4 @@ __pycache__/
 
 # Task runner cache
 .task/
+.wrangler/

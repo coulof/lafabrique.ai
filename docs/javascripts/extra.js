@@ -1,46 +1,50 @@
 // Theme rotation for LaFabrique.AI
-// Rotates between blue, red, yellow themes on each page reload
+// Rotates between 6 color themes × 2 character variants on each page reload
 
 (function() {
-  var themes = ['blue', 'red', 'yellow'];
+  var themes = ['indigo', 'amber', 'emerald', 'crimson', 'noir', 'slate'];
+  var genders = ['woman', 'man'];
   var colors = {
-    blue:   { primary: '#1976d2', accent: '#1565c0' },
-    red:    { primary: '#e53935', accent: '#c62828' },
-    yellow: { primary: '#f9a825', accent: '#f57f17' }
+    indigo:  { primary: '#5c6bc0', accent: '#3949ab' },
+    amber:   { primary: '#ff8f00', accent: '#e65100' },
+    emerald: { primary: '#26a69a', accent: '#00897b' },
+    crimson: { primary: '#ec407a', accent: '#c62828' },
+    noir:    { primary: '#78909c', accent: '#546e7a' },
+    slate:   { primary: '#78909c', accent: '#455a64' }
   };
 
-  function applyTheme(theme) {
+  function applyTheme(theme, gender) {
     var root = document.documentElement;
     var color = colors[theme];
 
     root.setAttribute('data-theme', theme);
+    root.setAttribute('data-gender', gender);
     root.style.setProperty('--md-primary-fg-color', color.primary);
     root.style.setProperty('--md-accent-fg-color', color.accent);
     root.style.setProperty('--md-primary-fg-color--light', color.primary + '1a');
     root.style.setProperty('--md-primary-fg-color--dark', color.accent);
   }
 
-  function getNextTheme(current) {
-    var available = themes.filter(function(t) { return t !== current; });
+  function pickRandom(arr, exclude) {
+    var available = arr.filter(function(t) { return t !== exclude; });
     return available[Math.floor(Math.random() * available.length)];
   }
 
   function initTheme() {
-    var stored = sessionStorage.getItem('lafabrique-theme');
-    var theme;
+    var storedTheme = sessionStorage.getItem('lafabrique-theme');
+    var theme, gender;
 
-    if (stored && colors[stored]) {
-      // On reload, pick a different theme
-      theme = getNextTheme(stored);
+    if (storedTheme && colors[storedTheme]) {
+      theme = pickRandom(themes, storedTheme);
     } else {
-      // First visit, pick random
       theme = themes[Math.floor(Math.random() * themes.length)];
     }
 
+    gender = genders[Math.floor(Math.random() * genders.length)];
+
     sessionStorage.setItem('lafabrique-theme', theme);
-    applyTheme(theme);
+    applyTheme(theme, gender);
   }
 
-  // Run immediately
   initTheme();
 })();
