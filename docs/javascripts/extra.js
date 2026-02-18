@@ -34,12 +34,6 @@
       img.style.opacity = (i === colorIndex) ? '1' : '0';
     });
 
-    // Update tape sticker
-    var sticker = document.getElementById('theme-tape-sticker');
-    if (sticker) {
-      sticker.textContent = '🎨 ' + theme.name + ' Week';
-      sticker.style.display = 'block';
-    }
   }
 
   function pickColorIndex(theme) {

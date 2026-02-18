@@ -41,67 +41,6 @@
 }
 
 /* ========================================
-   Tape Sticker — Top-right corner ribbon
-   ======================================== */
-
-#theme-tape-sticker {
-  position: fixed;
-  top: 28px;
-  right: -40px;
-  z-index: 9999;
-  width: 220px;
-  text-align: center;
-  padding: 6px 0;
-  font-family: 'Goldman', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: #1a1a2e;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 248, 220, 0.88) 0%,
-    rgba(245, 235, 200, 0.92) 30%,
-    rgba(255, 248, 220, 0.85) 50%,
-    rgba(240, 230, 195, 0.90) 70%,
-    rgba(255, 248, 220, 0.88) 100%
-  );
-  transform: rotate(42deg);
-  transform-origin: center center;
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.25),
-    inset 0 0 12px rgba(0, 0, 0, 0.04);
-  border-top: 1px solid rgba(200, 185, 150, 0.5);
-  border-bottom: 1px solid rgba(200, 185, 150, 0.5);
-  /* Wrinkled/tape texture via subtle repeating gradient */
-  background-image:
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 3px,
-      rgba(0, 0, 0, 0.015) 3px,
-      rgba(0, 0, 0, 0.015) 6px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 4px,
-      rgba(0, 0, 0, 0.01) 4px,
-      rgba(0, 0, 0, 0.01) 8px
-    );
-  /* Torn edge feel via slight clip */
-  clip-path: polygon(
-    0% 2%, 3% 0%, 7% 3%, 12% 0%, 17% 2%, 22% 0%, 27% 1%, 32% 0%,
-    37% 2%, 42% 0%, 47% 1%, 52% 0%, 57% 2%, 62% 0%, 67% 1%, 72% 0%,
-    77% 3%, 82% 0%, 87% 2%, 92% 0%, 96% 1%, 100% 0%,
-    100% 98%, 97% 100%, 93% 97%, 88% 100%, 83% 98%, 78% 100%, 73% 99%,
-    68% 100%, 63% 98%, 58% 100%, 53% 99%, 48% 100%, 43% 98%, 38% 100%,
-    33% 99%, 28% 100%, 23% 97%, 18% 100%, 13% 98%, 8% 100%, 3% 99%, 0% 100%
-  );
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-/* ========================================
    Hero Section - Full Width Parallax
    ======================================== */
 
@@ -322,12 +261,6 @@ html {
     height: 100%;
   }
 
-  #theme-tape-sticker {
-    font-size: 0.7rem;
-    width: 180px;
-    top: 22px;
-    right: -45px;
-  }
 }
 
 @media screen and (max-width: 480px) {
@@ -338,13 +271,6 @@ html {
   .mdx-hero__content p {
     font-size: 1rem;
     margin-bottom: 2rem;
-  }
-
-  #theme-tape-sticker {
-    font-size: 0.65rem;
-    width: 160px;
-    top: 18px;
-    right: -48px;
   }
 }
 
