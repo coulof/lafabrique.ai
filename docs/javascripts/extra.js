@@ -2,7 +2,7 @@
 // Reads theme-config.json (updated weekly by cron) and rotates between 3 color variants per reload.
 
 (function() {
-  var CONFIG_URL = 'assets/theme-config.json';
+  var CONFIG_URL = '/assets/theme-config.json';
 
   // Fallback theme if config fails to load
   var FALLBACK = {
