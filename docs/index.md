@@ -15,8 +15,10 @@ Welcome to LaFabrique.AI, a space dedicated to exploring the fascinating world o
 
 ## What You'll Find Here
 
-- **Blog** - Regular posts about AI developments, tutorials, and insights
-- **Resume** - Professional background and experience
-- **GIA** - Special projects and experiments
+- **[Blog](blog/)** — AI experiments, GPU benchmarks, tutorials, and field reports
+- **[Chat my Resume](https://huggingface.co/spaces/bauagonzo/chat-my-resume)** — An AI-powered resume chatbot on Hugging Face Spaces
+- **[GIA](https://gia.lafabrique.ai/)** — Psychometric test preparation tool
+- **[Live Poll](https://live-poll.florian-coulombel.workers.dev)** — Real-time polling, powered by Cloudflare Workers
+- **[Pastebin](https://pb.lafabrique.ai)** — Self-hosted code sharing with syntax highlighting
 
 </div>
