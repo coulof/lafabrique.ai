@@ -24,8 +24,9 @@ nav:
   - Home: index.md
   - Blog:
     - blog/index.md
-  - GIA: https://gia.lafabrique.ai/
   - Chat my Resume: https://huggingface.co/spaces/bauagonzo/chat-my-resume
+  - GIA: https://gia.lafabrique.ai/
+  - Live Poll: https://live-poll.florian-coulombel.workers.dev
   - Pastebin: https://pb.lafabrique.ai
 
 plugins:
