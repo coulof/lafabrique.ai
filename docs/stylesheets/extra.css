@@ -202,26 +202,7 @@
    Parallax Scroll Effect
    ======================================== */
 
-/* Parallax: banners stay fixed behind hero, content scrolls over them */
-@supports (background-attachment: fixed) {
-  .mdx-hero {
-    position: relative;
-    z-index: 1;
-  }
-
-  .mdx-hero__banner {
-    position: fixed;
-    top: 0;
-    height: 100vh;
-  }
-}
-
-/* Content must sit above the fixed banners */
-.md-main {
-  position: relative;
-  z-index: 2;
-  background: var(--md-default-bg-color, #fff);
-}
+/* No parallax — banners stay absolute within hero section */
 
 /* ========================================
    Content Section Styling
