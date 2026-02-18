@@ -69,6 +69,19 @@
         { "name": "teal",   "hex": "#26a69a", "accent": "#00897b" },
         { "name": "slate",  "hex": "#78909c", "accent": "#455a64" }
       ]
+    },
+    {
+      "name": "Legacy",
+      "colors": [
+        { "name": "blue",   "hex": "#1976d2", "accent": "#1565c0" },
+        { "name": "red",    "hex": "#e53935", "accent": "#c62828" },
+        { "name": "yellow", "hex": "#f9a825", "accent": "#f57f17" }
+      ],
+      "banners": [
+        "blue.png",
+        "red.png",
+        "yellow.png"
+      ]
     }
   ]
 }
