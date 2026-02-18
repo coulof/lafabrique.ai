@@ -34,6 +34,16 @@
       img.style.opacity = (i === colorIndex) ? '1' : '0';
     });
 
+    // Update site title with theme name + icon
+    var icon = theme.icon || '🎨';
+    var titleText = 'LAFABRIQUE.AI — ' + theme.name + ' week ' + icon;
+    document.title = titleText;
+
+    // Update header title if present
+    var headerTitle = document.querySelector('.md-header__topic .md-ellipsis');
+    if (headerTitle) {
+      headerTitle.textContent = titleText;
+    }
   }
 
   function pickColorIndex(theme) {
