@@ -2,12 +2,12 @@
   "_comment": "Theme config for LaFabrique.AI hero section. Updated weekly by cron. Format: name (display name), colors (array of 3 objects with name, hex, accent), banners (array of 3 filenames from docs/assets/images/banner/). The cron picks from the themes list below and writes the active theme.",
   "active": {
     "name": "Catppuccin",
-    "icon": "\ud83d\udc31",
+    "icon": "🐱",
     "colors": [
       {
-        "name": "rosewater",
-        "hex": "#f5e0dc",
-        "accent": "#f2cdcd"
+        "name": "peach",
+        "hex": "#fab387",
+        "accent": "#ef9f76"
       },
       {
         "name": "mauve",
@@ -29,7 +29,7 @@
   "themes": [
     {
       "name": "Primary RGB",
-      "icon": "\ud83d\udd34\ud83d\udfe2\ud83d\udd35",
+      "icon": "🔴🟢🔵",
       "colors": [
         {
           "name": "red",
@@ -50,7 +50,7 @@
     },
     {
       "name": "CMY",
-      "icon": "\ud83c\udfa8",
+      "icon": "🎨",
       "colors": [
         {
           "name": "cyan",
@@ -71,7 +71,7 @@
     },
     {
       "name": "Dracula",
-      "icon": "\ud83e\udddb",
+      "icon": "🧛",
       "colors": [
         {
           "name": "purple",
@@ -92,12 +92,12 @@
     },
     {
       "name": "Catppuccin",
-      "icon": "\ud83d\udc31",
+      "icon": "🐱",
       "colors": [
         {
-          "name": "rosewater",
-          "hex": "#f5e0dc",
-          "accent": "#f2cdcd"
+          "name": "peach",
+          "hex": "#fab387",
+          "accent": "#ef9f76"
         },
         {
           "name": "mauve",
@@ -113,7 +113,7 @@
     },
     {
       "name": "Nord",
-      "icon": "\u2744\ufe0f",
+      "icon": "❄️",
       "colors": [
         {
           "name": "frost",
@@ -134,7 +134,7 @@
     },
     {
       "name": "Warm",
-      "icon": "\ud83d\udd25",
+      "icon": "🔥",
       "colors": [
         {
           "name": "amber",
@@ -155,7 +155,7 @@
     },
     {
       "name": "Cool",
-      "icon": "\ud83e\uddca",
+      "icon": "🧊",
       "colors": [
         {
           "name": "indigo",
@@ -176,7 +176,7 @@
     },
     {
       "name": "Legacy",
-      "icon": "\ud83c\udfdb\ufe0f",
+      "icon": "🏛️",
       "colors": [
         {
           "name": "blue",
