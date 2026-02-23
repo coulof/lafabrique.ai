@@ -64,7 +64,7 @@ The previous version of the chatbot (before the agent was born) had even more pr
 
 ## Project 3 : LLM Bench — Where It Got Dangerous
 
-This one burned me. I benchmarked eight LLM models on an RTX PRO 6000 and an RTX 5070 Ti, comparing Vulkan and CUDA backends. The AI helped run benchmarks, parse results, generate charts, and write the [blog post :material-open-in-new:](https://lafabrique.ai/blackwell-gpu-benchmarks/).
+I benchmarked eight LLM models on an RTX PRO 6000 and an RTX 5070 Ti, comparing Vulkan and CUDA backends. The AI helped run benchmarks, parse results, generate charts, and write the [blog post :material-open-in-new:](https://lafabrique.ai/blackwell-gpu-benchmarks/).
 
 Two major data errors made it into the draft :
 
@@ -82,7 +82,7 @@ Both errors survived multiple iterations because the conclusions sounded plausib
 
 Here's what surprised me most. The biggest value wasn't productivity. It was **having someone to think with**.
 
-I've worked at Dell for six years. Corporate teams get leaner every year. Deep pair programming sessions, where you sit with a colleague for four hours and think through a problem together, haven't happened in a decade.
+I've worked at Dell for forteen years. Corporate teams get leaner every year. Deep pair programming sessions, where you sit with a colleague for four hours and think through a problem together, haven't happened in a decade.
 
 Working with the AI agent felt like that. Not because it's smart (it is, sometimes). But because it's **present**. It doesn't context-switch to another meeting. It doesn't check Slack. It remembers what we discussed two hours ago. When I say "that chart looks wrong," it doesn't ask for a Jira ticket. It investigates.
 
@@ -114,7 +114,7 @@ With smaller models :
 
 ---
 
-## OpenClaw : The Frontier
+## OpenClaw : The New Frontier
 
 [OpenClaw :material-github:](https://github.com/openclaw/openclaw) is what makes this workflow possible. It's an open-source gateway that connects AI models to your machine, your messages, your tools. The agent persists across sessions, remembers context, runs cron jobs, manages files.
 
@@ -135,21 +135,5 @@ It's early. It's rough. It's also genuinely a new way to work.
 
 ---
 
-## What I'd Tell You Before You Start
-
-1. **AI refactors better than it creates.** Start with existing code or a clear spec. "Build me something" produces more bugs than "improve this."
-
-2. **Always audit.** The output looks professional. That's the trap. Review it like you'd review a junior's PR.
-
-3. **Watch the data.** AI makes confident mistakes with data. If a conclusion sounds too clean, check the inputs.
-
-4. **The value is collaboration, not delegation.** Use it as a thinking partner, not a code monkey.
-
-5. **The model matters more than you think.** 15% better on benchmarks means qualitatively different working sessions.
-
-6. **It's still early.** Expect friction. Document workarounds. The tooling is catching up to the capability.
-
----
-
-*Built with OpenClaw + Claude Opus 4.6. The agent helped write this post too. I audited it.*
+*Built with OpenClaw + Claude Opus 4.6. The agent helped write this post too. I audited it of course :-)*
 
