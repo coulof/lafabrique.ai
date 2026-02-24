@@ -1,0 +1,1660 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A Journey Through Artificial Intelligence">
+      
+      
+      
+        <link rel="canonical" href="https://lafabrique.ai/blog/best-practices-for-deployment-and-life-cycle-management-of-dell-csm-modules/">
+      
+      
+        <link rel="prev" href="../how-to-build-a-custom-dell-csi-driver/">
+      
+      
+        <link rel="next" href="../-hardening-kubernetes-csi-drivers-reducing-cap_sys_admin-without-breaking-storage/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+    
+    
+      
+        <title>Best Practices for Deployment and Life Cycle Management of Dell CSM Modules - LAFABRIQUE.AI — Catppuccin week 🐱</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#best-practices-for-deployment-and-life-cycle-management-of-dell-csm-modules" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="LAFABRIQUE.AI — Catppuccin week 🐱" class="md-header__button md-logo" aria-label="LAFABRIQUE.AI — Catppuccin week 🐱" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 18v2h4v-2zm0-4v2h10v-2zm6 4v2h4v-2zm6-4v2h4v-2zm0 4v2h4v-2zM2 22V8l5 4V8l5 4V8l5 4 1-10h3l1 10v10z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LAFABRIQUE.AI — Catppuccin week 🐱
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Best Practices for Deployment and Life Cycle Management of Dell CSM Modules
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://huggingface.co/spaces/bauagonzo/chat-my-resume" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Chat my Resume
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://gia.lafabrique.ai/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  GIA
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://poll.lafabrique.ai" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Live Poll
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://pb.lafabrique.ai" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Pastebin
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="LAFABRIQUE.AI — Catppuccin week 🐱" class="md-nav__button md-logo" aria-label="LAFABRIQUE.AI — Catppuccin week 🐱" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 18v2h4v-2zm0-4v2h10v-2zm6 4v2h4v-2zm6-4v2h4v-2zm0 4v2h4v-2zM2 22V8l5 4V8l5 4V8l5 4 1-10h3l1 10v10z"/></svg>
+
+    </a>
+    LAFABRIQUE.AI — Catppuccin week 🐱
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Archive
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Archive
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2026/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2025
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2024/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2024
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2023/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2023
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2022/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2022
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2021/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2021
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2020/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2020
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Categories
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/announcements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Announcements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/ansible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/dell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/devops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevOps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/disaster-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disaster Recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/linux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://huggingface.co/spaces/bauagonzo/chat-my-resume" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat my Resume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://gia.lafabrique.ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GIA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://poll.lafabrique.ai" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Poll
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://pb.lafabrique.ai" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pastebin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#use-helm-charts-where-you-can" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Helm Charts Where You Can
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use Helm Charts Where You Can">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-the-installation-wizard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the Installation Wizard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#store-configuration-in-a-versioning-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store Configuration in a Versioning System
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrades-with-helm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrades with Helm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrades-with-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrades with Operator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Upgrades with Operator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apply-the-new-crd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Apply the New CRD
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../" class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+              <div class="md-post__authors md-typeset">
+                
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="../../assets/images/coulof-avatar.png" alt="coulof">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          coulof
+                        
+                      </strong>
+                      <br>
+                      Author
+                    </span>
+                  </div>
+                
+              </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2024-09-19 00:00:00+00:00" class="md-ellipsis">September 19, 2024</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../category/kubernetes/">Kubernetes</a>, 
+                              <a href="../category/devops/">DevOps</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              4 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+
+
+
+
+<h1 id="best-practices-for-deployment-and-life-cycle-management-of-dell-csm-modules">Best Practices for Deployment and Life Cycle Management of Dell CSM Modules</h1>
+<p><em>Co-authored with Parasar Kodati.</em></p>
+<p>The Dell CSM Kubernetes Operator packages the CSI driver and other storage services (Container Storage Modules) for observability, replication, authorization, and node resiliency. This single operator supports PowerFlex, PowerStore, PowerScale, and Unity platforms (see <a href="https://dell.github.io/csm-docs/docs/deployment/csmoperator/">Support Matrix <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.963 14.6V9.324h1.222v4.204h2.14v1.07h-3.362zm-9.784-3.288 2.98-2.292q.42.343.841.687l-2.827 2.14.611.535 2.827-2.216q.42.343.841.688a296 296 0 0 1-2.827 2.216l.61.536 2.83-2.295-.001-1.986h1.223v4.204h2.216v1.07h-3.362v-1.987q-1.491 1.146-2.981 2.292l-2.981-2.292c-.144.729-.653 1.36-1.312 1.694a2.7 2.7 0 0 1-.915.276c-.183.022-.367.017-.551.017H3.516V9.325H5.69a2.54 2.54 0 0 1 1.563.557c.454.36.778.872.927 1.43m-3.516-.917v3.21l.953-.001a1.38 1.38 0 0 0 1.036-.523 1.74 1.74 0 0 0 .182-1.889 1.5 1.5 0 0 0-.976-.766c-.166-.04-.338-.03-.507-.032zM11.82 0h.337a11.94 11.94 0 0 1 5.405 1.373 12.1 12.1 0 0 1 4.126 3.557A11.93 11.93 0 0 1 24 11.82v.36a11.96 11.96 0 0 1-3.236 8.033A11.97 11.97 0 0 1 12.182 24h-.361a12 12 0 0 1-4.145-.806 12 12 0 0 1-4.274-2.836A12.06 12.06 0 0 1 .576 15.67 12 12 0 0 1 0 12.181v-.361a11.92 11.92 0 0 1 1.992-6.396 12.2 12.2 0 0 1 4.71-4.172A11.9 11.9 0 0 1 11.82 0m-.153 1.23a10.72 10.72 0 0 0-6.43 2.375 10.8 10.8 0 0 0-3.319 4.573 10.86 10.86 0 0 0 .193 8.12 10.8 10.8 0 0 0 3.546 4.421 10.7 10.7 0 0 0 4.786 1.946c1.456.209 2.955.124 4.376-.26a10.76 10.76 0 0 0 5.075-3.062 10.74 10.74 0 0 0 2.686-5.28 10.9 10.9 0 0 0-.122-4.682 10.77 10.77 0 0 0-7.098-7.626 10.8 10.8 0 0 0-3.693-.525"/></svg></span></a>). This post lays out best practices for deployment and lifecycle management of Dell CSMs.</p>
+<!-- more -->
+
+<hr />
+<h2 id="use-helm-charts-where-you-can">Use Helm Charts Where You Can</h2>
+<p>Kubernetes operators provide a framework where the controller-CRD model can be extended for any functionality. However, for day-one deployment and upgrades, Helm charts provide a simpler solution. If you prefer not to use the Operator framework on platforms like <a href="https://www.redhat.com/en/technologies/cloud-computing/openshift">Red Hat OpenShift <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.009 13.386c1.577 0 3.86-.326 3.86-2.202a1.8 1.8 0 0 0-.04-.431l-.94-4.08c-.216-.898-.406-1.305-1.982-2.093-1.223-.625-3.888-1.658-4.676-1.658-.733 0-.947.946-1.822.946-.842 0-1.467-.706-2.255-.706-.757 0-1.25.515-1.63 1.576 0 0-1.06 2.99-1.197 3.424a.8.8 0 0 0-.028.245c0 1.162 4.577 4.974 10.71 4.974m4.101-1.435c.218 1.032.218 1.14.218 1.277 0 1.765-1.984 2.745-4.593 2.745-5.895.004-11.06-3.451-11.06-5.734a2.3 2.3 0 0 1 .19-.925C2.746 9.415 0 9.794 0 12.217c0 3.969 9.405 8.861 16.851 8.861 5.71 0 7.149-2.582 7.149-4.62 0-1.605-1.387-3.425-3.887-4.512"/></svg></span></a>, we recommend using Helm charts to install the CSMs.</p>
+<p>Add the Helm repository for Dell and list the available charts :</p>
+<p><img alt="Helm repo and charts" src="../../assets/images/csm-best-practices/helm-repo-charts.png" /></p>
+<p><em>Dell Helm repository listing CSI drivers and CSM charts.</em></p>
+<h3 id="use-the-installation-wizard">Use the Installation Wizard</h3>
+<p>Whether you use Helm Charts or the CSM Operator, the <a href="https://dell.github.io/csm-docs/docs/deployment/csminstallationwizard/src/index.html">CSM Installation Wizard <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.963 14.6V9.324h1.222v4.204h2.14v1.07h-3.362zm-9.784-3.288 2.98-2.292q.42.343.841.687l-2.827 2.14.611.535 2.827-2.216q.42.343.841.688a296 296 0 0 1-2.827 2.216l.61.536 2.83-2.295-.001-1.986h1.223v4.204h2.216v1.07h-3.362v-1.987q-1.491 1.146-2.981 2.292l-2.981-2.292c-.144.729-.653 1.36-1.312 1.694a2.7 2.7 0 0 1-.915.276c-.183.022-.367.017-.551.017H3.516V9.325H5.69a2.54 2.54 0 0 1 1.563.557c.454.36.778.872.927 1.43m-3.516-.917v3.21l.953-.001a1.38 1.38 0 0 0 1.036-.523 1.74 1.74 0 0 0 .182-1.889 1.5 1.5 0 0 0-.976-.766c-.166-.04-.338-.03-.507-.032zM11.82 0h.337a11.94 11.94 0 0 1 5.405 1.373 12.1 12.1 0 0 1 4.126 3.557A11.93 11.93 0 0 1 24 11.82v.36a11.96 11.96 0 0 1-3.236 8.033A11.97 11.97 0 0 1 12.182 24h-.361a12 12 0 0 1-4.145-.806 12 12 0 0 1-4.274-2.836A12.06 12.06 0 0 1 .576 15.67 12 12 0 0 1 0 12.181v-.361a11.92 11.92 0 0 1 1.992-6.396 12.2 12.2 0 0 1 4.71-4.172A11.9 11.9 0 0 1 11.82 0m-.153 1.23a10.72 10.72 0 0 0-6.43 2.375 10.8 10.8 0 0 0-3.319 4.573 10.86 10.86 0 0 0 .193 8.12 10.8 10.8 0 0 0 3.546 4.421 10.7 10.7 0 0 0 4.786 1.946c1.456.209 2.955.124 4.376-.26a10.76 10.76 0 0 0 5.075-3.062 10.74 10.74 0 0 0 2.686-5.28 10.9 10.9 0 0 0-.122-4.682 10.77 10.77 0 0 0-7.098-7.626 10.8 10.8 0 0 0-3.693-.525"/></svg></span></a> is an essential deployment tool. It provides a simple web interface to create YAML manifests. Select the method of installation (Operator or Helm), the Dell storage platform, and specify features and attributes :</p>
+<p><img alt="Installation Wizard" src="../../assets/images/csm-best-practices/installation-wizard.png" /></p>
+<p><em>The CSM Installation Wizard generates configuration YAML for both Helm and Operator deployments.</em></p>
+<p>When you select Helm, the generated YAML contains all attributes for the Helm chart installation. When you select Operator, you generate the CRD that the Operator uses to install the CSMs :</p>
+<p><img alt="Helm vs Operator YAML" src="../../assets/images/csm-best-practices/helm-vs-operator-yaml.png" /></p>
+<p><em>Side-by-side comparison of Helm values (left) and Operator CRD (right).</em></p>
+<h3 id="store-configuration-in-a-versioning-system">Store Configuration in a Versioning System</h3>
+<div class="admonition warning">
+<p class="admonition-title">Most important step</p>
+<p>After the YAML files are generated (and possibly modified) and used to install, they <strong>must</strong> be saved in a version control system.</p>
+</div>
+<p>This is critical during upgrades when you need to compare against a later install manifest. An integrated option is to use a GitOps agent to store the installation files and apply them. Examples :</p>
+<ul>
+<li><a href="https://infohub.delltechnologies.com/en-us/p/dell-container-storage-modules-a-gitops-ready-platform/">Azure ARC/FluxCD <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2z"/></svg></span></a></li>
+<li><a href="https://infohub.delltechnologies.com/en-us/l/videos-131/argocd-deployment-of-stateful-application-dell-powerflex-container-storage-services-1/">ArgoCD <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.581 0q.656.056 1.299.186c1.679.383 3.121 1.213 4.382 2.365 1.161 1.06 1.917 2.372 2.335 3.881.089.321.216.56.586.624.205.035.238.245.239.43q.003.97.002 1.94l-.002 1.21c-.001.356-.116.479-.466.474-.211-.003-.293.119-.344.291q-.219.735-.552 1.426c-.818 1.682-2.084 2.938-3.688 3.87q-.116.067-.233.131c-.252.137-.258.146-.155.415.114.299.358.529.664.625.269.096.553.134.827.21a.7.7 0 0 1 .236.094c-.066.082-.156.067-.231.082-.36.073-.713.184-1.086.17a1.3 1.3 0 0 1-.438-.064c-.114-.045-.152-.006-.176.109a5.4 5.4 0 0 0-.084.92c-.015.617-.071 1.23-.112 1.844-.042.598-.018.651.558.842q.422.14.842.286c.069.024.15.038.192.117-.04.057-.098.035-.146.035q-.739.006-1.478.001c-.524-.005-.806-.282-.845-.803-.055-.762-.12-1.524-.182-2.286a1 1 0 0 0-.026-.12c-.079.455-.065.879-.084 1.298-.023.528-.008 1.057-.007 1.584 0 .27.086.388.335.483.359.135.711.295 1.114.262.141-.012.276.062.402.129.032.017.073.033.069.073-.004.043-.049.047-.084.045-.657-.019-1.317.065-1.972-.028-.323-.046-.533-.236-.631-.552-.094-.303-.114-.617-.137-.93-.046-.626-.078-1.253-.116-1.88a.22.22 0 0 0-.061-.171.28.28 0 0 0-.031.193q-.003 1.434-.001 2.866c0 .388.123.575.494.708.481.172.976.298 1.47.423.11.028.225.047.242.192h-1.852q-.077-.016-.155-.03c-.701-.1-1.001-.372-1.143-1.042l-.067-.331-.226-1.103q-.104.181-.144.386c-.083.399-.151.802-.243 1.2-.113.493-.444.763-.932.857l-.33.063H8.558c.057-.171.216-.185.355-.221.476-.127.96-.223 1.417-.409a.6.6 0 0 0 .397-.521c.058-.435.002-.865-.013-1.296a1.5 1.5 0 0 0-.078-.315.4.4 0 0 0-.071.207q-.037.444-.075.886c-.038.432-.273.716-.679.81a1.7 1.7 0 0 1-.37.045q-.836.003-1.673-.005c-.048 0-.109.019-.148-.065.178-.103.377-.168.582-.187a5.7 5.7 0 0 0 .939-.193c.42-.114.522-.249.512-.687-.023-.931-.091-1.86-.069-2.791.004-.184.001-.368.001-.551a2.4 2.4 0 0 0-.05.385 40 40 0 0 1-.186 2.623c-.052.513-.296.748-.804.805-.446.051-.889.002-1.332-.02-.108-.006-.234.012-.339-.064.043-.066.106-.07.16-.087.362-.115.725-.224 1.086-.344.246-.081.35-.235.355-.492a2 2 0 0 0-.003-.232 45 45 0 0 1-.105-2.149 6 6 0 0 0-.035-.478c-.024-.188-.131-.287-.295-.258-.505.092-.99-.006-1.473-.139-.059-.016-.134-.007-.178-.088a1 1 0 0 1 .285-.09q.383-.078.753-.208c.312-.112.564-.347.695-.651.089-.203.056-.317-.112-.398-1.418-.683-2.512-1.73-3.391-3.017a8.2 8.2 0 0 1-1.123-2.447c-.067-.246-.156-.3-.383-.26-.306.053-.401.006-.535-.273v-3.49c.144-.303.205-.341.534-.329.235.01.247-.004.309-.242.396-1.508 1.082-2.861 2.171-3.988C6.9 1.42 8.523.631 10.34.203c.456-.108.922-.15 1.387-.203zm7.974 8.948a7 7 0 0 0-.048-.938 8 8 0 0 0-.099-.65c-.598-2.964-2.344-5.02-5.051-6.268-1.553-.715-3.21-.835-4.878-.511-3.248.633-5.396 2.583-6.539 5.652-.436 1.173-.495 2.406-.37 3.65.087.935.339 1.846.745 2.694.585 1.213 1.444 2.207 2.477 3.058q.516.43 1.121.719c.235.111.247.105.245-.146q.009-.24-.009-.48c-.125-1.02-.142-2.045-.169-3.069a.39.39 0 0 0-.184-.353c-.385-.268-.713-.592-.921-1.019-.474-.97-.372-2.361.813-3.215.136-.097.217-.19.198-.373a1.7 1.7 0 0 1 .031-.442c.177-1.187.748-2.138 1.722-2.84.68-.492 1.442-.772 2.286-.782.483-.007.953.11 1.414.244 1.609.467 2.846 2.07 2.845 3.697a.64.64 0 0 0 .268.565c.463.371.821.83.943 1.426.22 1.077-.083 1.982-.979 2.634-.266.194-.347.406-.333.698q.002.071-.002.142l-.062 1.439c-.025.586-.138 1.165-.117 1.754.008.223.006.226.201.128a7.5 7.5 0 0 0 2.393-1.903c1.32-1.577 2.074-3.372 2.059-5.511M9.117 12.102c1.489.021 2.443-1.578 1.716-2.879a1.94 1.94 0 0 0-1.699-.991c-1.094-.004-1.954.822-1.958 1.881-.005 1.148.813 1.985 1.941 1.989m5.794 0c1.101.002 1.935-.823 1.935-1.917 0-1.091-.846-1.949-1.92-1.947-1.064.003-1.94.866-1.943 1.915-.003 1.105.831 1.948 1.928 1.949m-1.472 1.937c-.208.128-.407.277-.63.384-.536.257-1.063.257-1.579-.048-.158-.094-.308-.201-.464-.298-.047-.028-.092-.103-.15-.062-.044.03-.01.1-.001.151q.055.27.082.544c.027.565.293.992.742 1.31a.98.98 0 0 0 .791.186c.565-.119 1.025-.614 1.124-1.218.043-.266.005-.544.109-.803a.13.13 0 0 0-.024-.146m-8.78-4.92c-.012-1.102.143-2.055.54-2.961.633-1.443 1.642-2.553 2.98-3.374a.38.38 0 0 1 .459.067c.06.06.036.118.01.178a1.1 1.1 0 0 1-.48.51c-1.079.639-1.829 1.571-2.357 2.688a6.3 6.3 0 0 0-.618 2.986c.055 1.309.439 2.516 1.213 3.588.088.104.148.23.173.365.01.08.059.168-.031.228a.31.31 0 0 1-.288.041.5.5 0 0 1-.234-.185c-.72-.979-1.193-2.056-1.331-3.273-.036-.326-.004-.653-.036-.858M8.94 2.34a.373.373 0 0 1 .378-.382c.211.001.409.226.416.473.004.138-.309.39-.476.386-.189-.005-.318-.2-.318-.477m-.465 7.48a.61.61 0 0 1 .586-.631c.38-.003.671.271.675.633.004.356-.27.622-.639.621-.38-.002-.621-.241-.622-.623m6.496.623c-.381-.002-.625-.255-.621-.646a.635.635 0 0 1 .596-.613.656.656 0 0 1 .669.643c.001.354-.275.618-.644.616"/></svg></span></a></li>
+</ul>
+<hr />
+<h2 id="upgrades-with-helm">Upgrades with Helm</h2>
+<p>CSI and CSM upgrades are straightforward with Helm charts. Use the wizard to generate the Helm manifest for the target version, then run <code>helm upgrade</code> with the new manifest.</p>
+<p>You can enable or disable new modules, but you must carry over your customizations. For example, if you changed the default volume prefix, update it again in the new manifest.</p>
+<p>Compare the new manifest with the one used during installation. At the CLI, use <a href="https://www.freecodecamp.org/news/git-diff-command/">git diff <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2z"/></svg></span></a>. Visual Studio Code has a <a href="https://devblogs.microsoft.com/visualstudio/new-in-visual-studio-compare-files-with-solution-explorer/">built-in compare tool <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2z"/></svg></span></a> for a GUI approach.</p>
+<hr />
+<h2 id="upgrades-with-operator">Upgrades with Operator</h2>
+<p>In the Operator framework, the Operator itself must be updated first. Each Operator version supports three versions of the CSMs (n, n-1, n-2). Check the <a href="https://github.com/dell/csm-operator">dell/csm-operator <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></span></a> samples folder for the list of CRD versions per storage platform :</p>
+<p><img alt="Operator samples folder" src="../../assets/images/csm-best-practices/operator-samples-folder.png" /></p>
+<p><em>The samples folder in csm-operator shows supported CRD versions for each platform.</em></p>
+<p>Once you upgrade the Operator (either manually or through auto-upgrade in OpenShift), configure the latest CRD :</p>
+<p><strong>Step 1 :</strong> Generate the CRD using the wizard. It helps to remember the options you selected during the initial installation.</p>
+<p><strong>Step 2 :</strong> Compare the latest CRD with the original. Use git diff or VS Code :</p>
+<p><img alt="CRD diff in VS Code" src="../../assets/images/csm-best-practices/crd-diff-vscode.png" /></p>
+<p><em>Comparing old and new CRDs in VS Code to identify changes.</em></p>
+<p><strong>Step 3 :</strong> Reconcile changes in the new CRD. Version number differences are expected. However, environment-specific and feature selections must be carried over :</p>
+<ul>
+<li><strong>Terminology changes</strong> (less probable) :</li>
+</ul>
+<p><img alt="Diff terminology" src="../../assets/images/csm-best-practices/diff-terminology.png" /></p>
+<p><em>Field names may change between versions.</em></p>
+<ul>
+<li><strong>Environment details</strong> :</li>
+</ul>
+<p><img alt="Diff environment" src="../../assets/images/csm-best-practices/diff-environment.png" /></p>
+<p><em>Endpoints, credentials, and storage identifiers must be preserved.</em></p>
+<ul>
+<li><strong>Features and attributes</strong> :</li>
+</ul>
+<p><img alt="Diff features" src="../../assets/images/csm-best-practices/diff-features.png" /></p>
+<p><em>Feature toggles selected in the wizard need to be carried forward.</em></p>
+<h3 id="apply-the-new-crd">Apply the New CRD</h3>
+<p><strong>Red Hat OpenShift GUI :</strong></p>
+<ol>
+<li>Navigate to the CRD YAML section</li>
+<li>Copy the new YAML file contents</li>
+<li>Replace the <strong>spec</strong> section of the CRD (not the metadata section)</li>
+<li>Save. The Operator picks up the latest CRD and updates the CSMs.</li>
+</ol>
+<p><img alt="OpenShift CRD YAML" src="../../assets/images/csm-best-practices/openshift-crd-yaml.png" /></p>
+<p><em>Replacing the spec section in the OpenShift CRD editor.</em></p>
+<p><strong>kubectl CLI :</strong></p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>ContainerStorageModule<span class="w"> </span>&lt;name&gt;
+kubectl<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>new_CRD.yaml
+</code></pre></div>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>We hope this post helps you make your CSM upgrades smoothly. For questions or assistance, reach out to the community on <a href="https://github.com/dell/csm/issues/">GitHub <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></span></a> or <a href="https://dell.enterprise.slack.com/archives/C025E763URH">Slack :simple-slack:</a>.</p>
+<h2 id="sources">Sources</h2>
+<ul>
+<li><a href="https://dell.github.io/csm-docs/docs/deployment/csmoperator/">Dell CSM Operator documentation <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.963 14.6V9.324h1.222v4.204h2.14v1.07h-3.362zm-9.784-3.288 2.98-2.292q.42.343.841.687l-2.827 2.14.611.535 2.827-2.216q.42.343.841.688a296 296 0 0 1-2.827 2.216l.61.536 2.83-2.295-.001-1.986h1.223v4.204h2.216v1.07h-3.362v-1.987q-1.491 1.146-2.981 2.292l-2.981-2.292c-.144.729-.653 1.36-1.312 1.694a2.7 2.7 0 0 1-.915.276c-.183.022-.367.017-.551.017H3.516V9.325H5.69a2.54 2.54 0 0 1 1.563.557c.454.36.778.872.927 1.43m-3.516-.917v3.21l.953-.001a1.38 1.38 0 0 0 1.036-.523 1.74 1.74 0 0 0 .182-1.889 1.5 1.5 0 0 0-.976-.766c-.166-.04-.338-.03-.507-.032zM11.82 0h.337a11.94 11.94 0 0 1 5.405 1.373 12.1 12.1 0 0 1 4.126 3.557A11.93 11.93 0 0 1 24 11.82v.36a11.96 11.96 0 0 1-3.236 8.033A11.97 11.97 0 0 1 12.182 24h-.361a12 12 0 0 1-4.145-.806 12 12 0 0 1-4.274-2.836A12.06 12.06 0 0 1 .576 15.67 12 12 0 0 1 0 12.181v-.361a11.92 11.92 0 0 1 1.992-6.396 12.2 12.2 0 0 1 4.71-4.172A11.9 11.9 0 0 1 11.82 0m-.153 1.23a10.72 10.72 0 0 0-6.43 2.375 10.8 10.8 0 0 0-3.319 4.573 10.86 10.86 0 0 0 .193 8.12 10.8 10.8 0 0 0 3.546 4.421 10.7 10.7 0 0 0 4.786 1.946c1.456.209 2.955.124 4.376-.26a10.76 10.76 0 0 0 5.075-3.062 10.74 10.74 0 0 0 2.686-5.28 10.9 10.9 0 0 0-.122-4.682 10.77 10.77 0 0 0-7.098-7.626 10.8 10.8 0 0 0-3.693-.525"/></svg></span></a></li>
+<li><a href="https://dell.github.io/csm-docs/docs/deployment/csminstallationwizard/src/index.html">CSM Installation Wizard <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.963 14.6V9.324h1.222v4.204h2.14v1.07h-3.362zm-9.784-3.288 2.98-2.292q.42.343.841.687l-2.827 2.14.611.535 2.827-2.216q.42.343.841.688a296 296 0 0 1-2.827 2.216l.61.536 2.83-2.295-.001-1.986h1.223v4.204h2.216v1.07h-3.362v-1.987q-1.491 1.146-2.981 2.292l-2.981-2.292c-.144.729-.653 1.36-1.312 1.694a2.7 2.7 0 0 1-.915.276c-.183.022-.367.017-.551.017H3.516V9.325H5.69a2.54 2.54 0 0 1 1.563.557c.454.36.778.872.927 1.43m-3.516-.917v3.21l.953-.001a1.38 1.38 0 0 0 1.036-.523 1.74 1.74 0 0 0 .182-1.889 1.5 1.5 0 0 0-.976-.766c-.166-.04-.338-.03-.507-.032zM11.82 0h.337a11.94 11.94 0 0 1 5.405 1.373 12.1 12.1 0 0 1 4.126 3.557A11.93 11.93 0 0 1 24 11.82v.36a11.96 11.96 0 0 1-3.236 8.033A11.97 11.97 0 0 1 12.182 24h-.361a12 12 0 0 1-4.145-.806 12 12 0 0 1-4.274-2.836A12.06 12.06 0 0 1 .576 15.67 12 12 0 0 1 0 12.181v-.361a11.92 11.92 0 0 1 1.992-6.396 12.2 12.2 0 0 1 4.71-4.172A11.9 11.9 0 0 1 11.82 0m-.153 1.23a10.72 10.72 0 0 0-6.43 2.375 10.8 10.8 0 0 0-3.319 4.573 10.86 10.86 0 0 0 .193 8.12 10.8 10.8 0 0 0 3.546 4.421 10.7 10.7 0 0 0 4.786 1.946c1.456.209 2.955.124 4.376-.26a10.76 10.76 0 0 0 5.075-3.062 10.74 10.74 0 0 0 2.686-5.28 10.9 10.9 0 0 0-.122-4.682 10.77 10.77 0 0 0-7.098-7.626 10.8 10.8 0 0 0-3.693-.525"/></svg></span></a></li>
+<li><a href="https://infohub.delltechnologies.com/en-us/p/best-practices-for-deployment-and-life-cycle-management-of-dell-csm-modules/">Original article on Dell InfoHub <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.963 14.6V9.324h1.222v4.204h2.14v1.07h-3.362zm-9.784-3.288 2.98-2.292q.42.343.841.687l-2.827 2.14.611.535 2.827-2.216q.42.343.841.688a296 296 0 0 1-2.827 2.216l.61.536 2.83-2.295-.001-1.986h1.223v4.204h2.216v1.07h-3.362v-1.987q-1.491 1.146-2.981 2.292l-2.981-2.292c-.144.729-.653 1.36-1.312 1.694a2.7 2.7 0 0 1-.915.276c-.183.022-.367.017-.551.017H3.516V9.325H5.69a2.54 2.54 0 0 1 1.563.557c.454.36.778.872.927 1.43m-3.516-.917v3.21l.953-.001a1.38 1.38 0 0 0 1.036-.523 1.74 1.74 0 0 0 .182-1.889 1.5 1.5 0 0 0-.976-.766c-.166-.04-.338-.03-.507-.032zM11.82 0h.337a11.94 11.94 0 0 1 5.405 1.373 12.1 12.1 0 0 1 4.126 3.557A11.93 11.93 0 0 1 24 11.82v.36a11.96 11.96 0 0 1-3.236 8.033A11.97 11.97 0 0 1 12.182 24h-.361a12 12 0 0 1-4.145-.806 12 12 0 0 1-4.274-2.836A12.06 12.06 0 0 1 .576 15.67 12 12 0 0 1 0 12.181v-.361a11.92 11.92 0 0 1 1.992-6.396 12.2 12.2 0 0 1 4.71-4.172A11.9 11.9 0 0 1 11.82 0m-.153 1.23a10.72 10.72 0 0 0-6.43 2.375 10.8 10.8 0 0 0-3.319 4.573 10.86 10.86 0 0 0 .193 8.12 10.8 10.8 0 0 0 3.546 4.421 10.7 10.7 0 0 0 4.786 1.946c1.456.209 2.955.124 4.376-.26a10.76 10.76 0 0 0 5.075-3.062 10.74 10.74 0 0 0 2.686-5.28 10.9 10.9 0 0 0-.122-4.682 10.77 10.77 0 0 0-7.098-7.626 10.8 10.8 0 0 0-3.693-.525"/></svg></span></a></li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+      
+    </article>
+  </div>
+
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/extra.js"></script>
+      
+    
+  </body>
+</html>

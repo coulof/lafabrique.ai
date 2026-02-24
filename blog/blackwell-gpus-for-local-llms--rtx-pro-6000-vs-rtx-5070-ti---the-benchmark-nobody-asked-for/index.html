@@ -1,0 +1,2240 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Eight LLM models, two Blackwell GPUs, two backends, two operating systems. The $950 card punches way above its weight.">
+      
+      
+      
+        <link rel="canonical" href="https://lafabrique.ai/blog/blackwell-gpus-for-local-llms--rtx-pro-6000-vs-rtx-5070-ti---the-benchmark-nobody-asked-for/">
+      
+      
+        <link rel="prev" href="../devstral-2-and-vibe-hidden-gems-of-ai-coding-agents/">
+      
+      
+        <link rel="next" href="../my-ai-coworker-ships-fast-breaks-things-and-never-takes-a-coffee-break/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+    
+    
+      
+        <title>Blackwell GPUs for Local LLMs : RTX PRO 6000 vs RTX 5070 Ti - The Benchmark Nobody Asked For - LAFABRIQUE.AI — Catppuccin week 🐱</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#blackwell-gpus-for-local-llms-rtx-pro-6000-vs-rtx-5070-ti" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="LAFABRIQUE.AI — Catppuccin week 🐱" class="md-header__button md-logo" aria-label="LAFABRIQUE.AI — Catppuccin week 🐱" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 18v2h4v-2zm0-4v2h10v-2zm6 4v2h4v-2zm6-4v2h4v-2zm0 4v2h4v-2zM2 22V8l5 4V8l5 4V8l5 4 1-10h3l1 10v10z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LAFABRIQUE.AI — Catppuccin week 🐱
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Blackwell GPUs for Local LLMs : RTX PRO 6000 vs RTX 5070 Ti - The Benchmark Nobody Asked For
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Blog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://huggingface.co/spaces/bauagonzo/chat-my-resume" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Chat my Resume
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://gia.lafabrique.ai/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  GIA
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://poll.lafabrique.ai" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Live Poll
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://pb.lafabrique.ai" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Pastebin
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="LAFABRIQUE.AI — Catppuccin week 🐱" class="md-nav__button md-logo" aria-label="LAFABRIQUE.AI — Catppuccin week 🐱" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 18v2h4v-2zm0-4v2h10v-2zm6 4v2h4v-2zm6-4v2h4v-2zm0 4v2h4v-2zM2 22V8l5 4V8l5 4V8l5 4 1-10h3l1 10v10z"/></svg>
+
+    </a>
+    LAFABRIQUE.AI — Catppuccin week 🐱
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Blog
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Blog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Archive
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Archive
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2026/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2025
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2024/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2024
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2023/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2023
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2022/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2022
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2021/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2021
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../archive/2020/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2020
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Categories
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/announcements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Announcements
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/ansible/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/dell/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dell
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/devops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevOps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/disaster-recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disaster Recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/kubernetes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/linux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linux
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../category/tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://huggingface.co/spaces/bauagonzo/chat-my-resume" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chat my Resume
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://gia.lafabrique.ai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GIA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://poll.lafabrique.ai" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Poll
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://pb.lafabrique.ai" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pastebin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-benchmark-nobody-asked-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Benchmark Nobody Asked For
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tldr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TL;DR
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gpu-specifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPU Specifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-bench" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Bench
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-results-pro-6000-vs-5070-ti" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Results : PRO 6000 vs 5070 Ti
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Results : PRO 6000 vs 5070 Ti">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prompt-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompt Processing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-per-dollar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance per Dollar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pro-6000-large-models-32b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PRO 6000 : Large Models (32B+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vulkan-vs-cuda-closer-than-you-think" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vulkan vs CUDA : Closer Than You Think
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-cooling-trap-why-our-early-numbers-were-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Cooling Trap : Why Our Early Numbers Were Wrong
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Cooling Trap : Why Our Early Numbers Were Wrong">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-on-paper-it-should-have-worked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why On Paper It Should Have Worked
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-it-actually-failed-i-guess" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why It Actually Failed (I guess)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#community-results-confirm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Community Results Confirm
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross-os-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-OS Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#who-should-buy-what" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Who Should Buy What
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methodology
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methodology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-q4_k_m-quantization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Q4_K_M Quantization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benchmark-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benchmark Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../" class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+              <div class="md-post__authors md-typeset">
+                
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="../../assets/images/coulof-avatar.png" alt="coulof">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          coulof
+                        
+                      </strong>
+                      <br>
+                      Author
+                    </span>
+                  </div>
+                
+              </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2026-02-12 00:00:00+00:00" class="md-ellipsis">February 12, 2026</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../category/ai/">AI</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              10 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+
+
+
+
+<h1 id="blackwell-gpus-for-local-llms-rtx-pro-6000-vs-rtx-5070-ti">Blackwell GPUs for Local LLMs : RTX PRO 6000 vs RTX 5070 Ti</h1>
+<h2 id="the-benchmark-nobody-asked-for">The Benchmark Nobody Asked For</h2>
+<p><em>Tested on AMD Ryzen 7 9800X3D with llama.cpp b7966 via localscore-bench, February 2026</em></p>
+<hr />
+<h2 id="tldr">TL;DR</h2>
+<p>We benchmarked eight LLM models (1B to 70B parameters) on two Blackwell GPUs with Vulkan and CUDA 13.1, on both Linux and Windows.</p>
+<p><strong>The headlines :</strong></p>
+<ul>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 6h18v12H5zm9 3a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3M9 8a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2v-4a2 2 0 0 1-2-2zm-8 2h2v10h16v2H1z"/></svg></span> <strong>The $950 card delivers 4 to 7x more tokens per dollar.</strong> For models under 12B, the 5070 Ti is the rational choice.</li>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3c-1.27 0-2.4.8-2.82 2H3v2h1.95L2 14c-.47 2 1 3 3.5 3s4.06-1 3.5-3L6.05 7h3.12c.33.85.98 1.5 1.83 1.83V20H2v2h20v-2h-9V8.82c.85-.32 1.5-.97 1.82-1.82h3.13L15 14c-.47 2 1 3 3.5 3s4.06-1 3.5-3l-2.95-7H21V5h-6.17C14.4 3.8 13.27 3 12 3m0 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1m-6.5 5.25L7 14H4zm13 0L20 14h-3z"/></svg></span> <strong>Vulkan and CUDA perform within 5 to 15% on cold hardware.</strong> Pick whichever works for your setup.</li>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20.79 13.95-2.33.62-2-1.13v-2.88l2-1.13 2.33.62.52-1.93-1.77-.47.46-1.77-1.93-.52-.62 2.33-2 1.13L13 7.38V5.12l1.71-1.71L13.29 2 12 3.29 10.71 2 9.29 3.41 11 5.12v2.26L8.5 8.82l-2-1.13-.58-2.33L4 5.88l.47 1.77-1.77.47.52 1.93 2.33-.62 2 1.13v2.89l-2 1.13-2.33-.62-.52 1.93 1.77.47L4 18.12l1.93.52.62-2.33 2-1.13L11 16.62v2.26l-1.71 1.71L10.71 22 12 20.71 13.29 22l1.41-1.41-1.7-1.71v-2.26l2.5-1.45 2 1.13.62 2.33 1.88-.51-.47-1.77 1.77-.47zM9.5 10.56 12 9.11l2.5 1.45v2.88L12 14.89l-2.5-1.45z"/></svg></span> <strong>The 5070 Ti just works. The PRO 6000 needs server cooling to get to its full potential.</strong> Active fans vs passive heatsink is a real differentiator.</li>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.41 13.41 6 19l1.41-1.42L1.83 12m20.41-6.42L11.66 16.17 7.5 12l-1.43 1.41L11.66 19l12-12M18 7l-1.41-1.42-6.35 6.35 1.42 1.41z"/></svg></span> <strong>OS barely matters.</strong> Linux and Windows within 5 to 10%.</li>
+<li><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 17H7V7h10m4 4V9h-2V7a2 2 0 0 0-2-2h-2V3h-2v2h-2V3H9v2H7c-1.11 0-2 .89-2 2v2H3v2h2v2H3v2h2v2a2 2 0 0 0 2 2h2v2h2v-2h2v2h2v-2h2a2 2 0 0 0 2-2v-2h2v-2h-2v-2m-6 2h-2v-2h2m2-2H9v6h6z"/></svg></span> <strong>VRAM is the main reason to buy the PRO 6000.</strong> It earns its price at 32B+, not at 12B.</li>
+</ul>
+<!-- more -->
+
+<hr />
+<h2 id="the-setup">The Setup</h2>
+<p><img alt="Our test bench : RTX PRO 6000 Blackwell Server Edition in an Antec case" src="../../assets/images/llm-bench-lab/psyche-build.jpg" width="600" /></p>
+<p><em>The Antec C5 mid-tower with seven case fans, doing its best to cool a 600W passive GPU.</em></p>
+<h3 id="gpu-specifications">GPU Specifications</h3>
+<table>
+<thead>
+<tr>
+<th>Spec</th>
+<th><a href="https://www.nvidia.com/en-us/data-center/rtx-pro-6000-blackwell-server-edition/?ncid=no-ncid">RTX PRO 6000 SE <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.948 8.798v-1.43a7 7 0 0 1 .424-.018c3.922-.124 6.493 3.374 6.493 3.374s-2.774 3.851-5.75 3.851a3.7 3.7 0 0 1-1.158-.185v-4.346c1.528.185 1.837.857 2.747 2.385l2.04-1.714s-1.492-1.952-4-1.952a6 6 0 0 0-.796.035m0-4.735v2.138l.424-.027c5.45-.185 9.01 4.47 9.01 4.47s-4.08 4.964-8.33 4.964a6.5 6.5 0 0 1-1.095-.097v1.325c.3.035.61.062.91.062 3.957 0 6.82-2.023 9.593-4.408.459.371 2.34 1.263 2.73 1.652-2.633 2.208-8.772 3.984-12.253 3.984-.335 0-.653-.018-.971-.053v1.864H24V4.063zm0 10.326v1.131c-3.657-.654-4.673-4.46-4.673-4.46s1.758-1.944 4.673-2.262v1.237H8.94c-1.528-.186-2.73 1.245-2.73 1.245s.68 2.412 2.739 3.11M2.456 10.9s2.164-3.197 6.5-3.533V6.201C4.153 6.59 0 10.653 0 10.653s2.35 6.802 8.948 7.42v-1.237c-4.84-.6-6.492-5.936-6.492-5.936"/></svg></span></a></th>
+<th><a href="https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5070-family/">RTX 5070 Ti <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.948 8.798v-1.43a7 7 0 0 1 .424-.018c3.922-.124 6.493 3.374 6.493 3.374s-2.774 3.851-5.75 3.851a3.7 3.7 0 0 1-1.158-.185v-4.346c1.528.185 1.837.857 2.747 2.385l2.04-1.714s-1.492-1.952-4-1.952a6 6 0 0 0-.796.035m0-4.735v2.138l.424-.027c5.45-.185 9.01 4.47 9.01 4.47s-4.08 4.964-8.33 4.964a6.5 6.5 0 0 1-1.095-.097v1.325c.3.035.61.062.91.062 3.957 0 6.82-2.023 9.593-4.408.459.371 2.34 1.263 2.73 1.652-2.633 2.208-8.772 3.984-12.253 3.984-.335 0-.653-.018-.971-.053v1.864H24V4.063zm0 10.326v1.131c-3.657-.654-4.673-4.46-4.673-4.46s1.758-1.944 4.673-2.262v1.237H8.94c-1.528-.186-2.73 1.245-2.73 1.245s.68 2.412 2.739 3.11M2.456 10.9s2.164-3.197 6.5-3.533V6.201C4.153 6.59 0 10.653 0 10.653s2.35 6.802 8.948 7.42v-1.237c-4.84-.6-6.492-5.936-6.492-5.936"/></svg></span></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Architecture</td>
+<td>Blackwell (GB202)</td>
+<td>Blackwell (GB203)</td>
+</tr>
+<tr>
+<td>VRAM</td>
+<td>96 GB GDDR7</td>
+<td>16 GB GDDR7</td>
+</tr>
+<tr>
+<td>Memory bandwidth</td>
+<td>~1,792 GB/s</td>
+<td>~896 GB/s</td>
+</tr>
+<tr>
+<td>TDP</td>
+<td>600W (configurable 300-600W)</td>
+<td>300W</td>
+</tr>
+<tr>
+<td>Cooling</td>
+<td>Passive (no fans)</td>
+<td>Active (dual/triple fan)</td>
+</tr>
+<tr>
+<td>Target</td>
+<td>Server / workstation rack</td>
+<td>Consumer desktop</td>
+</tr>
+<tr>
+<td>Street price (Feb 2026)</td>
+<td>~$10,000</td>
+<td>~$950</td>
+</tr>
+</tbody>
+</table>
+<h3 id="test-bench">Test Bench</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>AMD Ryzen 7 9800X3D</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>60 GB DDR5</td>
+</tr>
+<tr>
+<td>OS</td>
+<td>openSUSE Tumbleweed <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.724 0a12 12 0 0 0-9.448 4.623c1.464.391 2.5.727 2.81.832.005-.19.037-1.893.037-1.893s.004-.04.025-.06c.026-.026.065-.018.065-.018.385.056 8.602 1.274 12.066 3.292.427.25.638.517.902.786.958.99 2.223 5.108 2.359 5.957.005.033-.036.07-.054.083a5 5 0 0 1-.313.228c-.82.55-2.708 1.872-5.13 1.656-2.176-.193-5.018-1.44-8.445-3.699q.503 1.185 1 2.371c.497.258 5.287 2.7 7.651 2.651 1.904-.04 3.941-.968 4.756-1.458 0 0 .179-.108.257-.048.085.066.061.167.041.27-.05.234-.164.66-.242.863l-.065.165c-.093.25-.183.482-.356.625-.48.436-1.246.784-2.446 1.305-1.855.812-4.865 1.328-7.66 1.31-1.001-.022-1.968-.133-2.817-.232-1.743-.197-3.161-.357-4.026.269A12 12 0 0 0 10.724 24a12 12 0 0 0 12-12 12 12 0 0 0-12-12M13.4 6.963a3.5 3.5 0 0 0-2.521.942 3.5 3.5 0 0 0-1.114 2.449 3.53 3.53 0 0 0 3.39 3.64 3.48 3.48 0 0 0 2.524-.946 3.5 3.5 0 0 0 1.114-2.446 3.527 3.527 0 0 0-3.393-3.64zm-.03 1.035a2.46 2.46 0 0 1 2.368 2.539 2.43 2.43 0 0 1-.774 1.706 2.46 2.46 0 0 1-1.762.659 2.46 2.46 0 0 1-2.364-2.542c.02-.655.3-1.26.777-1.707a2.42 2.42 0 0 1 1.756-.655zm.402 1.23c-.602 0-1.087.325-1.087.727 0 .4.485.725 1.087.725.6 0 1.088-.326 1.088-.725 0-.402-.487-.726-1.088-.726Z"/></svg></span> + Windows 11 Pro <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M2 3h9v9H2zm9 19H2v-9h9zM21 3v9h-9V3zm0 19h-9v-9h9z"/></svg></span> (same hardware)</td>
+</tr>
+<tr>
+<td>Engine</td>
+<td><a href="https://github.com/ggml-org/llama.cpp">llama.cpp <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></span></a> b7966 (Vulkan with coopmat2, CUDA 13.1)</td>
+</tr>
+<tr>
+<td>Benchmark</td>
+<td><a href="https://github.com/bauagonzo/localscore-bench">localscore-bench <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></span></a> : pp1024+tg1024 primary config</td>
+</tr>
+</tbody>
+</table>
+<p>Both GPUs share Blackwell architecture and GDDR7 memory. The PRO 6000 has 6x the VRAM, 2x the memory bandwidth, 2x the power budget, and zero fans.</p>
+<hr />
+<h2 id="the-results-pro-6000-vs-5070-ti">The Results : PRO 6000 vs 5070 Ti</h2>
+<h3 id="prompt-processing">Prompt Processing</h3>
+<p><img alt="Prompt Processing comparison" src="../../assets/images/llm-bench-lab/merged-pp-comparison.png" /></p>
+<p><em>Fig 1 : Prompt processing throughput (<a href="#model-selection">model selection rationale</a>). The PRO 6000 leads by 1.5 to 2x, matching its 2:1 memory bandwidth advantage.</em></p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>PRO 6000 Vulkan</th>
+<th>PRO 6000 CUDA</th>
+<th>5070 Ti Vulkan</th>
+<th>5070 Ti CUDA</th>
+<th>PRO 6000 lead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://huggingface.co/bartowski/google_gemma-3-1b-it-GGUF">Gemma 3 1B <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053z"/></svg></span></a></td>
+<td>47,925</td>
+<td>42,075</td>
+<td>32,064</td>
+<td>29,862</td>
+<td>1.5x</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF">Llama 3.2 1B <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a7 7 0 0 0 .265.86 5.3 5.3 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.7 3.7 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a45 45 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.26 2.26 0 0 1 1.088-.285"/></svg></span></a></td>
+<td>49,329</td>
+<td>44,046</td>
+<td>28,768</td>
+<td>23,843</td>
+<td>1.7x</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/bartowski/microsoft_Phi-4-mini-instruct-GGUF">Phi-4 Mini 3.8B :simple-microsoft:</a></td>
+<td>19,917</td>
+<td>20,525</td>
+<td>10,212</td>
+<td>10,705</td>
+<td>1.9x</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/bartowski/Ministral-8B-Instruct-2410-GGUF">Ministral 8B <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m9 4 2.5 5.5L17 12l-5.5 2.5L9 20l-2.5-5.5L1 12l5.5-2.5zm0 4.83L8 11l-2.17 1L8 13l1 2.17L10 13l2.17-1L10 11zM19 9l-1.26-2.74L15 5l2.74-1.25L19 1l1.25 2.75L23 5l-2.75 1.26zm0 14-1.26-2.74L15 19l2.74-1.25L19 15l1.25 2.75L23 19l-2.75 1.26z"/></svg></span></a></td>
+<td>10,692</td>
+<td>11,780</td>
+<td>6,041</td>
+<td>5,901</td>
+<td>1.8x</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/bartowski/google_gemma-3-12b-it-GGUF">Gemma 3 12B <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053z"/></svg></span></a></td>
+<td>7,668</td>
+<td>8,040</td>
+<td>3,950</td>
+<td>4,127</td>
+<td>1.9x</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>PP = Prompt Processing (tokens/sec). All models use <a href="#why-q4_k_m-quantization">Q4_K_M quantization</a>.</p>
+</blockquote>
+<p>The PRO 6000's wider memory bus shows up clearly in prefill workloads. Prompt processing is memory bandwidth bound : the 2:1 bandwidth ratio (~1,792 vs ~896 GB/s) maps directly to the observed 1.5 to 2x performance gap.</p>
+<h3 id="token-generation">Token Generation</h3>
+<p><img alt="Token Generation comparison" src="../../assets/images/llm-bench-lab/merged-tg-comparison.png" /></p>
+<p><em>Fig 2 : Token generation throughput. The gap narrows to 1.1 to 1.5x. Both cards are faster than anyone can read.</em></p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>PRO 6000 (best)</th>
+<th>5070 Ti (best)</th>
+<th>PRO 6000 lead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemma 3 1B</td>
+<td>484 t/s</td>
+<td>436 t/s</td>
+<td>1.1x</td>
+</tr>
+<tr>
+<td>Llama 3.2 1B</td>
+<td>836 t/s</td>
+<td>615 t/s</td>
+<td>1.4x</td>
+</tr>
+<tr>
+<td>Phi-4 Mini 3.8B</td>
+<td>331 t/s</td>
+<td>229 t/s</td>
+<td>1.4x</td>
+</tr>
+<tr>
+<td>Ministral 8B</td>
+<td>212 t/s</td>
+<td>137 t/s</td>
+<td>1.5x</td>
+</tr>
+<tr>
+<td>Gemma 3 12B</td>
+<td>123 t/s</td>
+<td>92 t/s</td>
+<td>1.3x</td>
+</tr>
+</tbody>
+</table>
+<p>Token generation is what you feel during a conversation. Gemma 3 12B at 92 t/s on the 5070 Ti produces roughly 70 words per second. Average human reading speed is about 4 words per second. Both cards have a 16x margin over human reading speed. The delta between them is measurable but imperceptible during interactive use.</p>
+<h3 id="performance-per-dollar">Performance per Dollar</h3>
+<p><img alt="Value comparison" src="../../assets/images/llm-bench-lab/merged-perf-per-dollar.png" /></p>
+<p><em>Fig 3 : Token generation per $1,000 invested. The 5070 Ti delivers 4 to 7x more tokens per dollar across every model tested.</em></p>
+<p>At roughly $950 versus $10,000, the 5070 Ti generates 4 to 7x more tokens per dollar spent. The PRO 6000 justifies its price through VRAM capacity, not throughput on small models. If your workload fits in 16 GB, the math is clear.</p>
+<h3 id="pro-6000-large-models-32b">PRO 6000 : Large Models (32B+)</h3>
+<p>This is where the PRO 6000 earns its keep. These models do not fit in 16 GB :</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>PRO 6000 Vulkan PP</th>
+<th>PRO 6000 Vulkan TG</th>
+<th>5070 Ti</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://huggingface.co/bartowski/Qwen_Qwen3-32B-GGUF">Qwen3 32B <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.391 16.22c-.963.044-.865-.459-.302-1.234 1.32-1.768 3.82-4.236 3.906-5.982.151-2.283-2.143-3.026-4.501-3.004-1.645.022-3.344.492-4.501.906C5 8.315 2.489 10.576.909 13.076-.768 15.554-.216 17.923 3.322 18c2.716-.109 4.48-.862 6.32-1.802.01 0-5.086 1.453-6.958.383l-.008-.002c-.193-.11-.404-.264-.457-.683-.012-.885 1.46-1.802 2.283-2.097v-1.533a5.4 5.4 0 0 0 1.955.366 5.38 5.38 0 0 0 3.472-1.265c.037.13.056.278.044.447h.371c.048-.394-.172-.706-.172-.706-.333-.529-.915-.52-.915-.52s.315.137.529.466a4.95 4.95 0 0 1-4.665.932l1.21-1.2-.336-.874c2.435-.852 4.48-1.507 7.812-2.085l-.746-.624.389-.24c2.01.568 3.325.985 3.253 2.051a2.7 2.7 0 0 1-.202.611c-.584 1.158-2.326 3.09-3.029 3.898-.465.535-.92 1.06-1.245 1.562-.335.503-.54.971-.551 1.42.043 3.504 10.334-1.64 12.324-3.003-2.943 1.266-6.113 2.489-9.609 2.718"/></svg></span></a></td>
+<td>2,865</td>
+<td>59</td>
+<td>Does not fit</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/bartowski/Llama-3.3-70B-Instruct-GGUF">Llama 3.3 70B <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a7 7 0 0 0 .265.86 5.3 5.3 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.7 3.7 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a45 45 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.26 2.26 0 0 1 1.088-.285"/></svg></span></a></td>
+<td>1,394</td>
+<td>30</td>
+<td>Does not fit</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Qwen3 32B at Q4_K_M needs ~20 GB VRAM. Llama 3.3 70B at Q4_K_M needs ~42 GB. These are PRO 6000 territory.</p>
+</blockquote>
+<p>Qwen3 32B at 59 t/s is comfortable for interactive use. Llama 70B at 30 t/s is usable but not snappy. Both are impossible on the 5070 Ti without aggressive quantization and partial CPU offload.</p>
+<hr />
+<h2 id="vulkan-vs-cuda-closer-than-you-think">Vulkan vs CUDA : Closer Than You Think</h2>
+<p>On the PRO 6000 with cold hardware, the backend gap is surprisingly small :</p>
+<p><img alt="Vulkan vs CUDA on cold PRO 6000" src="../../assets/images/llm-bench-lab/merged-vulkan-vs-cuda-cold.png" /></p>
+<p><em>Fig 4 : PRO 6000 Vulkan vs CUDA on cold hardware (Feb 15 data). The difference is 5 to 15% either way depending on model and workload.</em></p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Vulkan PP</th>
+<th>CUDA PP</th>
+<th>Vulkan TG</th>
+<th>CUDA TG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemma 3 1B</td>
+<td><strong>47,925</strong></td>
+<td>42,075</td>
+<td>463</td>
+<td><strong>484</strong></td>
+</tr>
+<tr>
+<td>Llama 3.2 1B</td>
+<td><strong>49,329</strong></td>
+<td>44,046</td>
+<td><strong>836</strong></td>
+<td>719</td>
+</tr>
+<tr>
+<td>Phi-4 Mini 3.8B</td>
+<td>19,917</td>
+<td><strong>20,525</strong></td>
+<td><strong>331</strong></td>
+<td>314</td>
+</tr>
+<tr>
+<td>Ministral 8B</td>
+<td>10,692</td>
+<td><strong>11,780</strong></td>
+<td><strong>212</strong></td>
+<td>199</td>
+</tr>
+<tr>
+<td>Gemma 3 12B</td>
+<td>7,668</td>
+<td><strong>8,040</strong></td>
+<td>121</td>
+<td><strong>123</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Vulkan wins PP on 1B models (+12 to 14%). CUDA wins PP on 3.8B and 12B models (+3 to 5%). Token generation splits similarly. No clear winner.</p>
+<p>On the 5070 Ti, the story is even simpler : both backends perform within 5 to 10% across the board. No anomalies, no crashes. Pick whichever works for your setup.</p>
+<hr />
+<h2 id="the-cooling-trap-why-our-early-numbers-were-wrong">The Cooling Trap : Why Our Early Numbers Were Wrong</h2>
+<p>We initially reported Vulkan winning by 26 to 67% across the board. That was wrong.</p>
+<p>The real story : we were comparing cold Vulkan runs against thermally degraded CUDA runs. The PRO 6000 Server Edition is a <strong>600W passive GPU with zero fans</strong>. NVIDIA designed it for <a href="https://www.dell.com/en-us/shop/dell-poweredge-servers/sf/poweredge">rack servers <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.963 14.6V9.324h1.222v4.204h2.14v1.07h-3.362zm-9.784-3.288 2.98-2.292q.42.343.841.687l-2.827 2.14.611.535 2.827-2.216q.42.343.841.688a296 296 0 0 1-2.827 2.216l.61.536 2.83-2.295-.001-1.986h1.223v4.204h2.216v1.07h-3.362v-1.987q-1.491 1.146-2.981 2.292l-2.981-2.292c-.144.729-.653 1.36-1.312 1.694a2.7 2.7 0 0 1-.915.276c-.183.022-.367.017-.551.017H3.516V9.325H5.69a2.54 2.54 0 0 1 1.563.557c.454.36.778.872.927 1.43m-3.516-.917v3.21l.953-.001a1.38 1.38 0 0 0 1.036-.523 1.74 1.74 0 0 0 .182-1.889 1.5 1.5 0 0 0-.976-.766c-.166-.04-.338-.03-.507-.032zM11.82 0h.337a11.94 11.94 0 0 1 5.405 1.373 12.1 12.1 0 0 1 4.126 3.557A11.93 11.93 0 0 1 24 11.82v.36a11.96 11.96 0 0 1-3.236 8.033A11.97 11.97 0 0 1 12.182 24h-.361a12 12 0 0 1-4.145-.806 12 12 0 0 1-4.274-2.836A12.06 12.06 0 0 1 .576 15.67 12 12 0 0 1 0 12.181v-.361a11.92 11.92 0 0 1 1.992-6.396 12.2 12.2 0 0 1 4.71-4.172A11.9 11.9 0 0 1 11.82 0m-.153 1.23a10.72 10.72 0 0 0-6.43 2.375 10.8 10.8 0 0 0-3.319 4.573 10.86 10.86 0 0 0 .193 8.12 10.8 10.8 0 0 0 3.546 4.421 10.7 10.7 0 0 0 4.786 1.946c1.456.209 2.955.124 4.376-.26a10.76 10.76 0 0 0 5.075-3.062 10.74 10.74 0 0 0 2.686-5.28 10.9 10.9 0 0 0-.122-4.682 10.77 10.77 0 0 0-7.098-7.626 10.8 10.8 0 0 0-3.693-.525"/></svg></span></a> with engineered front-to-back airflow tunnels. We put it in an <a href="https://www.antec.com/product/case/c5">Antec C5 <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2z"/></svg></span></a> mid-tower.</p>
+<p><img alt="Thermal impact on CUDA performance" src="../../assets/images/llm-bench-lab/merged-thermal-impact.png" /></p>
+<p><em>Fig 5 : Same GPU, same backend, same model. The only variable is temperature. Cold hardware delivers 10 to 14x more throughput.</em></p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>CUDA Cold (45°C)</th>
+<th>CUDA Hot (90-100°C)</th>
+<th>Ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemma 3 1B</td>
+<td>42,075 t/s</td>
+<td>3,273 t/s</td>
+<td><strong>13x</strong></td>
+</tr>
+<tr>
+<td>Llama 3.2 1B</td>
+<td>44,046 t/s</td>
+<td>3,348 t/s</td>
+<td><strong>13x</strong></td>
+</tr>
+<tr>
+<td>Phi-4 Mini 3.8B</td>
+<td>20,525 t/s</td>
+<td>1,490 t/s</td>
+<td><strong>14x</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The hot numbers came from running models sequentially without cooldown (Feb 9 scaling test). Temperature climbed to 90-100°C and NVIDIA's thermal management aggressively downclocked the GPU. The cold numbers came from running each model individually on a fresh GPU (Feb 15).</p>
+<h3 id="why-on-paper-it-should-have-worked">Why On Paper It Should Have Worked</h3>
+<p>Our <a href="https://www.antec.com/product/case/c5">Antec C5 <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2z"/></svg></span></a> has seven Antec P12 120 mm ARGB fans : six reversed as intake (bottom and side panels) and one rear exhaust. The case uses a vertical bottom-to-top airflow scheme. Each P12 pushes roughly 50 to 60 CFM at 1.5 to 2.0 mm H₂O static pressure. Total theoretical intake : about 330 CFM.</p>
+<p>A standard electronic cooling formula gives the required airflow through a heat source :</p>
+<blockquote>
+<p><strong>CFM = (Watts × 3.16) / ΔT (°C)</strong></p>
+</blockquote>
+<p>For our 600W card :</p>
+<table>
+<thead>
+<tr>
+<th>Allowed Air Temp Rise</th>
+<th>Required CFM Through Card</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10°C</td>
+<td>~190 CFM</td>
+</tr>
+<tr>
+<td>15°C</td>
+<td>~125 CFM</td>
+</tr>
+<tr>
+<td>20°C</td>
+<td>~95 CFM</td>
+</tr>
+</tbody>
+</table>
+<p>At 330 CFM total, even assuming 50% loss to imperfect routing, we should land at ~165 CFM through the card. On paper that covers the 10°C rise scenario with margin. In practice, the losses are much worse than 50%.</p>
+<h3 id="why-it-actually-failed-i-guess">Why It Actually Failed (I guess)</h3>
+<p>Three factors compound to turn 330 CFM into a fraction of what the GPU heatsink receives :</p>
+<p><strong>Direction.</strong> The P12 fans push air vertically and from the side. The GPU heatsink fins run front to back. Air flows around the card, not through it. Without baffles or ducting to redirect the airflow, the path of least resistance bypasses the heatsink entirely.</p>
+<p><strong>Static pressure.</strong> Dense passive heatsink fins in server GPUs need 5 to 10+ mm H₂O of static pressure to force air through the tight fin spacing. The Antec P12 fans deliver 1.5 to 2.0 mm H₂O. That is 3 to 5x less than required. Consumer case fans are designed for volume, not pressure. They move a lot of air through open space but stall against resistance.</p>
+<p><strong>No ducting.</strong> In a server chassis, the entire airflow path is sealed : cold air enters the front, passes through the heatsink, exits the rear. Nothing leaks. In our open mid-tower, hot air recirculates freely. Cold air takes shortcuts around the card instead of through it. The GPU sits in a pocket of turbulence, not a cooling tunnel.</p>
+<p>Realistic estimate : only 30 to 40% of total chassis airflow actually passes through the GPU heatsink. That puts effective GPU airflow at roughly 100 to 130 CFM, barely enough for a 15°C rise at 600W and not enough for sustained loads.</p>
+<h3 id="community-results-confirm">Community Results Confirm</h3>
+<p>Other builders on <a href="https://www.reddit.com/r/LocalLLM/comments/1mmqghu/rtx_pro_6000_se_is_crushing_it/">r/LocalLLM <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 3.314 1.343 6.314 3.515 8.485l-2.286 2.286A.72.72 0 0 0 1.738 24H12c6.627 0 12-5.373 12-12S18.627 0 12 0m4.388 3.199a1.999 1.999 0 1 1-1.947 2.46v.002a2.37 2.37 0 0 0-2.032 2.341v.007c1.776.067 3.4.567 4.686 1.363a2.802 2.802 0 1 1 2.908 4.753c-.088 3.256-3.637 5.876-7.997 5.876-4.361 0-7.905-2.617-7.998-5.87a2.8 2.8 0 0 1 1.189-5.34c.645 0 1.239.218 1.712.585 1.275-.79 2.881-1.291 4.64-1.365v-.01a3.23 3.23 0 0 1 2.88-3.207 2 2 0 0 1 1.959-1.595m-8.085 8.376c-.784 0-1.459.78-1.506 1.797s.64 1.429 1.426 1.429 1.371-.369 1.418-1.385-.553-1.841-1.338-1.841m7.406 0c-.786 0-1.385.824-1.338 1.841s.634 1.385 1.418 1.385c.785 0 1.473-.413 1.426-1.429-.046-1.017-.721-1.797-1.506-1.797m-3.703 4.013c-.974 0-1.907.048-2.77.135a.222.222 0 0 0-.183.305 3.2 3.2 0 0 0 2.953 1.964 3.2 3.2 0 0 0 2.953-1.964.222.222 0 0 0-.184-.305 28 28 0 0 0-2.769-.135"/></svg></span></a> tested the same card in non-server enclosures :</p>
+<table>
+<thead>
+<tr>
+<th>Fan Setup</th>
+<th>CFM (Directed)</th>
+<th>Idle Temp</th>
+<th>Load Temp</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thermalright TY-143 (single)</td>
+<td>~130</td>
+<td>50°C</td>
+<td>85°C</td>
+<td>Marginal, throttles under sustained load</td>
+</tr>
+<tr>
+<td>Wathai 120x38mm server fan + custom duct</td>
+<td>~220</td>
+<td>33°C</td>
+<td>61-62°C</td>
+<td>Stable, no throttling</td>
+</tr>
+</tbody>
+</table>
+<p>The difference is not raw CFM. It is <strong>directed, high-pressure airflow</strong> through the heatsink with proper ducting. The Wathai setup uses a server-grade fan (high static pressure) mounted in a custom shroud that forces every cubic foot of air through the card.</p>
+<p>Over the course of our testing, we recorded <strong>seven GPU crashes</strong> (PCIe <code>VK_ERROR_DEVICE_LOST</code>, requiring full power cycle each time). The 5070 Ti completed all runs without a single issue. Active cooling works.</p>
+<div class="admonition warning">
+<p class="admonition-title">Don't do this at home</p>
+<p>Running a 600W passive server GPU in a consumer mid-tower is a terrible idea. If you insist, you need server-grade fans (5+ mm H₂O static pressure), custom ducting or a shroud that seals the airflow path through the heatsink, and temperature monitoring with automatic shutdown at 95°C.</p>
+</div>
+<hr />
+<h2 id="cross-os-comparison">Cross-OS Comparison</h2>
+<p>We ran the full suite on Windows 11 Pro (same hardware, driver 582.32). Performance is within 5 to 10% :</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Linux Vulkan PP</th>
+<th>Windows CUDA PP</th>
+<th>Linux Vulkan TG</th>
+<th>Windows CUDA TG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gemma 3 1B</td>
+<td>47,925</td>
+<td>27,952</td>
+<td>463</td>
+<td>517</td>
+</tr>
+<tr>
+<td>Llama 3.2 1B</td>
+<td>49,329</td>
+<td>30,764</td>
+<td>836</td>
+<td>774</td>
+</tr>
+<tr>
+<td>Phi-4 Mini 3.8B</td>
+<td>19,917</td>
+<td>14,631</td>
+<td>331</td>
+<td>320</td>
+</tr>
+<tr>
+<td>Ministral 8B</td>
+<td>10,692</td>
+<td>7,767</td>
+<td>212</td>
+<td>171</td>
+</tr>
+<tr>
+<td>Qwen3 32B</td>
+<td>2,865</td>
+<td>2,202</td>
+<td>59</td>
+<td>59</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>This table compares different backends (Vulkan on Linux, CUDA on Windows). The PP differences largely reflect the backend gap, not the OS gap. TG numbers are comparable, confirming OS choice has minimal impact on generation speed.</p>
+</blockquote>
+<hr />
+<h2 id="who-should-buy-what">Who Should Buy What</h2>
+<p><strong>Get a 5070 Ti (~$950) if :</strong></p>
+<ul>
+<li>Your models fit in 16 GB (up to ~12B at Q4_K_M)</li>
+<li>You want the best performance per dollar</li>
+<li>You value stability and simple cooling</li>
+<li>You are building a home lab or dev workstation</li>
+<li>Example models : Llama 3.2 1B/3B, Phi-4 Mini 3.8B, Gemma 3 12B, Qwen3 14B</li>
+</ul>
+<p><strong>Get a PRO 6000 (~$10,000) if :</strong></p>
+<ul>
+<li>You need 32B+ parameter models running locally</li>
+<li>You want 70B+ models without aggressive quantization</li>
+<li>You are running production inference workloads</li>
+<li>You have proper server cooling or plan to build custom ducting</li>
+<li>Example models : Qwen3 32B, Llama 3.3 70B (Q4_K_M), Mistral Large 2 123B (Q2_K)</li>
+</ul>
+<hr />
+<h2 id="methodology">Methodology</h2>
+<h3 id="model-selection">Model Selection</h3>
+<p>We selected models to cover the range of practical local LLM use cases :</p>
+<ul>
+<li><strong>1B models</strong> (Gemma 3 1B, Llama 3.2 1B) : fast assistants, edge deployment, RAG pipelines. These fit comfortably in any GPU and stress memory bandwidth at the small end.</li>
+<li><strong>3.8B</strong> (Phi-4 Mini) : Microsoft's compact reasoning model, popular for its quality-to-size ratio.</li>
+<li><strong>8B</strong> (Ministral 8B) : the sweet spot for many users. Good quality, fast enough for real-time chat.</li>
+<li><strong>12B</strong> (Gemma 3 12B) : the largest models that fit in 16 GB at Q4_K_M. This is the ceiling for the 5070 Ti and the natural comparison point.</li>
+<li><strong>32B</strong> (Qwen3 32B) and <strong>70B</strong> (Llama 3.3 70B) : PRO 6000 territory. These need 20 to 42 GB of VRAM at Q4_K_M and represent the practical upper bound for single-GPU inference.</li>
+</ul>
+<p>All models were sourced from <a href="https://huggingface.co/bartowski">bartowski's GGUF collection <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12.025 1.13c-5.77 0-10.449 4.647-10.449 10.378 0 1.112.178 2.181.503 3.185.064-.222.203-.444.416-.577a.96.96 0 0 1 .524-.15c.293 0 .584.124.84.284.278.173.48.408.71.694.226.282.458.611.684.951v-.014c.017-.324.106-.622.264-.874s.403-.487.762-.543c.3-.047.596.06.787.203s.31.313.4.467c.15.257.212.468.233.542.01.026.653 1.552 1.657 2.54.616.605 1.01 1.223 1.082 1.912.055.537-.096 1.059-.38 1.572.637.121 1.294.187 1.967.187.657 0 1.298-.063 1.921-.178-.287-.517-.44-1.041-.384-1.581.07-.69.465-1.307 1.081-1.913 1.004-.987 1.647-2.513 1.657-2.539.021-.074.083-.285.233-.542.09-.154.208-.323.4-.467a1.08 1.08 0 0 1 .787-.203c.359.056.604.29.762.543s.247.55.265.874v.015c.225-.34.457-.67.683-.952.23-.286.432-.52.71-.694.257-.16.547-.284.84-.285a.97.97 0 0 1 .524.151c.228.143.373.388.43.625l.006.04a10.3 10.3 0 0 0 .534-3.273c0-5.731-4.678-10.378-10.449-10.378M8.327 6.583a1.5 1.5 0 0 1 .713.174 1.487 1.487 0 0 1 .617 2.013c-.183.343-.762-.214-1.102-.094-.38.134-.532.914-.917.71a1.487 1.487 0 0 1 .69-2.803m7.486 0a1.487 1.487 0 0 1 .689 2.803c-.385.204-.536-.576-.916-.71-.34-.12-.92.437-1.103.094a1.487 1.487 0 0 1 .617-2.013 1.5 1.5 0 0 1 .713-.174m-10.68 1.55a.96.96 0 1 1 0 1.921.96.96 0 0 1 0-1.92m13.838 0a.96.96 0 1 1 0 1.92.96.96 0 0 1 0-1.92M8.489 11.458c.588.01 1.965 1.157 3.572 1.164 1.607-.007 2.984-1.155 3.572-1.164.196-.003.305.12.305.454 0 .886-.424 2.328-1.563 3.202-.22-.756-1.396-1.366-1.63-1.32q-.011.001-.02.006l-.044.026-.01.008-.03.024q-.018.017-.035.036l-.032.04a1 1 0 0 0-.058.09l-.014.025q-.049.088-.11.19a1 1 0 0 1-.083.116 1.2 1.2 0 0 1-.173.18q-.035.029-.075.058a1.3 1.3 0 0 1-.251-.243 1 1 0 0 1-.076-.107c-.124-.193-.177-.363-.337-.444-.034-.016-.104-.008-.2.022q-.094.03-.216.087-.06.028-.125.063l-.13.074q-.067.04-.136.086a3 3 0 0 0-.135.096 3 3 0 0 0-.26.219 2 2 0 0 0-.12.121 2 2 0 0 0-.106.128l-.002.002a2 2 0 0 0-.09.132l-.001.001a1.2 1.2 0 0 0-.105.212q-.013.036-.024.073c-1.139-.875-1.563-2.317-1.563-3.203 0-.334.109-.457.305-.454m.836 10.354c.824-1.19.766-2.082-.365-3.194-1.13-1.112-1.789-2.738-1.789-2.738s-.246-.945-.806-.858-.97 1.499.202 2.362c1.173.864-.233 1.45-.685.64-.45-.812-1.683-2.896-2.322-3.295s-1.089-.175-.938.647 2.822 2.813 2.562 3.244-1.176-.506-1.176-.506-2.866-2.567-3.49-1.898.473 1.23 2.037 2.16c1.564.932 1.686 1.178 1.464 1.53s-3.675-2.511-4-1.297c-.323 1.214 3.524 1.567 3.287 2.405-.238.839-2.71-1.587-3.216-.642-.506.946 3.49 2.056 3.522 2.064 1.29.33 4.568 1.028 5.713-.624m5.349 0c-.824-1.19-.766-2.082.365-3.194 1.13-1.112 1.789-2.738 1.789-2.738s.246-.945.806-.858.97 1.499-.202 2.362c-1.173.864.233 1.45.685.64.451-.812 1.683-2.896 2.322-3.295s1.089-.175.938.647-2.822 2.813-2.562 3.244 1.176-.506 1.176-.506 2.866-2.567 3.49-1.898-.473 1.23-2.037 2.16c-1.564.932-1.686 1.178-1.464 1.53s3.675-2.511 4-1.297c.323 1.214-3.524 1.567-3.287 2.405.238.839 2.71-1.587 3.216-.642.506.946-3.49 2.056-3.522 2.064-1.29.33-4.568 1.028-5.713-.624"/></svg></span></a> on Hugging Face, a widely used source for quantized models in the llama.cpp community.</p>
+<h3 id="why-q4_k_m-quantization">Why Q4_K_M Quantization</h3>
+<p>Q4_K_M (4-bit with k-quant medium) is the community default for a reason :</p>
+<ul>
+<li><strong>Quality :</strong> minimal perceptible degradation versus FP16 for most models. The k-quant family uses importance-weighted quantization that preserves critical layers at higher precision.</li>
+<li><strong>Size :</strong> roughly 4.5 bits per parameter effective, putting a 12B model at ~7 GB and a 70B model at ~42 GB. This fits the 5070 Ti's 16 GB and the PRO 6000's 96 GB respectively.</li>
+<li><strong>Performance :</strong> 4-bit operations are well-optimized in llama.cpp for both Vulkan and CUDA backends. Going lower (Q2_K, Q3_K) saves VRAM but loses quality. Going higher (Q6_K, Q8_0) improves quality marginally but does not fit as many models.</li>
+</ul>
+<p>Q4_K_M represents the practical trade-off most users make. All models use the same quantization to keep the comparison fair.</p>
+<h3 id="benchmark-configuration">Benchmark Configuration</h3>
+<p>We used <a href="https://github.com/bauagonzo/localscore-bench">localscore-bench <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></span></a> which runs three configurations per model :</p>
+<ul>
+<li><strong>pp1024+tg16</strong> : prompt processing focused (simulates loading a long context)</li>
+<li><strong>pp1024+tg1024</strong> : balanced (our primary metric, simulates a typical chat turn)</li>
+<li><strong>pp16+tg1536</strong> : token generation focused (simulates long-form output)</li>
+</ul>
+<p>Each configuration runs three repetitions. The numbers in this post use the pp1024+tg1024 averages unless noted otherwise.</p>
+<p>Raw data, scripts, and GPU monitoring charts available at <a href="https://github.com/bauagonzo/llm-bench-lab">llm-bench-lab <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></span></a>.</p>
+<hr />
+<p><em>Last updated February 16, 2026.</em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+      
+    </article>
+  </div>
+
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../javascripts/extra.js"></script>
+      
+    
+  </body>
+</html>
