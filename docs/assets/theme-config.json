@@ -1,23 +1,23 @@
 {
   "_comment": "Theme config for LaFabrique.AI hero section. Updated weekly by cron. Format: name (display name), colors (array of 3 objects with name, hex, accent), banners (array of 3 filenames from docs/assets/images/banner/). The cron picks from the themes list below and writes the active theme.",
   "active": {
-    "name": "Catppuccin",
-    "icon": "🐱",
+    "name": "Nord",
+    "icon": "❄️",
     "colors": [
       {
-        "name": "peach",
-        "hex": "#fab387",
-        "accent": "#ef9f76"
+        "name": "frost",
+        "hex": "#88c0d0",
+        "accent": "#5e81ac"
       },
       {
-        "name": "mauve",
-        "hex": "#cba6f7",
-        "accent": "#b4befe"
+        "name": "aurora",
+        "hex": "#a3be8c",
+        "accent": "#8fbcbb"
       },
       {
-        "name": "teal",
-        "hex": "#94e2d5",
-        "accent": "#89dceb"
+        "name": "snow",
+        "hex": "#eceff4",
+        "accent": "#d8dee9"
       }
     ],
     "banners": [
