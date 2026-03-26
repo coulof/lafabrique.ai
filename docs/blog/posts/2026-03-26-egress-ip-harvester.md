@@ -40,45 +40,6 @@ This makes `VpcEgressGateway` available alongside Harvester's primary Canal CNI.
 
 ## Architecture
 
-```
-                             +----------------------+
-                             |      Internet        |
-                             +----------+-----------+
-                                        |
-                             +----------+-----------+
-                             |  Router 192.168.31.1 |
-                             +----------+-----------+
-                                        |
-                    +-------------------+-------------------+
-                    |   Physical Network 192.168.31.0/24    |
-                    +---+-------------------------------+---+
-                        |                               |
-               +--------+--------+             +--------+--------+
-               | eth0 (mgmt)     |             | eth1 (external) |
-               | 192.168.31.68   |             | ProviderNetwork |
-               +-----------------+             +--------+--------+
-                                                        |
-                                               +--------+--------+
-                                               | Egress Gateway  |
-                                               | eth0: OVN       |
-                                               | net1: external  |
-                                               | 192.168.31.101  |
-                                               +--------+--------+
-                                                        |
-                                               +--------+--------+
-                                               | OVN Router      |
-                                               | lr-policy       |
-                                               | reroutes tenant |
-                                               | traffic to gw   |
-                                               +--------+--------+
-                                                        |
-                                               +--------+--------+
-                                               | Tenant-A VMs    |
-                                               | 172.20.10.0/24  |
-                                               | egress: .101    |
-                                               +-----------------+
-```
-
 Each tenant gets its own overlay subnet, egress gateway, and dedicated external IP.
 The OVN logical router uses policy-based routing to redirect tenant traffic through the corresponding gateway, which applies SNAT before forwarding to the physical network.
 All VMs within a tenant namespace share the same egress IP, regardless of which node they run on.
