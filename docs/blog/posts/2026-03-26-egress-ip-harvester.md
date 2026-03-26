@@ -13,6 +13,8 @@ title: "Per-Namespace Egress IPs on Harvester"
 
 This article is the result of one of my very first deep-dives into Harvester :simple-suse: (aka [SUSE Virtualization](https://www.suse.com/products/rancher/virtualization/)) not related to storage. It describes how to configure dedicated egress IPs per tenant (aka `Namespace`) on Harvester using Kube-OVN's `VpcEgressGateway`.
 
+![Network architecture overview showing Harvester node, ProviderNetwork, VpcEgressGateway, and tenant VM connectivity](../../assets/images/egress-ip-harvester/network-architecture.png)
+
 <!-- more -->
 
 ## The problem
