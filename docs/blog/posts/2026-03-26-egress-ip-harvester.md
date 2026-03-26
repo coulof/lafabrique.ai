@@ -75,7 +75,7 @@ The OVN logical router uses policy-based routing to redirect tenant traffic thro
 
 - Harvester v1.8.0-rc2 with the kubeovn-operator addon enabled
 - A dedicated NIC (`eth1`) on the same L2 segment as the management network
-- MAC address spoofing enabled on the dedicated NIC (Hyper-V: VM Settings > Network Adapter > Advanced Features)
+- MAC address spoofing enabled on the dedicated NIC (Hyper-V: VM Settings > Network Adapter > Advanced Features). Without it, OVS sends packets with pod MACs that Hyper-V silently drops.
 
 ## Setup
 
