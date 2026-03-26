@@ -28,6 +28,14 @@ It supports [ECMP](https://en.wikipedia.org/wiki/Equal-cost_multi-path_routing){
 On Harvester v1.8.0-rc2, the [kubeovn-operator addon](https://docs.harvesterhci.io/v1.8/advanced/addons/kubeovn-operator){target="_blank"} ships Kube-OVN v1.15.4 with `--non-primary-cni-mode=true` enabled by default.
 This makes `VpcEgressGateway` available alongside Harvester's primary Canal CNI.
 
+!!! info "Harvester UI naming"
+    The Harvester UI renames certain Kubernetes resource kinds. This blog uses the original API names, but here is the mapping:
+
+    | Kubernetes Resource              | Harvester UI Name         |
+    |----------------------------------|---------------------------|
+    | `NetworkAttachmentDefinition`    | Virtual Machine Networks  |
+    | `Subnet`                         | Virtual Private Cloud     |
+
 ## Architecture
 
 ```
@@ -207,9 +215,12 @@ spec:
         - egress-internal-a
 ```
 
-### Step 4: Apply the workaround
+### Step 4: Apply the workaround 🔥
 
 The `VpcEgressGateway` controller has a known issue in `--non-primary-cni-mode`: it does not attach the internal OVN `Subnet` as a Multus network interface.
+
+This is caused by a missing annotation.
+
 A simple patch fixes this by setting the internal NAD as the pod's default network:
 
 ```bash
