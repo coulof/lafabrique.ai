@@ -11,7 +11,7 @@ title: "Per-Namespace Egress IPs on Harvester"
 
 # Per-Namespace Egress IPs on Harvester with Kube-OVN `VpcEgressGateway`
 
-This article is the result of one of my very first deep-dives into Harvester (aka [SUSE Virtualization](https://www.suse.com/products/rancher/virtualization/)) not related to storage. It describes how to configure dedicated egress IPs per tenant (aka namespace) on Harvester using Kube-OVN's `VpcEgressGateway`.
+This article is the result of one of my very first deep-dives into Harvester :simple-suse: (aka [SUSE Virtualization](https://www.suse.com/products/rancher/virtualization/)) not related to storage. It describes how to configure dedicated egress IPs per tenant (aka `Namespace`) on Harvester using Kube-OVN's `VpcEgressGateway`.
 
 <!-- more -->
 
@@ -74,9 +74,9 @@ The OVN logical router uses policy-based routing to redirect tenant traffic thro
 
 ## Prerequisites
 
-- Harvester v1.8.0-rc2 with the kubeovn-operator addon enabled
-- A dedicated NIC (`eth1`) on the same L2 segment as the management network
-- MAC address spoofing enabled on the dedicated NIC (Hyper-V: VM Settings > Network Adapter > Advanced Features). Without it, OVS sends packets with pod MACs that Hyper-V silently drops.
+- :simple-kubernetes: Harvester v1.8.0-rc2 with the kubeovn-operator addon enabled
+- :material-network-outline: A dedicated NIC (`eth1`) on the same L2 segment as the management network
+- :material-microsoft-windows: MAC address spoofing enabled on the dedicated NIC (Hyper-V: VM Settings > Network Adapter > Advanced Features). Without it, OVS sends packets with pod MACs that Hyper-V silently drops.
 
 ## Setup
 
@@ -270,11 +270,11 @@ When everything is healthy, you should see:
 - `NetworkAttachmentDefinitions`: both in `tenant-a`
 - `ProviderNetwork`: `eth1` READY
 
-### Connectivity and egress proof
+### Connectivity and egress proof :material-magnify:
 
 From the VM console, ping any external host:
 
-```bash
+```
 ping 8.8.8.8
 ```
 
@@ -312,7 +312,7 @@ VMs are on the internal overlay subnet, so the policy must reference that subnet
 
 ## Repository
 
-All manifests are available at [github.com/coulof/egress-ip-poc](https://github.com/coulof/egress-ip-poc){target="_blank"}.
+All manifests are available at :simple-github: [github.com/coulof/egress-ip-poc](https://github.com/coulof/egress-ip-poc){target="_blank"}.
 
 ```bash
 kubectl apply -f manifests/infra/
@@ -328,7 +328,7 @@ The setup requires a workaround for `--non-primary-cni-mode`, but the result is 
 
 ## Further reading
 
-- [Kube-OVN VpcEgressGateway documentation](https://kube-ovn.readthedocs.io/zh-cn/latest/en/vpc/vpc-egress-gateway/){target="_blank"}
-- [Harvester kubeovn-operator addon](https://docs.harvesterhci.io/v1.8/advanced/addons/kubeovn-operator){target="_blank"}
-- [Harvester networking deep-dive](https://docs.harvesterhci.io/v1.8/networking/deep-dive){target="_blank"}
-- [Kube-OVN architecture overview](https://kube-ovn.readthedocs.io/zh-cn/latest/en/start/architecture/){target="_blank"}
+- :material-network-outline: [Kube-OVN VpcEgressGateway documentation](https://kube-ovn.readthedocs.io/zh-cn/latest/en/vpc/vpc-egress-gateway/){target="_blank"}
+- :simple-suse: [Harvester kubeovn-operator addon](https://docs.harvesterhci.io/v1.8/advanced/addons/kubeovn-operator){target="_blank"}
+- :simple-suse: [Harvester networking deep-dive](https://docs.harvesterhci.io/v1.8/networking/deep-dive){target="_blank"}
+- :material-network-outline: [Kube-OVN architecture overview](https://kube-ovn.readthedocs.io/zh-cn/latest/en/start/architecture/){target="_blank"}
