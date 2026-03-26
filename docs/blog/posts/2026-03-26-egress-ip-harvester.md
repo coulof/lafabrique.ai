@@ -71,6 +71,7 @@ This makes `VpcEgressGateway` available alongside Harvester's primary Canal CNI.
 
 Each tenant gets its own overlay subnet, egress gateway, and dedicated external IP.
 The OVN logical router uses policy-based routing to redirect tenant traffic through the corresponding gateway, which applies SNAT before forwarding to the physical network.
+All Virtual Machines within a tenant namespace share the same egress IP, regardless of which node they run on.
 
 ## Prerequisites
 
@@ -285,14 +286,16 @@ Traffic from the VM appears with source IP `192.168.31.101`, the tenant's egress
 
 ## Adding more tenants
 
-Repeat steps 2 through 5 with a different namespace, internal subnet CIDR, and external IP:
+You can repeat steps 2 through 5 with a different namespace, internal subnet CIDR, and external IP
+
+For example the repo gives configuration for:
 
 | Tenant   | Internal Subnet  | Egress IP       |
 |----------|------------------|-----------------|
 | tenant-a | 172.20.10.0/24   | 192.168.31.101  |
 | tenant-b | 172.20.20.0/24   | 192.168.31.150  |
 
-Each tenant's traffic is isolated and exits through its own dedicated IP.
+That way all VMs in a given tenant exit with the same source IP, and each tenant's traffic is fully isolated.
 
 ## Key design decisions
 
