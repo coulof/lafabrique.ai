@@ -22,8 +22,8 @@ Firewalls, compliance audits, and partner integrations all rely on predictable s
 
 ## The solution
 
-Kube-OVN's [`VpcEgressGateway`](https://kube-ovn.readthedocs.io/zh-cn/latest/en/vpc/vpc-egress-gateway/){target="_blank"} CRD provides exactly this: a per-namespace egress gateway that applies [SNAT](https://en.wikipedia.org/wiki/Network_address_translation#SNAT){target="_blank"} to overlay traffic through a dedicated external IP.
-It supports [ECMP](https://en.wikipedia.org/wiki/Equal-cost_multi-path_routing){target="_blank"} load balancing and [BFD](https://en.wikipedia.org/wiki/Bidirectional_Forwarding_Detection){target="_blank"} for fast failover.
+Kube-OVN's [`VpcEgressGateway`](https://kube-ovn.readthedocs.io/zh-cn/latest/en/vpc/vpc-egress-gateway/){target="_blank"} CRD provides exactly this: a per-namespace egress gateway that applies [SNAT](https://en.wikipedia.org/wiki/Network_address_translation#SNAT){target="_blank"} :material-wikipedia: to overlay traffic through a dedicated external IP.
+It supports [ECMP](https://en.wikipedia.org/wiki/Equal-cost_multi-path_routing){target="_blank"} :material-wikipedia: load balancing and [BFD](https://en.wikipedia.org/wiki/Bidirectional_Forwarding_Detection){target="_blank"} :material-wikipedia: for fast failover.
 
 On Harvester v1.8.0-rc2, the [kubeovn-operator addon](https://docs.harvesterhci.io/v1.8/advanced/addons/kubeovn-operator){target="_blank"} ships Kube-OVN v1.15.4 with `--non-primary-cni-mode=true` enabled by default.
 This makes `VpcEgressGateway` available alongside Harvester's primary Canal CNI.
@@ -71,13 +71,13 @@ This makes `VpcEgressGateway` available alongside Harvester's primary Canal CNI.
 
 Each tenant gets its own overlay subnet, egress gateway, and dedicated external IP.
 The OVN logical router uses policy-based routing to redirect tenant traffic through the corresponding gateway, which applies SNAT before forwarding to the physical network.
-All Virtual Machines within a tenant namespace share the same egress IP, regardless of which node they run on.
+All VMs within a tenant namespace share the same egress IP, regardless of which node they run on.
 
 ## Prerequisites
 
-- :simple-kubernetes: Harvester v1.8.0-rc2 with the kubeovn-operator addon enabled
-- :material-network-outline: A dedicated NIC (`eth1`) on the same L2 segment as the management network
-- :material-microsoft-windows: MAC address spoofing enabled on the dedicated NIC (Hyper-V: VM Settings > Network Adapter > Advanced Features). Without it, OVS sends packets with pod MACs that Hyper-V silently drops.
+- Harvester v1.8.0-rc2 with the kubeovn-operator addon enabled :simple-kubernetes:
+- A dedicated NIC (`eth1`) on the same L2 segment as the management network :material-network-outline:
+- MAC address spoofing enabled on the dedicated NIC (Hyper-V: VM Settings > Network Adapter > Advanced Features). Without it, OVS sends packets with pod MACs that Hyper-V silently drops. :material-microsoft-windows:
 
 ## Setup
 
@@ -210,7 +210,7 @@ spec:
 ### Step 4: Apply the workaround
 
 The `VpcEgressGateway` controller has a known issue in `--non-primary-cni-mode`: it does not attach the internal OVN `Subnet` as a Multus network interface.
-A one-line patch fixes this by setting the internal NAD as the pod's default network:
+A simple patch fixes this by setting the internal NAD as the pod's default network:
 
 ```bash
 ./manifests/patch-deployment.sh tenant-a egress-tenant-a
@@ -286,9 +286,9 @@ Traffic from the VM appears with source IP `192.168.31.101`, the tenant's egress
 
 ## Adding more tenants
 
-You can repeat steps 2 through 5 with a different namespace, internal subnet CIDR, and external IP
+You can repeat steps 2 through 5 with a different namespace, internal subnet CIDR, and external IP.
 
-For example the repo gives configuration for:
+For example, the repo gives configuration for:
 
 | Tenant   | Internal Subnet  | Egress IP       |
 |----------|------------------|-----------------|
@@ -315,7 +315,7 @@ VMs are on the internal overlay subnet, so the policy must reference that subnet
 
 ## Repository
 
-All manifests are available at :simple-github: [github.com/coulof/egress-ip-poc](https://github.com/coulof/egress-ip-poc){target="_blank"}.
+All manifests are available at [github.com/coulof/egress-ip-poc](https://github.com/coulof/egress-ip-poc){target="_blank"} :simple-github:.
 
 ```bash
 kubectl apply -f manifests/infra/
@@ -331,7 +331,7 @@ The setup requires a workaround for `--non-primary-cni-mode`, but the result is 
 
 ## Further reading
 
-- :material-network-outline: [Kube-OVN VpcEgressGateway documentation](https://kube-ovn.readthedocs.io/zh-cn/latest/en/vpc/vpc-egress-gateway/){target="_blank"}
-- :simple-suse: [Harvester kubeovn-operator addon](https://docs.harvesterhci.io/v1.8/advanced/addons/kubeovn-operator){target="_blank"}
-- :simple-suse: [Harvester networking deep-dive](https://docs.harvesterhci.io/v1.8/networking/deep-dive){target="_blank"}
-- :material-network-outline: [Kube-OVN architecture overview](https://kube-ovn.readthedocs.io/zh-cn/latest/en/start/architecture/){target="_blank"}
+- [Kube-OVN VpcEgressGateway documentation](https://kube-ovn.readthedocs.io/zh-cn/latest/en/vpc/vpc-egress-gateway/){target="_blank"} :material-network-outline:
+- [Harvester kubeovn-operator addon](https://docs.harvesterhci.io/v1.8/advanced/addons/kubeovn-operator){target="_blank"} :simple-suse:
+- [Harvester networking deep-dive](https://docs.harvesterhci.io/v1.8/networking/deep-dive){target="_blank"} :simple-suse:
+- [Kube-OVN architecture overview](https://kube-ovn.readthedocs.io/zh-cn/latest/en/start/architecture/){target="_blank"} :material-network-outline:
