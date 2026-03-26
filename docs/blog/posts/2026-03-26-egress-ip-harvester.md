@@ -50,6 +50,8 @@ All VMs within a tenant namespace share the same egress IP, regardless of which 
 - A dedicated NIC (`eth1`) on the same L2 segment as the management network :material-network-outline:
 - MAC address spoofing enabled on the dedicated NIC (Hyper-V: VM Settings > Network Adapter > Advanced Features). Without it, OVS sends packets with pod MACs that Hyper-V silently drops. :material-microsoft-windows:
 
+![Harvester UI Add-ons page showing kubeovn-operator with Deploy Successful status](../../assets/images/egress-ip-harvester/kube-ovn-add-on.png)
+
 ## Setup
 
 ### Step 1: Create the infrastructure
@@ -154,6 +156,8 @@ spec:
     - 192.168.31.111..192.168.31.254
 ```
 
+![Harvester UI showing Virtual Machine Networks and Virtual Private Cloud for both tenants](../../assets/images/egress-ip-harvester/vpc-vm-networks.png)
+
 ### Step 3: Deploy the egress gateway
 
 Create the `VpcEgressGateway` CRD.
@@ -205,6 +209,8 @@ With DHCP enabled on the `Subnet`, VMs automatically receive an IP and default r
 kubectl apply -f manifests/tenant-a/06-vm-test-1.yaml
 ```
 
+![Harvester UI VM creation showing internal overlay network selection](../../assets/images/egress-ip-harvester/vm-network-2.png)
+
 ## Verification
 
 ### Resource overview
@@ -234,7 +240,7 @@ Run the following command to check all resources at once:
       && kubectl get provider-networks.kubeovn.io
     ```
 
-![Detailed network status showing subnets, NADs, and provider network](../../assets/images/egress-ip-harvester/network-status.png)
+![Full network details showing egress gateways, VMs, subnets, NADs, and provider network](../../assets/images/egress-ip-harvester/full-network-details.png)
 
 When everything is healthy, you should see:
 
