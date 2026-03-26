@@ -10,7 +10,7 @@ title: "Per-Namespace Egress IPs on Harvester"
 
 # Per-Namespace Egress IPs on Harvester with Kube-OVN `VpcEgressGateway`
 
-A step-by-step guide to configuring dedicated egress IPs per tenant on Harvester v1.8.0-rc2.
+This blog is the result of one of my very first deep-dives into Harvester (aka SUSE Virtualization) not related to storage. It describes how to configure dedicated egress IPs per tenant (aka namespace) on Harvester v1.8.0-rc2 using Kube-OVN's `VpcEgressGateway`.
 
 <!-- more -->
 
