@@ -5,12 +5,13 @@ authors:
 categories:
   - Kubernetes
   - Networking
+  - Harvester
 title: "Per-Namespace Egress IPs on Harvester"
 ---
 
 # Per-Namespace Egress IPs on Harvester with Kube-OVN `VpcEgressGateway`
 
-This blog is the result of one of my very first deep-dives into Harvester (aka SUSE Virtualization) not related to storage. It describes how to configure dedicated egress IPs per tenant (aka namespace) on Harvester v1.8.0-rc2 using Kube-OVN's `VpcEgressGateway`.
+This article is the result of one of my very first deep-dives into Harvester (aka [SUSE Virtualization](https://www.suse.com/products/rancher/virtualization/)) not related to storage. It describes how to configure dedicated egress IPs per tenant (aka namespace) on Harvester using Kube-OVN's `VpcEgressGateway`.
 
 <!-- more -->
 
@@ -21,8 +22,8 @@ Firewalls, compliance audits, and partner integrations all rely on predictable s
 
 ## The solution
 
-Kube-OVN's [`VpcEgressGateway`](https://kube-ovn.readthedocs.io/zh-cn/latest/en/vpc/vpc-egress-gateway/){target="_blank"} CRD provides exactly this: a per-namespace egress gateway that SNATs overlay traffic through a dedicated external IP.
-It supports ECMP load balancing and BFD for fast failover.
+Kube-OVN's [`VpcEgressGateway`](https://kube-ovn.readthedocs.io/zh-cn/latest/en/vpc/vpc-egress-gateway/){target="_blank"} CRD provides exactly this: a per-namespace egress gateway that applies [SNAT](https://en.wikipedia.org/wiki/Network_address_translation#SNAT){target="_blank"} to overlay traffic through a dedicated external IP.
+It supports [ECMP](https://en.wikipedia.org/wiki/Equal-cost_multi-path_routing){target="_blank"} load balancing and [BFD](https://en.wikipedia.org/wiki/Bidirectional_Forwarding_Detection){target="_blank"} for fast failover.
 
 On Harvester v1.8.0-rc2, the [kubeovn-operator addon](https://docs.harvesterhci.io/v1.8/advanced/addons/kubeovn-operator){target="_blank"} ships Kube-OVN v1.15.4 with `--non-primary-cni-mode=true` enabled by default.
 This makes `VpcEgressGateway` available alongside Harvester's primary Canal CNI.
@@ -82,7 +83,7 @@ The OVN logical router uses policy-based routing to redirect tenant traffic thro
 ### Step 1: Create the infrastructure
 
 Create a Kube-OVN `ProviderNetwork` on the dedicated NIC.
-This creates an OVS bridge that connects OVN to the physical network.
+This creates an [OVS](https://www.openvswitch.org/){target="_blank"} bridge that connects OVN to the physical network.
 
 ```yaml
 # manifests/infra/00-provider-network.yaml
@@ -114,7 +115,7 @@ kubectl get provider-networks.kubeovn.io pn-external
 ### Step 2: Configure tenant networking
 
 Each tenant needs four resources: an internal OVN overlay for VM traffic and an external underlay for the gateway's physical connectivity.
-Both use `kube-ovn` type `NetworkAttachmentDefinitions`, which is what Harvester's network webhook accepts.
+Both use `kube-ovn` type [`NetworkAttachmentDefinitions`](https://www.cni.dev/docs/spec/){target="_blank"} (NADs), which is what Harvester's network webhook accepts.
 
 **Internal overlay** (where VMs live):
 
@@ -235,26 +236,28 @@ kubectl apply -f manifests/tenant-a/06-vm-test-1.yaml
 
 Run the following command to check all resources at once:
 
-```bash
-echo "=== VPC Egress Gateways ===" \
-  && kubectl get vpc-egress-gateways.kubeovn.io -A -o wide \
-  && echo "" \
-  && echo "=== Virtual Machines ===" \
-  && kubectl get vmi -A -o wide \
-  && echo "" \
-  && echo "=== Gateway Pod ===" \
-  && kubectl get pods -n tenant-a \
-       -l ovn.kubernetes.io/vpc-egress-gateway -o wide \
-  && echo "" \
-  && echo "=== Subnets ===" \
-  && kubectl get subnets.kubeovn.io \
-  && echo "" \
-  && echo "=== Network Attachments ===" \
-  && kubectl get net-attach-def -A \
-  && echo "" \
-  && echo "=== ProviderNetwork ===" \
-  && kubectl get provider-networks.kubeovn.io
-```
+??? example "Full verification command"
+
+    ```bash
+    echo "=== VPC Egress Gateways ===" \
+      && kubectl get vpc-egress-gateways.kubeovn.io -A -o wide \
+      && echo "" \
+      && echo "=== Virtual Machines ===" \
+      && kubectl get vmi -A -o wide \
+      && echo "" \
+      && echo "=== Gateway Pod ===" \
+      && kubectl get pods -n tenant-a \
+           -l ovn.kubernetes.io/vpc-egress-gateway -o wide \
+      && echo "" \
+      && echo "=== Subnets ===" \
+      && kubectl get subnets.kubeovn.io \
+      && echo "" \
+      && echo "=== Network Attachments ===" \
+      && kubectl get net-attach-def -A \
+      && echo "" \
+      && echo "=== ProviderNetwork ===" \
+      && kubectl get provider-networks.kubeovn.io
+    ```
 
 ![Detailed network status showing subnets, NADs, and provider network](../../assets/images/egress-ip-harvester/network-status.png)
 
@@ -316,3 +319,16 @@ kubectl apply -f manifests/infra/
 kubectl apply -f manifests/tenant-a/
 ./manifests/patch-deployment.sh tenant-a egress-tenant-a
 ```
+
+## Conclusion
+
+With Kube-OVN's `VpcEgressGateway` and a dedicated NIC, you can assign stable, per-tenant egress IPs on Harvester.
+Each namespace gets its own SNAT gateway, making firewall rules and compliance audits straightforward.
+The setup requires a workaround for `--non-primary-cni-mode`, but the result is a clean, repeatable pattern that scales to as many tenants as you need.
+
+## Further reading
+
+- [Kube-OVN VpcEgressGateway documentation](https://kube-ovn.readthedocs.io/zh-cn/latest/en/vpc/vpc-egress-gateway/){target="_blank"}
+- [Harvester kubeovn-operator addon](https://docs.harvesterhci.io/v1.8/advanced/addons/kubeovn-operator){target="_blank"}
+- [Harvester networking deep-dive](https://docs.harvesterhci.io/v1.8/networking/deep-dive){target="_blank"}
+- [Kube-OVN architecture overview](https://kube-ovn.readthedocs.io/zh-cn/latest/en/start/architecture/){target="_blank"}
