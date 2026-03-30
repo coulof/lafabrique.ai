@@ -7,7 +7,7 @@
 
 set -euo pipefail
 
-REPO_ROOT="$HOME/go/src/github.com/coulof/lafabrique.ai"
+REPO_ROOT="$HOME/src/lafabrique.ai"
 TOOL_DIR="${REPO_ROOT}/tools/hero-gen"
 BANNER_DIR="${REPO_ROOT}/docs/assets/images/banner"
 OUTPUT_DIR="${TOOL_DIR}/output"
@@ -59,7 +59,7 @@ for theme in "${THEMES[@]}"; do
         prompt="A wide view of a futuristic laboratory filled with robotic machinery, scientists, and glowing control panels. ${colors}, sunlight streaming through skylights. ${char} repairing a humanoid robot, holding a tool as they work on the robot's open back. They have a subtle gentle smile, face softly lit by natural light from above. The robot sits on the ground with legs stretched out, made of white and yellow metal, looking at its own hand. ${detail} is casually dressed. Tools scattered around, a red toolbox nearby. Soft natural lighting on face, warm highlights. Style: very rough unfinished manga sketch on a torn piece of paper with irregular ragged paper edges, the drawing bleeds off the torn edges, no straight borders, ripped and uneven paper silhouette, heavy ink splatters, aggressive scratchy pen strokes, visible corrections and overdrawn lines, smudged graphite underneath, yellowed torn sketchbook page ripped from a notebook, Otomo raw storyboard feel, chaotic energy, imperfect and messy like a real artist's working draft, colored pencil accents bleeding through. HD quality."
 
         echo "  → ${theme}-${gender}..."
-        $VENV generate_hero.py --engine imagen --aspect-ratio 16:9 -o "$outfile" --prompt "$prompt"
+        $VENV generate_hero.py --engine flash --aspect-ratio 16:9 -o "$outfile" --prompt "$prompt"
     done
 done
 
