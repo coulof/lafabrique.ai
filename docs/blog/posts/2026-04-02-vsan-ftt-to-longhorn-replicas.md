@@ -292,6 +292,67 @@ parameters:
 
 **vSAN equivalent:** FTT=0 with no constraints. Minimum resources for non-critical workloads.
 
+### Special case: Longhorn on external storage (SAN/NAS)
+
+Longhorn can consume storage from external arrays (FC, iSCSI, NVMe-oF) via block devices or mounted filesystems on each node. When the backend SAN already provides its own RAID redundancy, the question shifts: what are Longhorn replicas actually protecting against?
+
+On local disks, replicas protect against **disk failure + node failure**. On SAN-backed storage, disk failure is already handled by the array. Longhorn replicas only protect against:
+
+- Kubernetes node failure (node crash, reboot, network isolation)
+- Longhorn engine or Instance Manager crash
+- Network path loss between node and SAN (though multipath mitigates this)
+
+| Replicas | Use case | Notes |
+|----------|----------|-------|
+| 1 | SAN provides full redundancy (dual controllers, multipath, RAID). Accept brief downtime on node failure while pod reschedules. | Zero write amplification. Maximum performance. Best for app-level HA (databases). |
+| 2 | Want node-level HA on top of SAN redundancy. Survives 1 node failure with zero volume downtime. | Default recommendation for SAN-backed Longhorn. |
+| 3 | Rarely justified. Only if compliance mandates it. | Triple-writing to already-redundant storage is expensive for marginal benefit. |
+
+!!! warning "Hidden shared fate"
+    If two Longhorn nodes mount LUNs from the **same RAID group or array controller**, your replicas do not actually land on independent failure domains at the storage layer. One controller failure kills both replicas. Longhorn has no visibility into SAN topology. Map your LUNs to different array controllers or storage pools when possible.
+
+```yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-san-backed
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  numberOfReplicas: "2"
+  dataLocality: "best-effort"
+  replicaAutoBalance: "best-effort"
+  replicaSoftAntiAffinity: "false"      # hard node anti-affinity
+  diskSelector: "san"                   # only schedule on SAN-backed disks
+  fsType: "ext4"
+```
+
+**Why 2 replicas, not 3:** the SAN's own RAID already handles media failure. The second replica provides node-level HA. A third would triple-write to already-redundant storage with diminishing returns.
+
+**Why `diskSelector: "san"`:** in clusters with mixed storage (local NVMe + SAN LUNs), [storage tags](https://longhorn.io/docs/archives/1.11.2/nodes-and-volumes/nodes/storage-tags/){target="_blank"} ensure replicas land on the right disks. Tag your SAN-backed disks as `san` in the Longhorn node configuration.
+
+For workloads with application-level replication on SAN storage, go further:
+
+```yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: longhorn-san-local
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  numberOfReplicas: "1"
+  dataLocality: "strict-local"
+  diskSelector: "san"
+  fsType: "ext4"
+```
+
+Single replica, co-located with the pod, on SAN-backed storage. The array handles disk redundancy, the application handles node redundancy. Zero write amplification, maximum throughput.
+
 ## Space efficiency: the honest math
 
 For 1 TB of usable data with tolerance for 2 simultaneous failures:
