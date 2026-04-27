@@ -18,7 +18,7 @@ tasks:
     cmds:
       - python3 -m venv {{.VENV}}
       - "{{.PIP}} install --upgrade pip"
-      - "{{.PIP}} install mkdocs-material"
+      - "{{.PIP}} install mkdocs-material mkdocs-glightbox"
     status:
       - test -d {{.VENV}}
       - test -f {{.VENV}}/bin/mkdocs

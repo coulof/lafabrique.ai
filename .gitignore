@@ -11,3 +11,6 @@ __pycache__/
 # Task runner cache
 .task/
 .wrangler/
+
+# WSL / Windows NTFS alternate data stream metadata
+*:Zone.Identifier
