@@ -149,10 +149,8 @@ The Problems view (key `4`) also flags the pattern :
 
 It flags `gw-in` and not `gw-out`, because the default route already leads to `gw-out`. The check is labeled heuristic : without exec, the tool cannot know whether `gw-in` actually DNATs anything.
 
-<!-- TODO: capture problems-vpc-c.png, then uncomment
 ![kvovn-topo Problems view flagging router vpc-c because replies may bypass NAT gateway gw-in](../../assets/images/kvovn-topo/problems-vpc-c.png)
 *The Problems view on the `vpc-nat-gw-asym` scenario, with the router's details on the right.*
--->
 
 !!! tip "Know which hops your SDN cannot see"
     The VPC NAT gateway is not the only place where traffic leaves OVN's view :
@@ -173,9 +171,15 @@ It flags `gw-in` and not `gw-out`, because the default route already leads to `g
 claude mcp add kvovn-topo -- kvovn-topo mcp
 ```
 
-Then ask in plain words, for example "which node hosts the port of VM `vm-web` ?". The MCP server never runs the exec-based diagnostics, even with `--diag`.
+Then ask in plain words. Here I asked OpenCode, running Gemini 3.5 Flash, for a status check of my lab cluster. It went through the routers, policies and port bindings, and came back with a report.
 
-<!-- TODO: MCP screenshot -->
+![OpenCode report from the kvovn-topo MCP server : a router policy matching a subnet that does not exist, and missing routes between two VPCs](../../assets/images/kvovn-topo/mcp-report-01.png)
+*The agent spotted a policy that matches a subnet that does not exist, and two VPCs with no routes to each other.*
+
+![OpenCode report, continued : an unbound logical switch port, then a summary of healthy chassis, a dual-NIC VM and the NAT gateway](../../assets/images/kvovn-topo/mcp-report-02.png)
+*It also flagged an unbound port, and listed what was healthy : chassis, a dual-NIC VM and the NAT gateway.*
+
+The MCP server never runs the exec-based diagnostics, even with `--diag`.
 
 ### Kube-OVN v ovn-kubernetes, one OVN, two control planes, two designs
 
