@@ -29,7 +29,7 @@ On a classic hypervisor, you `ping`, you `tcpdump` the bridge, you read the rout
 
 A packet dropped by a logical flow never reaches a virtual interface. There is nothing to capture. The VM's tap device stays silent, and `ip route` on the node tells you nothing about the VPC.
 
-![Kube-OVN topology : the default VPC router ovn-cluster with the join and ovn-default switches, a custom VPC router vpc-c with its subnet and the external switch, all compiled into br-int on each node and linked by a Geneve tunnel](../../assets/images/kvovn-topo/kube-ovn-topology.svg)
+![Kube-OVN topology : the default VPC router ovn-cluster with the join and ovn-default switches, a custom VPC router vpc-c with its subnet and the external switch, all compiled into br-int on each node and linked by a Geneve tunnel](../../assets/images/kvovn-topo/kube-ovn-topology.png)
 *One logical topology for the whole cluster. The `join` switch connects the default VPC to every node through `ovn0`, and the `external` switch reaches the underlay through a localnet port. On the nodes, all of it is OpenFlow tables in `br-int`.*
 
 On classic Kubernetes, I reach for [netshoot](https://github.com/nicolaka/netshoot){target="_blank"} :simple-github:, a container packed with `tcpdump`, `dig`, `iperf` and friends. It is not enough here either : it sees one network namespace at a time, not the logical pipeline OVN runs between them.
@@ -78,7 +78,7 @@ A few hard design rules, given to the coding agent, made the tool safer :
 
 ## The packet OVN never saw
 
-Here is an actual "bug", or rather a Kube-OVN misconfiguration, that kvovn-topo helped me solve. I rebuilt it as a lab scenario, so you can reproduce the names and IPs below.
+Here is an actual "bug", or rather a Kube-OVN misconfiguration, that kvovn-topo helped me solve. I rebuilt it as a lab scenario with simpler names and IPs.
 
 A custom VPC `vpc-c` has two Kube-OVN VPC NAT gateways :
 
@@ -111,7 +111,7 @@ The request goes in through `gw-in`. The reply from `vm-web` reaches the router 
 
 The router sends the reply along `0.0.0.0/0` to `gw-out`. `gw-out` has no conntrack entry for the flow and SNATs the reply to its own EIP. The client expected an answer from `gw-in`'s EIP, so it drops the packet. That is an asymmetric return.
 
-![Diagram of the asymmetric return : the request enters through gw-in and is DNATed to VM vm-web, the reply follows the 0.0.0.0/0 route out through gw-out](../../assets/images/kvovn-topo/kube-ovn-asymmetric-nat.png)
+![Diagram of the asymmetric return : the request enters through gw-in and is DNATed to VM vm-web, the reply follows the 0.0.0.0/0 route out through gw-out](../../assets/images/kvovn-topo/kube-ovn-asymmetric-nat.svg)
 *Both gateways are half outside OVN's view. The router routes the reply by destination, and nothing pins it back to `gw-in`.*
 
 ### The fix
@@ -163,26 +163,21 @@ It flags `gw-in` and not `gw-out`, because the default route already leads to `g
 
     In each case `lr-nat-list` comes back empty while NAT happens.
 
-## Ask an agent : `kvovn-topo mcp`
+## Sidenotes
 
-`kvovn-topo mcp` is an MCP server over stdio. It gives an AI agent four read-only tools on the same graph as the TUI :
+### Ask an agent : `kvovn-topo mcp`
 
-- `find` : search routers, switches, ports and chassis by name, IP, MAC, namespace, pod or VM.
-- `get_graph` : the L3, L2 or chassis view.
-- `get_node` : one object in full, with its OVSDB columns and its Kubernetes identity.
-- `list_chassis` : the nodes, their tunnel IPs, bindings and gateway roles.
-
-Plugging it into Claude Code is one line, and OpenCode or agy work the same way :
+`kvovn-topo mcp` is an MCP server over stdio. It gives an AI agent four read-only tools on the same graph as the TUI : `find`, `get_graph`, `get_node` and `list_chassis`. Plugging it into Claude Code is one line :
 
 ```bash
 claude mcp add kvovn-topo -- kvovn-topo mcp
 ```
 
-Then ask questions in plain words : "which node hosts the port of VM `vm-web`, and is it bound ?" or "draw the L3 topology of VPC `vpc-c`". The agent chains `find`, `get_node` and `get_graph`, and answers from the NB and SB data.
+Then ask in plain words, for example "which node hosts the port of VM `vm-web` ?". The MCP server never runs the exec-based diagnostics, even with `--diag`.
 
-The MCP server never runs the exec-based diagnostics, even with `--diag`. Results are capped so a large cluster does not flood the context. Object names and `external_ids` only travel in the data part of each result, never in the summary text, which limits prompt injection through a crafted port name.
+<!-- TODO: MCP screenshot -->
 
-## (Sidenote) Kube-OVN v ovn-kubernetes, one OVN, two control planes, two designs
+### Kube-OVN v ovn-kubernetes, one OVN, two control planes, two designs
 
 Kube-OVN and ovn-kubernetes both drive OVN but they took very different paths.
 
@@ -214,17 +209,6 @@ ARCH=$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')
 curl -fsSL https://github.com/coulof/kvovn-topo/releases/download/v${VERSION}/kvovn-topo_${VERSION}_${OS}_${ARCH}.tar.gz | tar -xz kvovn-topo
 sudo install kvovn-topo /usr/local/bin/
 ```
-
-Windows builds and the chart options (TLS, RBAC) are in the [README](https://github.com/coulof/kvovn-topo#installation){target="_blank"} :simple-github:.
-
-No cluster at hand ? The repository ships captured scenarios, including the one from this post. In that scenario `vm-web` is a plain pod named `web`, to keep the lab light : OVN wires a pod and a KubeVirt VM the same way. Clone it and explore offline :
-
-```bash
-git clone https://github.com/coulof/kvovn-topo.git && cd kvovn-topo
-kvovn-topo --fixture-dir testdata/scenarios/vpc-nat-gw-asym
-```
-
-Press `4` for Problems, `?` for help. To plug in an AI agent, point its MCP configuration to `kvovn-topo mcp`.
 
 ## Conclusion
 
