@@ -111,7 +111,7 @@ The request goes in through `gw-in`. The reply from `vm-web` reaches the router 
 
 The router sends the reply along `0.0.0.0/0` to `gw-out`. `gw-out` has no conntrack entry for the flow and SNATs the reply to its own EIP. The client expected an answer from `gw-in`'s EIP, so it drops the packet. That is an asymmetric return.
 
-![Diagram of the asymmetric return : the request enters through gw-in and is DNATed to VM vm-web, the reply follows the 0.0.0.0/0 route out through gw-out](../../assets/images/kvovn-topo/kube-ovn-asymmetric-nat.svg)
+![Diagram of the asymmetric return : the request enters through gw-in and is DNATed to VM vm-web, the reply follows the 0.0.0.0/0 route out through gw-out](../../assets/images/kvovn-topo/kube-ovn-asymmetric-nat.png)
 *Both gateways are half outside OVN's view. The router routes the reply by destination, and nothing pins it back to `gw-in`.*
 
 ### The fix
