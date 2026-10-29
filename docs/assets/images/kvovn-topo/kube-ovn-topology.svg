@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" font-family="Helvetica, Arial, sans-serif" font-size="14">
+  <rect width="960" height="720" fill="#ffffff"/>
+
+  <!-- ===== logical layer ===== -->
+  <rect x="20" y="40" width="920" height="335" rx="14" fill="#f5f8ff" stroke="#2b2d6e" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="36" y="30" fill="#2b2d6e" font-weight="bold" font-size="15">Logical topology (OVN Northbound) : one for the whole cluster</text>
+
+
+  <!-- default VPC -->
+  <rect x="60" y="70" width="380" height="52" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  <text x="250" y="92" text-anchor="middle" fill="#2563eb" font-weight="bold">LS join  100.64.0.0/16</text>
+  <text x="250" y="111" text-anchor="middle" fill="#57606a" font-size="12">ports node-n1, node-n2 → each node's ovn0</text>
+
+  <rect x="165" y="160" width="170" height="52" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  <text x="250" y="182" text-anchor="middle" fill="#2563eb" font-weight="bold">LR ovn-cluster</text>
+  <text x="250" y="201" text-anchor="middle" fill="#57606a" font-size="12">default VPC</text>
+
+  <rect x="60" y="250" width="380" height="52" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  <text x="250" y="272" text-anchor="middle" fill="#2563eb" font-weight="bold">LS ovn-default  10.16.0.0/16</text>
+  <text x="250" y="291" text-anchor="middle" fill="#57606a" font-size="12">default subnet for pods</text>
+
+  <rect x="90" y="320" width="110" height="34" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="145" y="342" text-anchor="middle" fill="#24292f">pod-a</text>
+  <rect x="300" y="320" width="110" height="34" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="355" y="342" text-anchor="middle" fill="#24292f">pod-b</text>
+
+  <g stroke="#2563eb" stroke-width="2">
+    <line x1="250" y1="122" x2="250" y2="160"/>
+    <line x1="250" y1="212" x2="250" y2="250"/>
+    <line x1="145" y1="302" x2="145" y2="320"/>
+    <line x1="355" y1="302" x2="355" y2="320"/>
+  </g>
+
+  <!-- custom VPC -->
+  <rect x="520" y="70" width="380" height="52" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  <text x="710" y="92" text-anchor="middle" fill="#2563eb" font-weight="bold">LS external</text>
+  <text x="710" y="111" text-anchor="middle" fill="#57606a" font-size="12">localnet port → provider network (underlay)</text>
+
+  <rect x="625" y="160" width="170" height="52" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  <text x="710" y="182" text-anchor="middle" fill="#2563eb" font-weight="bold">LR vpc-c</text>
+  <text x="710" y="201" text-anchor="middle" fill="#57606a" font-size="12">custom VPC</text>
+  <text x="805" y="146" fill="#57606a" font-size="11">gateway port, active</text>
+  <text x="805" y="159" fill="#57606a" font-size="11">on one chassis</text>
+
+  <rect x="520" y="250" width="380" height="52" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  <text x="710" y="272" text-anchor="middle" fill="#2563eb" font-weight="bold">LS vpc-c-net  10.30.0.0/24</text>
+  <text x="710" y="291" text-anchor="middle" fill="#57606a" font-size="12">VPC subnet</text>
+
+  <rect x="650" y="320" width="140" height="34" rx="6" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="720" y="342" text-anchor="middle" fill="#24292f">VM vm-web</text>
+
+  <g stroke="#2563eb" stroke-width="2">
+    <line x1="710" y1="122" x2="710" y2="160"/>
+    <line x1="710" y1="212" x2="710" y2="250"/>
+    <line x1="720" y1="302" x2="720" y2="320"/>
+  </g>
+
+  <!-- ===== node layer ===== -->
+  <text x="500" y="398" text-anchor="middle" fill="#2b2d6e" font-weight="bold" font-size="15">What exists on the nodes</text>
+
+  <rect x="20" y="410" width="450" height="200" rx="14" fill="#ffffff" stroke="#2b2d6e" stroke-width="2"/>
+  <text x="36" y="600" fill="#2b2d6e" font-weight="bold">node n1</text>
+  <rect x="490" y="410" width="450" height="200" rx="14" fill="#ffffff" stroke="#2b2d6e" stroke-width="2"/>
+  <text x="506" y="600" fill="#2b2d6e" font-weight="bold">node n2</text>
+
+  <!-- Port_Binding links, drawn first so boxes sit on top -->
+  <g stroke="#8a8fa3" stroke-width="1.6" stroke-dasharray="4 4" fill="none">
+    <path d="M145,354 L240,425"/>
+    <path d="M355,354 L365,425"/>
+    <path d="M720,354 L705,425"/>
+    <path d="M900,95 L930,95 L930,410 L880,425"/>
+  </g>
+
+
+  <!-- n1 interfaces -->
+  <rect x="40" y="425" width="130" height="32" rx="6" fill="#ffffff" stroke="#2b2d6e" stroke-width="1.5"/>
+  <text x="105" y="446" text-anchor="middle" fill="#24292f" font-size="13">ovn0 100.64.0.2</text>
+  <rect x="185" y="425" width="110" height="32" rx="6" fill="#ffffff" stroke="#2b2d6e" stroke-width="1.5"/>
+  <text x="240" y="446" text-anchor="middle" fill="#24292f" font-size="13">veth pod-a</text>
+  <rect x="310" y="425" width="110" height="32" rx="6" fill="#ffffff" stroke="#2b2d6e" stroke-width="1.5"/>
+  <text x="365" y="446" text-anchor="middle" fill="#24292f" font-size="13">veth pod-b</text>
+  <rect x="40" y="480" width="410" height="50" rx="8" fill="#eef1ff" stroke="#2b2d6e" stroke-width="2"/>
+  <text x="245" y="501" text-anchor="middle" fill="#2b2d6e" font-weight="bold">br-int (OVS)</text>
+  <text x="245" y="519" text-anchor="middle" fill="#57606a" font-size="12">every LR and LS above, compiled to OpenFlow tables</text>
+  <g stroke="#2b2d6e" stroke-width="1.5">
+    <line x1="105" y1="457" x2="105" y2="480"/>
+    <line x1="240" y1="457" x2="240" y2="480"/>
+    <line x1="365" y1="457" x2="365" y2="480"/>
+  </g>
+
+  <!-- n2 interfaces -->
+  <rect x="510" y="425" width="130" height="32" rx="6" fill="#ffffff" stroke="#2b2d6e" stroke-width="1.5"/>
+  <text x="575" y="446" text-anchor="middle" fill="#24292f" font-size="13">ovn0 100.64.0.3</text>
+  <rect x="655" y="425" width="105" height="32" rx="6" fill="#ffffff" stroke="#2b2d6e" stroke-width="1.5"/>
+  <text x="707" y="446" text-anchor="middle" fill="#24292f" font-size="13">tap vm-web</text>
+  <rect x="775" y="425" width="150" height="32" rx="6" fill="#ffffff" stroke="#2b2d6e" stroke-width="1.5"/>
+  <text x="850" y="446" text-anchor="middle" fill="#24292f" font-size="13">br-provider → eth1</text>
+  <rect x="510" y="480" width="410" height="50" rx="8" fill="#eef1ff" stroke="#2b2d6e" stroke-width="2"/>
+  <text x="715" y="501" text-anchor="middle" fill="#2b2d6e" font-weight="bold">br-int (OVS)</text>
+  <text x="715" y="519" text-anchor="middle" fill="#57606a" font-size="12">the same tables, on every node</text>
+  <g stroke="#2b2d6e" stroke-width="1.5">
+    <line x1="575" y1="457" x2="575" y2="480"/>
+    <line x1="707" y1="457" x2="707" y2="480"/>
+    <line x1="850" y1="457" x2="850" y2="480"/>
+  </g>
+
+  <!-- Geneve tunnel -->
+  <path d="M245,530 L245,565 L715,565 L715,530" fill="none" stroke="#22a55a" stroke-width="3"/>
+  <rect x="362" y="541" width="236" height="20" fill="#ffffff"/>
+  <text x="480" y="556" text-anchor="middle" fill="#22a55a" font-weight="bold" font-size="13">Geneve tunnel between br-int</text>
+
+  <!-- legend / takeaway -->
+  <rect x="20" y="630" width="560" height="74" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="300" y="656" text-anchor="middle" fill="#c2410c" font-size="13">tcpdump on a node sees veths, ovn0, tap and the tunnel.</text>
+  <text x="300" y="676" text-anchor="middle" fill="#c2410c" font-size="13">The routers and switches have no interface : a packet</text>
+  <text x="300" y="694" text-anchor="middle" fill="#c2410c" font-size="13">dropped by a logical flow never shows up anywhere.</text>
+
+  <rect x="600" y="630" width="340" height="74" rx="10" fill="#ffffff" stroke="#8a8fa3" stroke-width="1.5"/>
+  <line x1="618" y1="656" x2="660" y2="656" stroke="#8a8fa3" stroke-width="1.6" stroke-dasharray="4 4"/>
+  <text x="670" y="660" fill="#57606a" font-size="12">Port_Binding (OVN Southbound) :</text>
+  <text x="670" y="677" fill="#57606a" font-size="12">which node hosts a logical port</text>
+  <line x1="618" y1="692" x2="660" y2="692" stroke="#2563eb" stroke-width="2"/>
+  <text x="670" y="696" fill="#57606a" font-size="12">logical link (NB)</text>
+</svg>
