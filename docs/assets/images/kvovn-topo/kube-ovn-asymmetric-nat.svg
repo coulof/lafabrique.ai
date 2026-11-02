@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" font-family="Helvetica, Arial, sans-serif" font-size="14">
+  <defs>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#22a55a"/>
+    </marker>
+    <marker id="o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#f97316"/>
+    </marker>
+  </defs>
+  <rect width="960" height="560" fill="#ffffff"/>
+
+  <text x="20" y="30" fill="#2b2d6e" font-weight="bold" font-size="16">Asymmetric gateway path : DNAT in, SNAT out</text>
+
+  <!-- what OVN sees -->
+  <rect x="300" y="55" width="640" height="350" rx="14" fill="#f5f8ff" stroke="#2b2d6e" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="318" y="80" fill="#2b2d6e" font-weight="bold">What OVN sees (NB / SB)</text>
+
+  <!-- client -->
+  <rect x="20" y="95" width="130" height="290" rx="10" fill="#ffffff" stroke="#2b2d6e" stroke-width="2"/>
+  <text x="85" y="235" text-anchor="middle" fill="#2b2d6e" font-weight="bold">client</text>
+  <text x="85" y="254" text-anchor="middle" fill="#57606a" font-size="12">external network</text>
+
+  <!-- gateways, half outside OVN's view -->
+  <rect x="210" y="110" width="180" height="80" rx="8" fill="#ffffff" stroke="#2b2d6e" stroke-width="2"/>
+  <text x="300" y="135" text-anchor="middle" fill="#2b2d6e" font-weight="bold">gw-in pod</text>
+  <text x="300" y="156" text-anchor="middle" fill="#57606a" font-size="12">iptables DNAT :8080</text>
+  <text x="300" y="174" text-anchor="middle" fill="#57606a" font-size="12">LAN 10.30.0.253</text>
+
+  <rect x="210" y="290" width="180" height="80" rx="8" fill="#ffffff" stroke="#2b2d6e" stroke-width="2"/>
+  <text x="300" y="315" text-anchor="middle" fill="#2b2d6e" font-weight="bold">gw-out pod</text>
+  <text x="300" y="336" text-anchor="middle" fill="#57606a" font-size="12">iptables SNAT</text>
+  <text x="300" y="354" text-anchor="middle" fill="#57606a" font-size="12">LAN 10.30.0.254</text>
+
+  <!-- router -->
+  <rect x="480" y="110" width="200" height="260" rx="10" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  <text x="580" y="225" text-anchor="middle" fill="#2563eb" font-weight="bold">LR vpc-c</text>
+  <text x="580" y="246" text-anchor="middle" fill="#2563eb" font-size="12">0.0.0.0/0 → 10.30.0.254</text>
+  <text x="580" y="264" text-anchor="middle" fill="#2563eb" font-size="12">no NAT rows</text>
+
+  <!-- switch + VM -->
+  <text x="830" y="102" text-anchor="middle" fill="#2563eb" font-size="12">LS vpc-c-net</text>
+  <rect x="760" y="110" width="150" height="260" rx="10" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  <text x="835" y="235" text-anchor="middle" fill="#2563eb" font-weight="bold">VM vm-web</text>
+  <text x="835" y="254" text-anchor="middle" fill="#2563eb" font-size="12">10.30.0.10</text>
+
+  <!-- 1. request -->
+  <g stroke="#22a55a" stroke-width="3" fill="none">
+    <path d="M150,150 L208,150" marker-end="url(#g)"/>
+    <path d="M390,150 L478,150" marker-end="url(#g)"/>
+    <path d="M680,150 L758,150" marker-end="url(#g)"/>
+  </g>
+  <text x="400" y="140" fill="#22a55a" font-weight="bold" font-size="13">1. request</text>
+
+  <!-- 2. reply -->
+  <g stroke="#f97316" stroke-width="3" stroke-dasharray="8 5" fill="none">
+    <path d="M760,330 L682,330" marker-end="url(#o)"/>
+    <path d="M480,330 L392,330" marker-end="url(#o)"/>
+    <path d="M210,330 L152,330" marker-end="url(#o)"/>
+  </g>
+  <text x="400" y="352" fill="#f97316" font-weight="bold" font-size="13">2. reply</text>
+
+  <!-- notes -->
+  <rect x="20" y="430" width="440" height="110" rx="10" fill="#fff7ed" stroke="#f97316" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="240" y="468" text-anchor="middle" fill="#c2410c" font-size="13">The reply follows 0.0.0.0/0 to gw-out.</text>
+  <text x="240" y="488" text-anchor="middle" fill="#c2410c" font-size="13">gw-out has no conntrack entry and SNATs it</text>
+  <text x="240" y="508" text-anchor="middle" fill="#c2410c" font-size="13">to the wrong source : the client drops it.</text>
+
+  <rect x="500" y="430" width="440" height="110" rx="10" fill="#f0fdf4" stroke="#22a55a" stroke-width="2"/>
+  <text x="720" y="468" text-anchor="middle" fill="#15803d" font-weight="bold" font-size="13">Fix : one src-ip route</text>
+  <text x="720" y="490" text-anchor="middle" fill="#15803d" font-family="monospace" font-size="14">10.30.0.10/32 → 10.30.0.253</text>
+  <text x="720" y="512" text-anchor="middle" fill="#15803d" font-size="13">pins replies to gw-in</text>
+</svg>
