@@ -36,7 +36,7 @@ plugins:
   - blog:
       post_url_format: "{slug}"
       draft_on_serve: true
-      draft: false
+      draft: true
       blog_toc: false
       archive: true
       archive_name: Archive
