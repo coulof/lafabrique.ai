@@ -21,7 +21,7 @@ My recommendation is to use an immutable distribution. In my customer projects, 
 
 The lifecycle is therefore split in two : Kubernetes upgrades on one side, OS upgrades underneath on the other. Rancher gives all the tools to manage both from a single stack.
 
-I drive SLE Micro's lifecycle from Rancher, the same way we drive Kubernetes. Everything runs on a live cluster while an application keeps answering, and each part comes with a short clip.
+I drive SLE Micro's lifecycle from Rancher, the same way we drive Kubernetes. Everything runs on a live cluster while an application keeps answering.
 
 <video autoplay loop muted playsinline preload="auto" width="100%" aria-label="SLE Micro lifecycle with Rancher, intro animation">
   <source src="../../assets/images/suc-sle-micro/sl-micro-intro-1080p.mp4" type="video/mp4">
@@ -50,7 +50,7 @@ The demo cluster has three SLE Micro 6.1 nodes on SUSE Virtualization, running K
 
 ### Stop nodes from patching themselves
 
-By default, SLE Micro patches and reboots itself on a timer. On a cluster node, that reboot happens without a drain. The machine pool's cloud-init registers the node with SCC, then turns self-patching off, so the cluster is the only owner of the OS lifecycle :
+By default, SLE Micro patches and reboots itself on a timer. On a cluster node, that reboot happens without a drain. The machine pool's [cloud-init](https://github.com/coulof/sle-micro-os-lifecycle/blob/main/cloud-init/harvester-machine-pool-userdata.yaml){target="_blank"} :simple-github: registers the node with SCC, then turns self-patching off, so the cluster is the only owner of the OS lifecycle :
 
 ```yaml
 #cloud-config
@@ -65,7 +65,7 @@ runcmd:
 
 The [System Upgrade Controller](https://github.com/rancher/system-upgrade-controller){target="_blank"} :simple-github: (SUC) ships with Rancher-provisioned clusters. It runs `Plan` objects : cordon, drain, run a job on the node, uncordon.
 
-I use three Plans, applied in order : etcd nodes, then control plane, then workers. Their node selectors don't overlap, so each node belongs to exactly one Plan. Here is the etcd one, trimmed :
+I use three Plans, applied in order : etcd nodes, then control plane, then workers. Their node selectors don't overlap, so each node belongs to exactly one Plan. Here is the etcd one from [`plans.yaml`](https://github.com/coulof/sle-micro-os-lifecycle/blob/main/fleet/base/plans.yaml){target="_blank"} :simple-github:, trimmed :
 
 ```yaml
 apiVersion: upgrade.cattle.io/v1
@@ -103,7 +103,7 @@ In the demo, all three nodes run etcd, so only `os-patch-etcd` matches anything.
 
 SUC can't run one Plan after another. When a node finishes a Plan, SUC labels it `plan.upgrade.cattle.io/<plan>=<hash>`, where the hash is the Plan's `status.latestHash`. I use that label to order the Plans.
 
-The `prepare` step of `os-patch-cp` and `os-patch-workers` runs `wait-plan.sh`. It counts the nodes of the previous group, counts those carrying the current hash label, and loops until both numbers match :
+The `prepare` step of `os-patch-cp` and `os-patch-workers` runs [`wait-plan.sh`](https://github.com/coulof/sle-micro-os-lifecycle/blob/main/fleet/base/scripts/wait-plan.sh){target="_blank"} :simple-github:. It counts the nodes of the previous group, counts those carrying the current hash label, and loops until both numbers match :
 
 ```sh
 hash=$(kubectl -n "$NS" get plan "$PLAN" -o jsonpath='{.status.latestHash}')
@@ -112,11 +112,11 @@ done_=$(kubectl get nodes -l "$SELECTOR,plan.upgrade.cattle.io/$PLAN=$hash" -o n
 [ "$done_" -ge "$total" ] && exit 0
 ```
 
-`prepare` runs before cordon and drain, so a waiting node keeps serving. The Plan passes its arguments, for example `os-patch-etcd node-role.kubernetes.io/etcd=true`. The `kubectl` image has no `awk` or `grep`, hence `wc -l` on names.
+`prepare` runs before cordon and drain, so a waiting node keeps serving. The Plan passes its arguments, for example `os-patch-etcd node-role.kubernetes.io/etcd=true`.
 
 ### Scripts without a custom image
 
-I didn't want to build and maintain an image for three shell scripts. The scripts live as plain files in Git, and kustomize generates the `os-scripts` ConfigMap from them.
+I didn't want to build and maintain an image for three shell scripts. The scripts live as plain files in [`fleet/base/scripts/`](https://github.com/coulof/sle-micro-os-lifecycle/tree/main/fleet/base/scripts){target="_blank"} :simple-github:, and [`kustomization.yaml`](https://github.com/coulof/sle-micro-os-lifecycle/blob/main/fleet/base/kustomization.yaml){target="_blank"} :simple-github: generates the `os-scripts` ConfigMap from them.
 
 A Plan can't mount a ConfigMap though. So kustomize `replacements` copy each script body into an env value of the Plan :
 
@@ -132,7 +132,7 @@ replacements:
 ```
 
 !!! note "Pulling from the SUSE Application Collection"
-    The `prepare` step and the inventory DaemonSet use the `kubectl` image from the [SUSE Application Collection](https://apps.rancher.io/){target="_blank"} :simple-suse: (`dp.apps.rancher.io/containers/kubectl:1.37.2`). That registry needs credentials : I created the K3s cluster with a Docker registry secret, `dp-apps-rancher-io`, which both ServiceAccounts reference in `imagePullSecrets`. Keep that secret out of Git.
+    The `kubectl` image comes from the [SUSE Application Collection](https://apps.rancher.io/){target="_blank"} :simple-suse:, which needs credentials. Both ServiceAccounts pull it with the `dp-apps-rancher-io` registry secret ([example](https://github.com/coulof/sle-micro-os-lifecycle/blob/main/secrets/dp-apps-rancher-io.example.yaml){target="_blank"} :simple-github:). Keep the real one out of Git.
 
 The upgrade container is a stock `bci-micro:15.7`. It only needs `sh`, `mkdir` and `chroot` : it writes `$UPGRADE_SCRIPT` to `/host/var/lib/os-upgrade/bin/upgrade.sh`, then `chroot /host` runs it with the node's own tools (`transactional-update`, `btrfs`, `SUSEConnect`).
 
@@ -140,7 +140,7 @@ Because the script text is part of the Plan spec, editing a script changes the P
 
 ### One line to start a rollout
 
-Fleet delivers the Plans from Rancher to downstream clusters. A Rancher cluster label, `os-lifecycle/wave=canary` or `prod`, picks the overlay. Each overlay only sets `spec.version`, the release ID.
+[Fleet](https://fleet.rancher.io/){target="_blank"} :material-open-in-new: delivers the Plans from Rancher to downstream clusters. A Rancher cluster label, `os-lifecycle/wave=canary` or `prod`, picks the overlay in [`fleet.yaml`](https://github.com/coulof/sle-micro-os-lifecycle/blob/main/fleet/fleet.yaml){target="_blank"} :simple-github:. Each [overlay](https://github.com/coulof/sle-micro-os-lifecycle/tree/main/fleet/overlays){target="_blank"} :simple-github: only sets `spec.version`, the release ID.
 
 Starting the weekly patch is a one-line Git commit :
 
@@ -155,7 +155,7 @@ Canary clusters get it first. When they converge, I set the same value in the pr
 
 ### What runs on the node
 
-SUC passes the Plan's `spec.version` to the job as `SYSTEM_UPGRADE_PLAN_LATEST_VERSION`, and `upgrade.sh` uses it as the release ID. The script must be idempotent, because SUC re-runs the job after every reboot and on every retry.
+SUC passes the Plan's `spec.version` to the job as `SYSTEM_UPGRADE_PLAN_LATEST_VERSION`, and [`upgrade.sh`](https://github.com/coulof/sle-micro-os-lifecycle/blob/main/fleet/base/scripts/upgrade.sh){target="_blank"} :simple-github: uses it as the release ID. The script must be idempotent, because SUC re-runs the job after every reboot and on every retry.
 
 On a new release, it goes through four steps :
 
@@ -193,13 +193,11 @@ The weekly patch on the demo cluster, 15 minutes squeezed into one (waiting phas
 
 In the clip, each node goes `Ready,Cordoned`, then comes back with a new kernel (`6.12.0-160000.5` to `.40`) and a new boot ID. Right after the reboot, the Plan shows `FAILED` for a few seconds : that is the job killed by the reboot, before SUC retries it and the verify step passes.
 
-The heartbeat page stays green, and answers come from the other two nodes. Over the 15 minutes, 5 requests timed out, each when a node was drained or rebooted. The service kept answering.
-
 ### Seeing drift : the os-inventory DaemonSet
 
 SUC labels record which Plan ran on a node, and nothing about its packages. Someone can still run `transactional-update` by hand, or a node can come back from a rollback.
 
-The `os-inventory` DaemonSet reads the host directly. It mounts `/` read-only, and runs as root with `SYS_CHROOT` only, so it can call the node's own `rpm`. Every 10 minutes, it labels its node :
+The `os-inventory` DaemonSet ([`inventory.yaml`](https://github.com/coulof/sle-micro-os-lifecycle/blob/main/fleet/base/inventory.yaml){target="_blank"} :simple-github:) reads the host directly. It mounts `/` read-only, and runs as root with `SYS_CHROOT` only, so it can call the node's own `rpm`. Every 10 minutes, [`inventory.sh`](https://github.com/coulof/sle-micro-os-lifecycle/blob/main/fleet/base/scripts/inventory.sh){target="_blank"} :simple-github: labels its node :
 
 ```sh
 ver=$(. /host/etc/os-release && echo "${VERSION_ID:-unknown}")
@@ -238,19 +236,19 @@ The 6.1 to 6.2 bump on the demo cluster, 15 minutes squeezed into one (waiting p
   <source src="../../assets/images/suc-sle-micro/sle-micro-bump-1080p.mp4" type="video/mp4">
 </video>
 
-In the clip, the new nodes show up as "SUSE Linux Enterprise Server 16.0" : SLE Micro 6.2 is built on the SLES 16 code base, and that is the OS name Kubernetes reports for those nodes. Each new node joins before an old one is cordoned, drained and removed. Over the run, 10 requests timed out, mostly when an old node was drained.
+In the clip, the new nodes show up as "SUSE Linux Enterprise Server 16.0" : SLE Micro 6.2 is built on the SLES 16 code base, and that is the OS name Kubernetes reports for those nodes.
 
 ## Trade-offs and what's left
 
 This is a prototype. Its limits :
 
 * **Patches are not atomic across the cluster.** Each node converges on its own, and a mirror can publish new packages mid-rollout. The `rpm-fp` label is how you notice.
-* **Kubernetes upgrades should wait for the OS.** A small `gate.sh` script passes only when every Plan is done, all nodes share the same `rpm-fp`, and none is cordoned. Only then does it set the new `kubernetesVersion` on the Rancher cluster.
-* **Two triggers for two lifecycles.** The patch lives in Git, the bump lives in the machine pool. The next step is one release definition for both, the way OpenShift moves the OS and Kubernetes together. Nothing does that today.
+* **Kubernetes upgrades should wait for the OS.** A small [`gate.sh`](https://github.com/coulof/sle-micro-os-lifecycle/blob/main/tools/gate.sh){target="_blank"} :simple-github: script passes only when every Plan is done, all nodes share the same `rpm-fp`, and none is cordoned. Only then does it set the new `kubernetesVersion` on the Rancher cluster.
+* **Two triggers for two lifecycles.** The patch lives in Git, the bump lives in the machine pool. The next step is one release definition for both.
 
 ## Conclusion
 
-On SLE Micro, patches stay in place through snapshots, and distribution bumps replace the nodes. With Fleet, the System Upgrade Controller and a machine pool, Rancher starts both, and a rollback stops the rollout on the failing node.
+On SLE Micro, patches stay in place through snapshots, and distribution bumps replace the nodes. With [Fleet](https://fleet.rancher.io/){target="_blank"} :material-open-in-new:, the [System Upgrade Controller](https://documentation.suse.com/suse-edge/3.7/html/edge/components-system-upgrade-controller.html){target="_blank"} :simple-suse: and a machine pool, Rancher starts both, and a rollback stops the rollout on the failing node.
 
 The Plans, scripts and cloud-init are in the [sle-micro-os-lifecycle repository](https://github.com/coulof/sle-micro-os-lifecycle){target="_blank"} :simple-github:. To go further :
 
