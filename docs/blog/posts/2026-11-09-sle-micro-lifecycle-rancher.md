@@ -7,29 +7,33 @@ categories:
   - Kubernetes
   - SUSE
   - Linux
-title: "Patching and Upgrading SL Micro from Rancher"
+title: "Patching and Upgrading SLE Micro from Rancher"
 description: "Two OS lifecycles for SUSE Linux Micro nodes under K3s : weekly in-place patches with Fleet and the System Upgrade Controller, and distribution bumps by replacing nodes from a Rancher machine pool."
 ---
 
-# Patching and Upgrading SL Micro from Rancher
+# Patching and Upgrading SLE Micro from Rancher
 
 When you upgrade OpenShift :simple-redhat:, the operating system comes along. CoreOS and the cluster move together, node by node.
 
-With K3s or RKE2 on SUSE Linux Micro (SL Micro), the two lifecycles are separate today. Rancher upgrades Kubernetes, and the OS underneath is left to you.
+The Rancher ecosystem, including [K3s](https://docs.k3s.io/){target="_blank"} :material-open-in-new: and [RKE2](https://docs.rke2.io/){target="_blank"} :material-open-in-new:, leaves the choice and management of the OS completely open.
 
-I drive SL Micro's lifecycle from Rancher, the same way we drive Kubernetes. Everything runs on a live cluster while an application keeps answering.
+My recommendation is to use an immutable distribution. In my customer projects, that is most of the time [SLE Micro](https://documentation.suse.com/sle-micro/){target="_blank"} :simple-suse:.
 
-:simple-youtube: Here is the video walkthrough :
-<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
-  <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/TODO_VIDEO_ID" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-</div>
+The lifecycle is therefore split in two : Kubernetes upgrades on one side, OS upgrades underneath on the other. Rancher gives all the tools to manage both from a single stack.
+
+I drive SLE Micro's lifecycle from Rancher, the same way we drive Kubernetes. Everything runs on a live cluster while an application keeps answering, and each part comes with a short clip.
+
+<video autoplay loop muted playsinline preload="auto" width="100%" aria-label="SLE Micro lifecycle with Rancher, intro animation">
+  <source src="../../assets/images/suc-sle-micro/sl-micro-intro-1080p.mp4" type="video/mp4">
+  <source src="../../assets/images/suc-sle-micro/sl-micro-intro-1080p.webm" type="video/webm">
+</video>
 
 <!-- more -->
 
 ## Two kinds of OS change
 
 * **The weekly patch.** We stay on the same VM. `transactional-update` builds a new btrfs snapshot in the background. The node is drained, reboots into the snapshot, and comes back. If anything goes wrong, we boot the previous snapshot.
-* **The distribution bump**, twice a year, for example SL Micro 6.1 to 6.2. Here SUSE recommends a fresh install. On SUSE Virtualization (Harvester), a fresh install is cheap : point the machine pool at the new image and let Rancher replace the nodes.
+* **The distribution bump**, twice a year, for example SLE Micro 6.1 to 6.2. Here SUSE recommends a fresh install. On SUSE Virtualization (Harvester), a fresh install is cheap : point the machine pool at the new image and let Rancher replace the nodes.
 
 Both end with every node on the same version, and both start from Rancher.
 
@@ -40,17 +44,18 @@ Both end with every node on the same version, and both start from Rancher.
 | Node | Same VM, drain, reboot, uncordon | New VM joins, old VM removed |
 | Rollback | Boot the previous snapshot | Pool back to the previous image |
 
-The demo cluster has three SL Micro 6.1 nodes on SUSE Virtualization, running K3s and managed by Rancher. Each node holds every role (control plane, etcd, worker), so they upgrade strictly one at a time. A small heartbeat page queries the cluster every second through a single floating IP and shows which pod and node answered.
+The demo cluster has three SLE Micro 6.1 nodes on SUSE Virtualization, running K3s and managed by Rancher. Each node holds every role (control plane, etcd, worker), so they upgrade strictly one at a time. A small heartbeat page queries the cluster every second through a single floating IP and shows which pod and node answered.
 
 ## The weekly patch : Fleet and the System Upgrade Controller
 
 ### Stop nodes from patching themselves
 
-By default, SL Micro patches and reboots itself on a timer. On a cluster node, that reboot happens without a drain. The machine pool's cloud-init turns it off, so the cluster is the only owner of the OS lifecycle :
+By default, SLE Micro patches and reboots itself on a timer. On a cluster node, that reboot happens without a drain. The machine pool's cloud-init registers the node with SCC, then turns self-patching off, so the cluster is the only owner of the OS lifecycle :
 
 ```yaml
 #cloud-config
 runcmd:
+  - transactional-update --non-interactive register -r "<REGISTRATION_CODE>" -e "<EMAIL>"   # inject from a secret-backed template, never commit it
   - systemctl disable --now transactional-update.timer || true
   - systemctl disable --now rebootmgr.service || true
   - systemctl enable health-checker.service || true
@@ -126,6 +131,9 @@ replacements:
         fieldPaths: [spec.upgrade.envs.[name=UPGRADE_SCRIPT].value]
 ```
 
+!!! note "Pulling from the SUSE Application Collection"
+    The `prepare` step and the inventory DaemonSet use the `kubectl` image from the [SUSE Application Collection](https://apps.rancher.io/){target="_blank"} :simple-suse: (`dp.apps.rancher.io/containers/kubectl:1.37.2`). That registry needs credentials : I created the K3s cluster with a Docker registry secret, `dp-apps-rancher-io`, which both ServiceAccounts reference in `imagePullSecrets`. Keep that secret out of Git.
+
 The upgrade container is a stock `bci-micro:15.7`. It only needs `sh`, `mkdir` and `chroot` : it writes `$UPGRADE_SCRIPT` to `/host/var/lib/os-upgrade/bin/upgrade.sh`, then `chroot /host` runs it with the node's own tools (`transactional-update`, `btrfs`, `SUSEConnect`).
 
 Because the script text is part of the Plan spec, editing a script changes the Plan hash. SUC then cordons and drains every node again, even with the same release ID. `upgrade.sh` finds its state file and only verifies, but you still pay a drain per node.
@@ -177,7 +185,15 @@ fi
 * **Recorded snapshot is the default but not booted** : the reboot didn't happen yet, so it reboots again.
 * **Neither** : `health-checker` rolled the node back to its previous snapshot. The job fails, the node stays cordoned on the old snapshot, and the rollout stops there. With `concurrency: 1`, the other nodes are untouched.
 
-In the video, you can see the node go `Ready,Cordoned`, then `NotReady`, then `Ready` with a new boot ID. The heartbeat stays green ; answers come from the other two nodes. An occasional request fails when it hits a node going down, and the service keeps answering.
+The weekly patch on the demo cluster, 15 minutes squeezed into one (waiting phases at ×50) :
+
+<video controls muted playsinline preload="metadata" width="100%" aria-label="Weekly patch of SLE Micro from Rancher, time-lapse">
+  <source src="../../assets/images/suc-sle-micro/sle-micro-patch-1080p.mp4" type="video/mp4">
+</video>
+
+In the clip, each node goes `Ready,Cordoned`, then comes back with a new kernel (`6.12.0-160000.5` to `.40`) and a new boot ID. Right after the reboot, the Plan shows `FAILED` for a few seconds : that is the job killed by the reboot, before SUC retries it and the verify step passes.
+
+The heartbeat page stays green, and answers come from the other two nodes. Over the 15 minutes, 5 requests timed out, each when a node was drained or rebooted. The service kept answering.
 
 ### Seeing drift : the os-inventory DaemonSet
 
@@ -206,7 +222,7 @@ kubectl get nodes -L os-lifecycle/os-version,os-lifecycle/rpm-fp,os-lifecycle/os
 
 ## The distribution bump : replace the nodes
 
-For SL Micro 6.1 to 6.2, I don't migrate in place. In Rancher, under **Cluster Management**, I edit the machine pool, switch the image to the SL Micro 6.2 one, and save. The same change could be a Terraform diff.
+For SLE Micro 6.1 to 6.2, I don't migrate in place. In Rancher, under **Cluster Management**, I edit the [machine pool](https://docs.harvesterhci.io/v1.9/rancher/node/k3s-cluster#create-k3s-kubernetes-cluster){target="_blank"} :simple-suse:, switch the image to the SLE Micro 6.2 one, and save. The same change could be a Terraform diff.
 
 Rancher then rolls the pool :
 
@@ -215,6 +231,14 @@ Rancher then rolls the pool :
 3. It repeats until all three nodes are replaced.
 
 Every node IP changes, but users hit a stable MetalLB VIP, so it doesn't matter. Rollback is the same move backwards : point the pool at the previous image.
+
+The 6.1 to 6.2 bump on the demo cluster, 15 minutes squeezed into one (waiting phases at ×40) :
+
+<video controls muted playsinline preload="metadata" width="100%" aria-label="SLE Micro 6.1 to 6.2 distribution bump from Rancher, time-lapse">
+  <source src="../../assets/images/suc-sle-micro/sle-micro-bump-1080p.mp4" type="video/mp4">
+</video>
+
+In the clip, the new nodes show up as "SUSE Linux Enterprise Server 16.0" : SLE Micro 6.2 is built on the SLES 16 code base, and that is the OS name Kubernetes reports for those nodes. Each new node joins before an old one is cordoned, drained and removed. Over the run, 10 requests timed out, mostly when an old node was drained.
 
 ## Trade-offs and what's left
 
@@ -226,10 +250,10 @@ This is a prototype. Its limits :
 
 ## Conclusion
 
-On SL Micro, patches stay in place through snapshots, and distribution bumps replace the nodes. With Fleet, the System Upgrade Controller and a machine pool, Rancher starts both, and a rollback stops the rollout on the failing node.
+On SLE Micro, patches stay in place through snapshots, and distribution bumps replace the nodes. With Fleet, the System Upgrade Controller and a machine pool, Rancher starts both, and a rollback stops the rollout on the failing node.
 
 The Plans, scripts and cloud-init are in the [sle-micro-os-lifecycle repository](https://github.com/coulof/sle-micro-os-lifecycle){target="_blank"} :simple-github:. To go further :
 
 * [K3s automated upgrades with SUC](https://docs.k3s.io/upgrades/automated){target="_blank"} :material-open-in-new:
 * [SUSE Linux Micro documentation](https://documentation.suse.com/sle-micro/){target="_blank"} :simple-suse:
-* [Installing SUSE Linux Micro on Hyper-V](2026-04-16-sles-micro-hyper-v.md), if you want to try SL Micro on your laptop first
+* [Installing SUSE Linux Micro on Hyper-V](2026-04-16-sles-micro-hyper-v.md), if you want to try SLE Micro on your laptop first
