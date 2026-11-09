@@ -142,8 +142,9 @@ Defined in `mkdocs.yml`. Includes external links to companion services:
 | Home | Landing page |
 | Blog | Blog index + archives + categories |
 | Chat my Resume | HuggingFace Space (Mistral AI) |
-| GIA | gia.lafabrique.ai |
+| kvtools | kvtools.lafabrique.ai |
 | Live Poll | poll.lafabrique.ai |
+| GIA | gia.lafabrique.ai |
 | Pastebin | pb.lafabrique.ai |
 
 ## Infrastructure

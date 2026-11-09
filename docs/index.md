@@ -17,8 +17,9 @@ Welcome to LaFabrique.AI, a space dedicated to exploring the fascinating world o
 
 - **[Blog](blog/)** — AI experiments, GPU benchmarks, tutorials, and field reports
 - **[Chat my Resume](https://huggingface.co/spaces/bauagonzo/chat-my-resume)** — An AI-powered resume chatbot, backed by Mistral AI
-- **[GIA](https://gia.lafabrique.ai/)** — Psychometric test preparation tool
+- **[kvtools](https://kvtools.lafabrique.ai/)** — Tools for KubeVirt
 - **[Live Poll](https://poll.lafabrique.ai)** — Real-time polling app
+- **[GIA](https://gia.lafabrique.ai/)** — Psychometric test preparation tool
 - **[Pastebin](https://pb.lafabrique.ai)** — Self-hosted code sharing with syntax highlighting
 
 </div>

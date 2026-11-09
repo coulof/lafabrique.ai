@@ -25,8 +25,9 @@ nav:
   - Blog:
     - blog/index.md
   - Chat my Resume: https://huggingface.co/spaces/bauagonzo/chat-my-resume
-  - GIA: https://gia.lafabrique.ai/
+  - kvtools: https://kvtools.lafabrique.ai/
   - Live Poll: https://poll.lafabrique.ai
+  - GIA: https://gia.lafabrique.ai/
   - Pastebin: https://pb.lafabrique.ai
 
 plugins:
